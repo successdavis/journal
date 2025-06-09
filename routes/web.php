@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\EditorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/author/my-submissions', [AuthorController::class, 'index']);
     Route::get('/author/submit-new-manuscript', [AuthorController::class, 'create']);
     Route::post('/author/submit-new-manuscript', [AuthorController::class, 'store']);
+
+
+    Route::get('/editor/all-submissions', [EditorController::class, 'index']);
+    Route::get('/editor/{item_id}/view', [EditorController::class, 'viewManuscript']);
+    Route::get('/editor/{item_id}/track-review', [EditorController::class, 'trackReviewManuscript']);
 });
 
 require __DIR__ . '/auth.php';

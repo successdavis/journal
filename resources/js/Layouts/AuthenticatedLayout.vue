@@ -5,13 +5,13 @@
                 class="flex border-b border-gray-100 bg-white"
             >
                 <!-- Primary Navigation Menu -->
-                <div v-if="role === 'editor'" class="flex lg:fixed">
+                <div v-if="$page.props.auth.user.role === 'editor'" class="flex lg:fixed">
                     <EditorsSideBar/>
                 </div>
-                <div v-else-if="role === 'reviewer'" class="flex lg:fixed">
+                <div v-else-if="$page.props.auth.user.role === 'reviewer'" class="flex lg:fixed">
                     <ReviewersSideBar/>
                 </div>
-                <div v-else-if="role === 'admin'" class="flex lg:fixed">
+                <div v-else-if="$page.props.auth.user.role === 'admin'" class="flex lg:fixed">
                     <AdminSideBar />
                 </div>
                 <div v-else class="flex lg:fixed">
@@ -86,13 +86,4 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import AuthorsSideBar from "@/Components/AuthorsSideBar.vue";
 import ReviewersSideBar from "@/Components/ReviewersSideBar.vue";
 import EditorsSideBar from "@/Components/EditorsSideBar.vue";
-
-
-let props = defineProps({
-    role: String
-})
-
-onMounted(() => {
-    console.log(props.role)
-})
 </script>

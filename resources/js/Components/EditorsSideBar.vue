@@ -15,7 +15,7 @@
 
             <nav class="flex flex-col space-y-3 text-sm">
                 <Link
-                    href="/editor/home"
+                    href="/editor/dashboard"
                     class="hover:bg-teal-100 px-3 py-2 rounded transition"
                 >
                     Home
