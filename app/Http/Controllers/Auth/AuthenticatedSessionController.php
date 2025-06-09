@@ -33,7 +33,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+
+        $user = Auth::user();
+
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'editor':
+                return redirect()->route('editor.dashboard');
+            case 'reviewer':
+                return redirect()->route('reviewer.dashboard');
+            case 'author':
+                return redirect()->route('author.dashboard');
+            default:
+                Auth::logout();
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Unauthorized role.',
+                ]);
+        }
     }
 
     /**
@@ -47,6 +64,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

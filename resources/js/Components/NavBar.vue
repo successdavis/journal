@@ -61,9 +61,14 @@
                         />
                     </svg>
                 </button>
-
                 <!-- Right Nav Links (desktop) -->
-                <div class="hidden lg:flex items-center gap-4">
+                <div v-if="user" class="hidden lg:flex items-center gap-4">
+                    <Link v-if="user.role === 'editor'" href="editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="user.role === 'reviewer'" href="reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="user.role === 'admin'" href="admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else href="author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                </div>
+                <div v-else class="hidden lg:flex items-center gap-4">
                     <Link href="search" class="text-sm font-medium text-gray-700 hover:text-blue-600">Search</Link>
                     <Link href="login" class="text-sm font-medium text-gray-700 hover:text-blue-600">Login</Link>
                     <Link href="register" class="text-sm font-medium text-gray-700 hover:text-blue-600">Register</Link>
@@ -92,7 +97,13 @@
                 </Link>
             </div>
 
-            <div class="flex flex-col lg:hidden gap-2 mt-4">
+            <div v-if="user" class="flex flex-col lg:hidden gap-2 mt-4">
+                <Link v-if="user.role === 'editor'" href="editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="user.role === 'reviewer'" href="reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="user.role === 'admin'" href="admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else href="author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+            </div>
+            <div v-else class="flex flex-col lg:hidden gap-2 mt-4">
                 <Link href="search" class="text-gray-700 hover:text-blue-600">Search</Link>
                 <Link href="login" class="text-gray-700 hover:text-blue-600">Login</Link>
                 <Link href="register" class="text-gray-700 hover:text-blue-600">Register</Link>
@@ -102,8 +113,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import {onMounted, ref} from 'vue'
+import { Link} from "@inertiajs/vue3";
+import { usePage } from '@inertiajs/vue3'
 
+const { props } = usePage()
+const user = props.auth.user
 const menuOpen = ref(false)
 </script>
