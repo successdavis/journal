@@ -82,6 +82,17 @@
                         </a>
                     </div>
                 </div>
+                <div class=" w-full ">
+                    <AssignReviewerSection
+                        :itemId="item.id"
+                        :reviewers="props.reviewers"
+                        :existingReviewers="props.existingReviewers"
+                    />
+                </div>
+
+                <div>
+                    <EditorDecision />
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>
@@ -92,8 +103,16 @@
 
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import AssignReviewerSection from "@/Components/AssignReviewerSection.vue";
+import {onMounted, ref} from "vue";
+import EditorDecision from "@/Components/EditorDecision.vue";
 
-defineProps({
-    item: Object
+
+
+let props = defineProps({
+    item: Object,
+    reviewers: Array,
+    existingReviewers: Array,
 })
+
 </script>

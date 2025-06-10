@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\ManuscriptReviewerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\ReviewerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -45,6 +47,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/editor/all-submissions', [EditorController::class, 'index']);
     Route::get('/editor/{item_id}/view', [EditorController::class, 'viewManuscript']);
     Route::get('/editor/{item_id}/track-review', [EditorController::class, 'trackReviewManuscript']);
+    Route::post('/editor/{reviewer_id}/assign-reviewer/{item_id}', [ManuscriptReviewerController::class, 'store']);
+    Route::delete('/editor/{reviewer_id}/assign-reviewer/{item_id}', [ManuscriptReviewerController::class, 'destroy']);
+
+
+    Route::get('/reviewer/assigned-reviews', [ReviewerController::class, 'index']);
+
 });
 
 require __DIR__ . '/auth.php';

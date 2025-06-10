@@ -26,18 +26,18 @@
                 >
                     All Submissions
                 </Link>
-                <Link
-                    href="/editor/assign-reviewers"
-                    class="hover:bg-teal-100 px-3 py-2 rounded transition"
-                >
-                    Assign Reviewers
-                </Link>
-                <Link
-                    href="/editor/make-decisions"
-                    class="hover:bg-teal-100 px-3 py-2 rounded transition"
-                >
-                    Make Decisions
-                </Link>
+<!--                <Link-->
+<!--                    href="/editor/assign-reviewers"-->
+<!--                    class="hover:bg-teal-100 px-3 py-2 rounded transition"-->
+<!--                >-->
+<!--                    Assign Reviewers-->
+<!--                </Link>-->
+<!--                <Link-->
+<!--                    href="/editor/make-decisions"-->
+<!--                    class="hover:bg-teal-100 px-3 py-2 rounded transition"-->
+<!--                >-->
+<!--                    Make Decisions-->
+<!--                </Link>-->
             </nav>
         </aside>
 

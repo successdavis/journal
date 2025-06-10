@@ -6,6 +6,8 @@ use App\Models\Author;
 use App\Models\Editor;
 use App\Http\Requests\StoreEditorRequest;
 use App\Http\Requests\UpdateEditorRequest;
+use App\Models\ManuscriptReviewer;
+use App\Models\User;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -18,7 +20,7 @@ class EditorController extends Controller
     public function index()
     {
         return inertia::render('Editor/AllSubmissions', [
-        'manuscripts'=> Author::with('author')->get()
+            'manuscripts' => Author::with('author')->get()
         ]);
     }
 
@@ -28,8 +30,13 @@ class EditorController extends Controller
         $item = Author::with('author')->findOrFail($item_id);
         $item->figures = json_decode($item->figures);
         $item->supplementary = json_decode($item->supplementary);
+        $existingReviewers = ManuscriptReviewer::with('reviewer')
+            ->where('manuscript_id', $item_id)
+            ->get();
         return inertia::render('Editor/View', [
-            'item' => $item
+            'item' => $item,
+            'existingReviewers' => $existingReviewers,
+            'reviewers' => User::where('role', 'reviewer')->get()
         ]);
     }
 
@@ -38,10 +45,16 @@ class EditorController extends Controller
         $item = Author::with('author')->findOrFail($item_id);
         $item->figures = json_decode($item->figures);
         $item->supplementary = json_decode($item->supplementary);
+        $existingReviewers = ManuscriptReviewer::with('reviewer')
+            ->where('manuscript_id', $item_id)
+            ->get();
         return inertia::render('Editor/AssignAndTrackReviewers', [
-            'item' => $item
+            'item' => $item,
+            'existingReviewers' => $existingReviewers,
+            'reviewers' => User::where('role', 'reviewer')->get()
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

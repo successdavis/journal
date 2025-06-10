@@ -15,6 +15,14 @@ class Author extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function reviewers()
+    {
+        return $this->belongsToMany(User::class, 'manuscript_reviewer');
+    }
+
+
+
+
     protected $fillable = [
         'author_id', 'title', 'abstract', 'keywords', 'article_type', 'author_name', 'email',
         'affiliation', 'journal', 'subject_area', 'main_document', 'figures',

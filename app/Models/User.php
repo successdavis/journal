@@ -17,6 +17,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    public function manuscripts()
+    {
+        return $this->belongsToMany(Author::class, 'manuscript_reviewer');
+    }
     protected $fillable = [
         'name',
         'email',

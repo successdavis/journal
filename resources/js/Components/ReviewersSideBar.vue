@@ -20,7 +20,7 @@
                     Home
                 </Link>
                 <Link
-                    href="/assigned-reviews"
+                    href="/reviewer/assigned-reviews"
                     class="hover:bg-indigo-100 px-3 py-2 rounded transition"
                 >
                     Assigned Reviews

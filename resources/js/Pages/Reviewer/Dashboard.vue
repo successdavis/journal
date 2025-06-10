@@ -1,6 +1,6 @@
 <template>
     <AuthenticatedLayout>
-        <p>Your logged in as Editor</p>
+        <p>Your logged in as Reviewer</p>
     </AuthenticatedLayout>
 </template>
 
