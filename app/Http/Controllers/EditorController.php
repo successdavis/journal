@@ -7,6 +7,7 @@ use App\Models\Editor;
 use App\Http\Requests\StoreEditorRequest;
 use App\Http\Requests\UpdateEditorRequest;
 use App\Models\ManuscriptReviewer;
+use App\Models\SubmittedReview;
 use App\Models\User;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,37 @@ class EditorController extends Controller
         return inertia::render('Editor/AllSubmissions', [
             'manuscripts' => Author::with('author')->get()
         ]);
+    }
+
+    public function viewReviews()
+    {
+        $reviews = SubmittedReview::whereHas('reviewManuscript')
+            ->with([
+                'reviewManuscript.reviewer', // Load reviewer info
+                'reviewManuscript.manuscript'
+            ])
+            ->latest()
+            ->get();
+
+        return inertia::render('Editor/AllReviews', [
+            'reviews' => $reviews,
+        ]);
+    }
+
+    public function viewReviewsSection($item_id)
+    {
+        $reviews = SubmittedReview::whereHas('reviewManuscript', function ($query) use ($item_id) {
+            $query->where('manuscript_id', $item_id);
+        })
+            ->with([
+                'reviewManuscript.reviewer', // Load reviewer info
+                'reviewManuscript.manuscript'
+            ])
+            ->latest()
+            ->get();
+
+        return response()->json($reviews);
+
     }
 
     public function viewManuscript($item_id)

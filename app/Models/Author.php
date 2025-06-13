@@ -17,9 +17,8 @@ class Author extends Model
 
     public function reviewers()
     {
-        return $this->belongsToMany(User::class, 'manuscript_reviewer');
+        return $this->belongsToMany(User::class, 'users');
     }
-
 
 
 

@@ -9,4 +9,11 @@ class Reviewer extends Model
 {
     /** @use HasFactory<\Database\Factories\ReviewerFactory> */
     use HasFactory;
+
+
+
+    public function reviewer()
+    {
+        return $this->belongsTo(Reviewer::class);
+    }
 }

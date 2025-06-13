@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ManuscriptReviewer;
 use App\Models\Reviewer;
 use App\Http\Requests\StoreReviewerRequest;
 use App\Http\Requests\UpdateReviewerRequest;
+use App\Models\SubmittedReview;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use PHPUnit\TextUI\Output\SummaryPrinter;
 
 class ReviewerController extends Controller
 {
@@ -13,7 +19,13 @@ class ReviewerController extends Controller
      */
     public function index()
     {
-        //
+
+        $user = Auth::user();
+        $assignedReviews = User::with('reviewedManuscripts.author')->find($user->id);
+
+        return inertia::render('Reviewer/View', [
+            'assignedReviews'=> $assignedReviews
+        ]);
     }
 
     /**
@@ -22,6 +34,20 @@ class ReviewerController extends Controller
     public function create()
     {
         //
+    }
+    public function history()
+    {
+        $reviewer = Auth::user();
+        $reviews = SubmittedReview::whereHas('reviewManuscript', function ($query) use ($reviewer) {
+            $query->where('reviewer_id', $reviewer->id);
+        })->with('reviewManuscript.manuscript')->latest()->get();
+
+        return inertia('Reviewer/History', [
+            'reviews' => $reviews,
+        ]);
+
+
+
     }
 
     /**

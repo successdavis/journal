@@ -25,9 +25,12 @@
                     :existingReviewers="existingReviewers"
                 />
             </div>
-            <!--             Editor Decision-->
-            <div>
-                <EditorDecision/>
+
+            <!--            SubmittedReview-->
+            <div class="h-fit">
+                <SubmittedReviews
+                :item="item"
+                />
             </div>
         </div>
     </AuthenticatedLayout>
@@ -38,6 +41,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import AssignReviewerSection from "@/Components/AssignReviewerSection.vue";
 import {ref} from "vue";
 import EditorDecision from "@/Components/EditorDecision.vue";
+import SubmittedReviews from "@/Components/SubmittedReviews.vue";
 
 const props = defineProps({
     item: Object,

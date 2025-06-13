@@ -24,7 +24,13 @@
                     href="/editor/all-submissions"
                     class="hover:bg-teal-100 px-3 py-2 rounded transition"
                 >
-                    All Submissions
+                    All submitted Manuscripts
+                </Link>
+                <Link
+                    href="/editor/all-reviews"
+                    class="hover:bg-teal-100 px-3 py-2 rounded transition"
+                >
+                    All submitted Reviews
                 </Link>
 <!--                <Link-->
 <!--                    href="/editor/assign-reviewers"-->

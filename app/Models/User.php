@@ -22,6 +22,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Author::class, 'manuscript_reviewer');
     }
+
+    public function reviewedManuscripts()
+    {
+        return $this->belongsToMany(Author::class, 'manuscript_reviewers', 'reviewer_id', 'manuscript_id')
+            ->withPivot(['request_status', 'status', 'complete_reviewed_on'])
+            ->withTimestamps();
+    }
     protected $fillable = [
         'name',
         'email',

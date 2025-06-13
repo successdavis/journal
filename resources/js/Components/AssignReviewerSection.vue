@@ -27,7 +27,7 @@
                         {{ reviewer.complete_reviewed_on ?? 'Not yet reviewed' }}
                     </td>
                     <td class="px-4 py-2 border">{{ reviewer.status }}</td>
-                    <td class="px-4 py-2 border">{{ reviewer.created_at }}</td>
+                    <td class="px-4 py-2 border">{{formatDate(reviewer.created_at)  }}</td>
                     <td class="px-4 py-2 border text-red-500">
                         <button
                             @click="removeReviewer(reviewer.reviewer.id, index)"
@@ -37,6 +37,7 @@
                         </button>
                     </td>
                 </tr>
+                <hr>
                 </tbody>
             </table>
 
@@ -85,6 +86,14 @@ const props = defineProps({
 const assignedReviewers = ref([...props.existingReviewers])
 const selectedReviewer = ref('')
 const displayedList = ref('')
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
 
 // props.existingReviewers.forEach(item => {
 //     if (item.reviewer) {

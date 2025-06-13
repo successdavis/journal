@@ -26,7 +26,7 @@
                     Assigned Reviews
                 </Link>
                 <Link
-                    href="/review-history"
+                    href="/reviewer/review-history"
                     class="hover:bg-indigo-100 px-3 py-2 rounded transition"
                 >
                     Review History
