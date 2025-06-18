@@ -26,7 +26,7 @@ class Author extends Model
         'author_id', 'title', 'abstract', 'keywords', 'article_type', 'author_name', 'email',
         'affiliation', 'journal', 'subject_area', 'main_document', 'figures',
         'supplementary', 'cover_letter', 'ethical_approval', 'conflict_of_interest',
-        'funding_statement', 'consent', 'originality', 'views', 'accepted_on',
+        'funding_statement', 'consent', 'originality', 'status', 'accepted_on',
     ];
 
     protected $casts = [

@@ -69,6 +69,7 @@ axios.get(`/editor/all-reviews/${props.item.id}`)
         reviews = reviews.map(review => ({
             ...review,
             selectedDecision: ''
+            // disable: ''
         }))
     })
 })

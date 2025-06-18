@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EditorDecisionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\ManuscriptReviewerController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/editor/{reviewer_id}/assign-reviewer/{item_id}', [ManuscriptReviewerController::class, 'destroy']);
     Route::get('/editor/all-reviews', [EditorController::class, 'viewReviews']);
     Route::get('/editor/all-reviews/{item_id}', [EditorController::class, 'viewReviewsSection']);
+    Route::post('/editor/{review_id}/make-decision', [EditorDecisionController::class, 'store']);
 
 
     Route::get('/reviewer/assigned-reviews', [ReviewerController::class, 'index']);

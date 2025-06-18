@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\EditorDecision;
 use App\Http\Requests\StoreEditorDecisionRequest;
 use App\Http\Requests\UpdateEditorDecisionRequest;
+use Illuminate\Support\Facades\Auth;
 
 class EditorDecisionController extends Controller
 {
@@ -29,7 +31,20 @@ class EditorDecisionController extends Controller
      */
     public function store(StoreEditorDecisionRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $data['editor_id'] = Auth::user()->id;
+
+        $manuscript = Author::find($data['manuscript_id']);
+        $manuscript->status = $data['decision'];
+        $manuscript->save();
+
+
+        $decision = EditorDecision::create($data);
+        return response()->json([
+            'message' => 'Decision saved successfully',
+            'decision' => $decision,
+        ]);
     }
 
     /**

@@ -31,10 +31,21 @@ return new class extends Migration
             $table->text('ethical_approval')->nullable();
             $table->text('conflict_of_interest')->nullable();
             $table->text('funding_statement')->nullable();
-            $table->integer('views')->nullable();
-            $table->string('accepted_on')->nullable();
             $table->boolean('consent');
             $table->boolean('originality');
+
+            $table->string('status')
+                ->default('under_review');
+
+            $table->unsignedBigInteger('views')
+                ->default(0);
+
+            $table->unsignedBigInteger('downloads')
+                ->default(0);
+
+            $table->timestamp('published_at')
+                ->nullable();
+
             $table->timestamps();
         });
 

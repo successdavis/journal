@@ -91,7 +91,9 @@
                 </div>
 
                 <div>
-                    <EditorDecision />
+                    <SubmittedReviews
+                    :item="item"
+                    />
                 </div>
             </div>
         </div>
@@ -106,6 +108,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import AssignReviewerSection from "@/Components/AssignReviewerSection.vue";
 import {onMounted, ref} from "vue";
 import EditorDecision from "@/Components/EditorDecision.vue";
+import SubmittedReviews from "@/Components/SubmittedReviews.vue";
 
 
 
