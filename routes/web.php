@@ -25,6 +25,7 @@ Route::get('/', function () {
 Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'latestThesis']);
 
 Route::get('/browse/journals-and-books', [PublicationsController::class, 'index']);
+Route::get('/browse/journals-and-books/show', [PublicationsController::class, 'show']);
 
 Route::get('/author/dashboard', function () {
     return Inertia::render('Author/Dashboard');
