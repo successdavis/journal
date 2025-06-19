@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\EditorDecisionController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ManuscriptReviewerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\ReviewerController;
@@ -41,9 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/author/my-submissions', [AuthorController::class, 'index']);
-    Route::get('/author/submit-new-manuscript', [AuthorController::class, 'create']);
-    Route::post('/author/submit-new-manuscript', [AuthorController::class, 'store']);
+    Route::get('/author/my-submissions', [PublicationController::class, 'index']);
+    Route::get('/author/submit-new-manuscript', [PublicationController::class, 'create']);
+    Route::post('/author/submit-new-manuscript', [PublicationController::class, 'store']);
 
 
     Route::get('/editor/all-submissions', [EditorController::class, 'index']);
@@ -54,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/editor/all-reviews', [EditorController::class, 'viewReviews']);
     Route::get('/editor/all-reviews/{item_id}', [EditorController::class, 'viewReviewsSection']);
     Route::post('/editor/{review_id}/make-decision', [EditorDecisionController::class, 'store']);
+    Route::get('/editor/categories/create', [CategoriesController::class, 'create']);
+    Route::post('/editor/categories/create', [CategoriesController::class, 'store']);
 
 
     Route::get('/reviewer/assigned-reviews', [ReviewerController::class, 'index']);

@@ -32,6 +32,12 @@
                 >
                     All submitted Reviews
                 </Link>
+                <Link
+                    href="/editor/categories/create"
+                    class="hover:bg-teal-100 px-3 py-2 rounded transition"
+                >
+                    Categories
+                </Link>
 <!--                <Link-->
 <!--                    href="/editor/assign-reviewers"-->
 <!--                    class="hover:bg-teal-100 px-3 py-2 rounded transition"-->

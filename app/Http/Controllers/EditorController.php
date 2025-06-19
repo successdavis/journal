@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
+use App\Models\Publication;
 use App\Models\Editor;
 use App\Http\Requests\StoreEditorRequest;
 use App\Http\Requests\UpdateEditorRequest;
@@ -21,7 +21,7 @@ class EditorController extends Controller
     public function index()
     {
         return inertia::render('Editor/AllSubmissions', [
-            'manuscripts' => Author::with('author')->get()
+            'manuscripts' => Publication::with('author')->get()
         ]);
     }
 
@@ -59,7 +59,7 @@ class EditorController extends Controller
     public function viewManuscript($item_id)
     {
 //        dd($item_id);
-        $item = Author::with('author')->findOrFail($item_id);
+        $item = Publication::with('author')->findOrFail($item_id);
         $item->figures = json_decode($item->figures);
         $item->supplementary = json_decode($item->supplementary);
         $existingReviewers = ManuscriptReviewer::with('reviewer')
@@ -74,7 +74,7 @@ class EditorController extends Controller
 
     public function trackReviewManuscript($item_id)
     {
-        $item = Author::with('author')->findOrFail($item_id);
+        $item = Publication::with('author')->findOrFail($item_id);
         $item->figures = json_decode($item->figures);
         $item->supplementary = json_decode($item->supplementary);
         $existingReviewers = ManuscriptReviewer::with('reviewer')

@@ -22,7 +22,7 @@ class StoreEditorDecisionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'manuscript_id' => 'required|exists:authors,id',
+            'manuscript_id' => 'required|exists:publications,id',
             'submitted_review_id' => 'required|exists:submitted_reviews,id',
             'round' => 'required|integer|min:1',
             'decision' => 'required|string|in:accept,minor_revisions,major_revisions,reject,request_additional_review,resubmit_elsewhere,withdrawn_by_author',

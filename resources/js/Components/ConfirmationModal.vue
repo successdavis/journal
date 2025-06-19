@@ -13,7 +13,7 @@
                 Are you sure this is your final decision for the review of <strong>{{ manuscriptTitle }}</strong>?
             </p>
 
-            <!-- Comment to Author -->
+            <!-- Comment to Publication -->
             <div class="mb-4">
                 <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium mb-1">
                     Comment to Author (optional)

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreManuscriptReviewerRequest extends FormRequest
+class UpdateCategoriesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,7 @@ class StoreManuscriptReviewerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'manuscript_id'   => ['required', 'integer', 'exists:publications,id'],
-            'reviewer_id'     => ['required', 'integer', 'exists:users,id'],
-            'request_status'  => ['required', 'string', 'in:pending,accepted,rejected'],
-            'complete_reviewed_on'     => ['nullable', 'date'],
-            'status'          => ['required', 'string', 'in:in_progress,completed,declined'],
+            //
         ];
     }
 }

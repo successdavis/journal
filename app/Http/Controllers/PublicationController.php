@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
+use App\Models\Publication;
 use App\Http\Requests\StoreAuthorRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Inertia\Inertia;
 
-class AuthorController extends Controller
+class PublicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class AuthorController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $articles = Author::where('author_id', $userId)->get();
+        $articles = Publication::where('author_id', $userId)->get();
 
         return Inertia::render('Author/MySubmissions', [
             'articles' => $articles->isNotEmpty() ? $articles : [],
@@ -66,7 +66,7 @@ class AuthorController extends Controller
         }
 
         // Save to DB
-        Author::create([
+        Publication::create([
             'title' => $data['title'],
             'author_id' => Auth::user()->id,
             'abstract' => $data['abstract'],
@@ -93,7 +93,7 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Author $author)
+    public function show(Publication $author)
     {
         //
     }
@@ -101,7 +101,7 @@ class AuthorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Author $author)
+    public function edit(Publication $author)
     {
         //
     }
@@ -109,7 +109,7 @@ class AuthorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAuthorRequest $request, Author $author)
+    public function update(UpdateAuthorRequest $request, Publication $author)
     {
         //
     }
@@ -117,7 +117,7 @@ class AuthorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Author $author)
+    public function destroy(Publication $author)
     {
         //
     }

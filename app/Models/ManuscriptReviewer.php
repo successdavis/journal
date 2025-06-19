@@ -18,13 +18,13 @@ class ManuscriptReviewer extends Model
 
     public function manuscript()
     {
-        return $this->belongsTo(Author::class, 'manuscript_id');
+        return $this->belongsTo(Publication::class, 'manuscript_id');
     }
 
 
     public function reviewedManuscripts()
     {
-        return $this->belongsToMany(Author::class, 'manuscript_reviewers', 'reviewer_id', 'manuscript_id')
+        return $this->belongsToMany(Publication::class, 'manuscript_reviewers', 'reviewer_id', 'manuscript_id')
             ->withPivot(['request_status', 'status', 'complete_reviewed_on'])
             ->withTimestamps();
     }

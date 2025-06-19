@@ -8,7 +8,7 @@
             >
                 <h2 class="text-2xl font-semibold text-teal-700 mb-2">{{ item.title }}</h2>
                 <p class="text-sm text-gray-500 mb-4">by <span
-                    class="font-medium text-gray-900">{{ item.author?.name || 'Unknown Author' }}</span></p>
+                    class="font-medium text-gray-900">{{ item.author?.name || 'Unknown Publication' }}</span></p>
 
                 <p class="mb-3"><span class="font-semibold">Abstract:</span> <span
                     class="text-gray-700">{{ item.abstract }}</span></p>
