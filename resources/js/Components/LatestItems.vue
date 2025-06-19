@@ -3,19 +3,15 @@
     <!-- Sidebar -->
     <aside class="md:col-span-1">
       <h2 class="text-lg font-semibold mb-4">Categories</h2>
-
       <ul class="space-y-2">
-        <!-- Skeleton loading -->
         <template v-if="loading">
           <li v-for="i in 5" :key="'skeleton-cat-' + i" class="h-6 bg-gray-200 rounded animate-pulse"></li>
         </template>
-
-        <!-- Actual categories -->
         <template v-else>
           <li
             v-for="(category, index) in categories"
             :key="index"
-            @click="selectedCategory = category"
+            @click="() => selectCategory(category)"
             :class="[
               'cursor-pointer p-2 rounded',
               selectedCategory === category
@@ -34,13 +30,13 @@
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">{{ title }}</h2>
         <div class="flex items-center gap-4 text-sm text-blue-600 cursor-pointer">
-          <button @click="prevSlide">‹</button>
-          <span @click="selectedCategory = ''">View All</span>
-          <button @click="nextSlide">›</button>
+          <button @click="prevSlide" :disabled="pageIndex === 0" class="disabled:opacity-30">‹</button>
+          <span @click="clearCategory" class="hover:underline">View All</span>
+          <button @click="nextSlide" :disabled="pageIndex >= totalPages - 1" class="disabled:opacity-30">›</button>
         </div>
       </div>
 
-      <!-- Skeleton loading -->
+      <!-- Loading Skeleton -->
       <div v-if="loading" class="space-y-6">
         <div
           v-for="i in 3"
@@ -57,13 +53,17 @@
         </div>
       </div>
 
-      <!-- Actual content -->
+      <!-- Render Publications -->
       <div v-else class="space-y-6">
         <PublicationCard
-          v-for="(post, index) in filteredPosts"
+          v-for="(post, index) in visiblePosts"
           :key="index"
           :post="post"
         />
+        <!-- Pagination Indicator -->
+        <div v-if="selectedCategory && totalPages > 1" class="text-sm text-gray-600 text-right pt-2">
+          Showing Page {{ pageIndex + 1 }} of {{ totalPages }}
+        </div>
       </div>
     </section>
   </div>
@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { router } from '@inertiajs/vue3'
+import axios from 'axios'
 import PublicationCard from './PublicationCard.vue'
 
 const props = defineProps({
@@ -89,25 +89,23 @@ const categories = ref([])
 const publications = ref([])
 const selectedCategory = ref('')
 const loading = ref(true)
+const pageIndex = ref(0)
+const itemsPerPage = 3
 
-const fetchData = () => {
-  router.visit(props.url, {
-    method: 'get',
-    preserveScroll: true,
-    only: [],
-    onSuccess: (page) => {
-      const data = page.props
-      categories.value = data.categories
-      publications.value = data.publications
-      selectedCategory.value = data.categories?.[0] ?? ''
-      loading.value = false
-    }
-  })
+const fetchData = async () => {
+  try {
+    const response = await axios.get(props.url)
+    categories.value = response.data.categories || []
+    publications.value = response.data.publications || []
+    selectedCategory.value = categories.value[0] || ''
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
-onMounted(() => {
-  fetchData()
-})
+onMounted(fetchData)
 
 const filteredPosts = computed(() => {
   if (!selectedCategory.value) return publications.value
@@ -116,11 +114,35 @@ const filteredPosts = computed(() => {
   )
 })
 
-const prevSlide = () => {
-  console.log('Prev clicked')
-}
+const visiblePosts = computed(() => {
+  const start = pageIndex.value * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredPosts.value.slice(start, end)
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredPosts.value.length / itemsPerPage)
+})
 
 const nextSlide = () => {
-  console.log('Next clicked')
+  if (pageIndex.value < totalPages.value - 1) {
+    pageIndex.value++
+  }
+}
+
+const prevSlide = () => {
+  if (pageIndex.value > 0) {
+    pageIndex.value--
+  }
+}
+
+const selectCategory = (category) => {
+  selectedCategory.value = category
+  pageIndex.value = 0
+}
+
+const clearCategory = () => {
+  selectedCategory.value = ''
+  pageIndex.value = 0
 }
 </script>

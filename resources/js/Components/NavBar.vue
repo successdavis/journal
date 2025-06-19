@@ -2,7 +2,7 @@
     <nav class=" border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Left: Logo -->
-            <div class="flex ">
+            <div class="flex">
 
                 <div class="flex items-center gap-4">
                     <Link href="/" class="py-2 mx-3 text-gray-700 hover:text-blue-600">
@@ -12,7 +12,7 @@
 
                 <div class="hidden lg:flex lg:gap-6">
                     <Link href="about-us" class="py-2 mx-3 text-gray-700 hover:text-blue-600">About Us</Link>
-                    <Link href="all-journals" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Journals</Link>
+                    <Link href="/browse/journals-and-books" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Journals</Link>
                     <Link href="all-articles" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Articles</Link>
                 </div>
             </div>

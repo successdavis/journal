@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\EditorDecisionController;
+use App\Http\Controllers\ListPublicationsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ManuscriptReviewerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\PublicationsController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use Illuminate\Foundation\Application;
@@ -20,6 +22,11 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'latestThesis']);
+
+Route::get('/browse/journals-and-books', [PublicationsController::class, 'index']);
+Route::get('/browse/journals-and-books/show', [PublicationsController::class, 'show']);
 
 Route::get('/author/dashboard', function () {
     return Inertia::render('Author/Dashboard');
