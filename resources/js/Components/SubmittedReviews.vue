@@ -16,7 +16,8 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
-                <tr v-for="review in reviews" :key="review.id" class="hover:bg-gray-50">
+                <tr v-for="review in reviews"
+                    :key="review.id" class="hover:bg-gray-50">
                     <td class="px-4 py-2 font-medium text-blue-700">Round {{ review.round }}</td>
                     <td class="px-4 py-2 capitalize">{{ review.review_manuscript.reviewer.name }}</td>
                     <td class="px-4 py-2">{{ review.review_manuscript.manuscript.title }}</td>
@@ -35,15 +36,23 @@
                         </button>
 
                     </td>
-                    <td class="px-4 py-2 font-medium text-blue-700">
+
+                    <td
+                        v-if="review.review_manuscript.manuscript.status === 'under_review'"
+                        class="px-4 py-2 font-medium text-blue-700">
                         <EditorDecision
                         :review="review"
+                        :item="item"
+                        :reviewers="reviewers"
+                        :existingReviewers="existingReviewers"
                         />
-
                     </td>
-
+                    <td
+                        v-else
+                        class="px-4 py-2 font-medium text-blue-700">
+                        {{ review.review_manuscript.manuscript.status }}
+                    </td>
                 </tr>
-
                 </tbody>
             </table>
         </div>
@@ -56,10 +65,13 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {onMounted, ref} from "vue";
 import EditorDecision from "@/Components/EditorDecision.vue";
+import AssignReviewerSection from "@/Components/AssignReviewerSection.vue";
 let reviews = ref([])
 
 let props = defineProps({
-    item: Object
+        item: Array,
+        reviewers: Array,
+        existingReviewers: Array,
 })
 onMounted(()=>{
 axios.get(`/editor/all-reviews/${props.item.id}`)
@@ -79,16 +91,5 @@ function formatDate(dateString) {
         month: 'short',
         day: 'numeric'
     });
-}
-
-let selectedDecision = ref('')
-function viewReview(review) {
-    // Logic to show full review
-    console.log('View review:', review.id);
-}
-
-function editReview(review) {
-    // Logic to edit (if it's a draft)
-    console.log('Edit review:', review.id);
 }
 </script>

@@ -12,10 +12,12 @@
                         <th class="px-4 py-3">Submitted On</th>
                         <th class="px-4 py-3">File</th>
                         <th class="px-4 py-3">Actions</th>
+                        <th class="px-4 py-3">Editor’s Decision</th>
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
-                    <tr v-for="review in reviews" :key="review.id" class="hover:bg-gray-50">
+                    <tr v-for="review in reviews"
+                        :key="review.id" class="hover:bg-gray-50">
                         <td class="px-4 py-2 font-medium text-blue-700">Round {{ review.round }}</td>
                         <td class="px-4 py-2 capitalize">{{ review.review_manuscript.reviewer.name }}</td>
                         <td class="px-4 py-2">{{ review.review_manuscript.manuscript.title }}</td>
@@ -32,24 +34,8 @@
                             >
                                View full <br> Review
                             </button>
-                            <button
-                                class=" text-green-600 rounded-lg transition"
-                            >
-                                Accept <br> Review
-                            </button>
-                            <button
-                                class=" text-red-600 rounded-lg transition"
-                            >
-                                Reject <br> Review
-                            </button>
-                            <button
-                                v-if="review.submit_option === 'draft'"
-                                @click="editReview(review)"
-                                class="px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
-                            >
-                                Edit
-                            </button>
                         </td>
+                        <td class="px-4 py-2 font-medium text-blue-700">{{ review.review_manuscript.manuscript.status}}</td>
                     </tr>
                     </tbody>
                 </table>

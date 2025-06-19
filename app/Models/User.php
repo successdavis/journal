@@ -20,12 +20,12 @@ class User extends Authenticatable
 
     public function manuscripts()
     {
-        return $this->belongsToMany(Author::class, 'manuscript_reviewer');
+        return $this->belongsToMany(Publication::class, 'manuscript_reviewer');
     }
 
     public function reviewedManuscripts()
     {
-        return $this->belongsToMany(Author::class, 'manuscript_reviewers', 'reviewer_id', 'manuscript_id')
+        return $this->belongsToMany(Publication::class, 'manuscript_reviewers', 'reviewer_id', 'manuscript_id')
             ->withPivot(['request_status', 'status', 'complete_reviewed_on'])
             ->withTimestamps();
     }

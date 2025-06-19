@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
+use App\Models\Publication;
 use App\Models\EditorDecision;
 use App\Http\Requests\StoreEditorDecisionRequest;
 use App\Http\Requests\UpdateEditorDecisionRequest;
@@ -35,7 +35,7 @@ class EditorDecisionController extends Controller
 
         $data['editor_id'] = Auth::user()->id;
 
-        $manuscript = Author::find($data['manuscript_id']);
+        $manuscript = Publication::find($data['manuscript_id']);
         $manuscript->status = $data['decision'];
         $manuscript->save();
 

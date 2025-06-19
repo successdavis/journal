@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Author Info -->
+            <!-- Publication Info -->
             <div class="grid md:grid-cols-3 gap-6">
                 <div>
                     <InputLabel for="affiliation" value="Affiliation" />

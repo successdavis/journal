@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
+use App\Models\Publication;
 use App\Models\ManuscriptReviewer;
 use App\Http\Requests\StoreManuscriptReviewerRequest;
 use App\Http\Requests\UpdateManuscriptReviewerRequest;
@@ -34,7 +34,7 @@ class ManuscriptReviewerController extends Controller
     public function store($reviewer_id, $item_id)
     {
         $reviewer = User::findOrFail($reviewer_id);
-        $manuscript = Author::findOrFail($item_id);
+        $manuscript = Publication::findOrFail($item_id);
 
         ManuscriptReviewer::create([
             'manuscript_id' => $manuscript->id,

@@ -95,12 +95,6 @@ function formatDate(dateString) {
     });
 }
 
-// props.existingReviewers.forEach(item => {
-//     if (item.reviewer) {
-//         assignedReviewers.value.push(item.reviewer);
-//     }
-// });
-
 // Methods
 function assignReviewer() {
 

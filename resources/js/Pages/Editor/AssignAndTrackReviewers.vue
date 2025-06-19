@@ -29,7 +29,9 @@
             <!--            SubmittedReview-->
             <div class="h-fit">
                 <SubmittedReviews
-                :item="item"
+                    :item="item"
+                    :reviewers="reviewers"
+                    :existingReviewers="existingReviewers"
                 />
             </div>
         </div>
