@@ -20,8 +20,6 @@ class Publication extends Model
         return $this->belongsToMany(User::class, 'users');
     }
 
-
-
     protected $fillable = [
         'author_id', 'title', 'abstract', 'keywords', 'article_type', 'author_name', 'email',
         'affiliation', 'journal', 'subject_area', 'main_document', 'figures',
@@ -35,5 +33,18 @@ class Publication extends Model
         'consent' => 'boolean',
         'originality' => 'boolean',
     ];
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getThumbnailPathAttribute($thumbnail)
+    {
+        if ($thumbnail) {
+            return asset('storage/' . $thumbnail);
+        }else {
+            return asset('storage/covers/default.png');
+        }
+    }
 
 }

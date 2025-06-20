@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('manuscript_reviewers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('manuscript_id')->references('id')->on('authors')->onDelete('cascade');
+            $table->foreignId('manuscript_id')->references('id')->on('publications')->onDelete('cascade');
             $table->foreignId('reviewer_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('request_status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamp('complete_reviewed_on')->nullable();
