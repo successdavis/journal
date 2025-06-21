@@ -36,7 +36,15 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        switch ($user->role) {
+        $user = auth()->user()->load('roles');
+
+        $roles =  $user->roles->pluck('name')->toArray();
+
+
+        $request->session()->put('role', $roles);
+
+
+        switch (strtolower($roles[0])) {
             case 'admin':
                 return redirect()->route('admin.dashboard');
             case 'editor':

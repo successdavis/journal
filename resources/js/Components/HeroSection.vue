@@ -1,14 +1,14 @@
 <template>
   <section class="bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col md:flex-row items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 gap-6 sm:px-6 lg:px-8 py-20 flex flex-col md:flex-row items-center justify-between">
       <!-- Left Image Section -->
       <div class="md:w-1/2 w-full mb-10 md:mb-0">
-        <img :src="imageSrc" alt="Exceptional Children" class="rounded shadow-lg w-full object-cover" />
+        <img src="/images/hero-image.webp" alt="Exceptional Children" class="rounded shadow-lg w-full object-cover" />
       </div>
 
       <!-- Right Text Section -->
       <div class="md:w-1/2 w-full text-center md:text-left">
-        <p class="text-teal-500 text-sm uppercase tracking-wide mb-2">_EXCEPTIONAL</p>
+        <p class="text-teal-500 text-sm uppercase tracking-wide mb-2">NAEC</p>
         <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
           We <span class="text-gray-800">Support</span> <br />
           <span class="text-teal-500">Exceptional Children</span>

@@ -16,14 +16,15 @@
       <p class="text-sm text-gray-600 mt-1 mb-3">
         {{ post.excerpt }}
       </p>
-      <button class="px-4 py-2 text-white bg-gray-700 rounded hover:bg-gray-800 text-sm">
+      <Link :href="`/browse/journals-and-books/${post.id}/show`" class="px-4 py-2 text-white bg-gray-700 rounded hover:bg-gray-800 text-sm">
         View Full Article
-      </button>
+      </Link>
     </div>
   </div>
 </template>
 
 <script setup>
+import {Link} from '@inertiajs/vue3'
 defineProps({
   post: Object
 })

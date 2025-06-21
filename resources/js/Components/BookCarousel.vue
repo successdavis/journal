@@ -24,7 +24,6 @@
                     ›
                 </button>
             </div>
-
         </div>
 
         <!-- Carousel Content -->
@@ -45,26 +44,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import axios from 'axios';
 import BookCard from './BookCard.vue';
 
-defineProps({
+const props = defineProps({
     title: {
         type: String,
         default: 'Book Publications',
     },
+    url: {
+        type: String,
+        required: true,
+    },
 });
 
-const books = [
-    { title: 'Translational Animal', image: '/images/book1.jpg' },
-    { title: 'Journal Of Communication', image: '/images/book2.jpg' },
-    { title: 'Journal Of Burn Care', image: '/images/book3.jpg' },
-    { title: 'Journal Of Communication', image: '/images/book4.jpg' },
-    { title: 'Translational Animal Science', image: '/images/book5.jpg' },
-    { title: 'New Book Release', image: '/images/book6.jpg' },
-];
-
+const books = ref([]);
 const carousel = ref(null);
+
+const fetchBooks = async () => {
+    try {
+        const response = await axios.get(props.url);
+        books.value = response.data?.books || []; // Adjust if backend returns differently
+    } catch (error) {
+        console.error('Failed to fetch books:', error);
+    }
+};
 
 const scrollRight = () => {
     carousel.value.scrollBy({ left: 300, behavior: 'smooth' });
@@ -73,6 +78,9 @@ const scrollRight = () => {
 const scrollLeft = () => {
     carousel.value.scrollBy({ left: -300, behavior: 'smooth' });
 };
+
+onMounted(fetchBooks);
+watch(() => props.url, fetchBooks);
 </script>
 
 <style scoped>

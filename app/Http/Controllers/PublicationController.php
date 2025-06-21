@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Publication;
-use App\Http\Requests\StoreAuthorRequest;
+use App\Http\Requests\StorePublicationRequest;
+use App\Models\PublicationType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -30,8 +32,11 @@ class PublicationController extends Controller
      */
     public function create()
     {
+        $publicationTypes = PublicationType::all();
+        $categories = Category::all();
         return inertia::render('Author/NewManuscript', [
-
+            'publication_type' => $publicationTypes,
+            'categories'          =>  $categories
         ]);
     }
 
@@ -39,7 +44,7 @@ class PublicationController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(StoreAuthorRequest $request)
+    public function store(StorePublicationRequest $request)
     {
         $data = $request->validated();
 
@@ -71,10 +76,11 @@ class PublicationController extends Controller
             'author_id' => Auth::user()->id,
             'abstract' => $data['abstract'],
             'keywords' => $data['keywords'],
-            'article_type' => $data['article_type'],
+            'publication_type_id' => $data['article_type'],
+            'category_id' => $data['category'],
+            'excerpt' => $data['excerpt'],
             'affiliation' => $data['affiliation'],
             'journal' => $data['journal'],
-            'subject_area' => $data['subject_area'],
             'main_document' => $mainDocumentPath,
             'figures' => json_encode($figuresPaths),
             'supplementary' => json_encode($supplementaryPaths),
@@ -86,16 +92,18 @@ class PublicationController extends Controller
             'originality' => $data['originality'],
         ]);
 
-        return response()->json(['message' => 'Manuscript submitted successfully.']);
+        return Inertia::render('ReportNotices/PublicationSuccess');
     }
 
 
     /**
      * Display the specified resource.
      */
-    public function show(Publication $author)
+    public function show(Publication $publication)
     {
-        //
+        return Inertia::render('Publication/Show', [
+            'publication'   => $publication
+        ]);
     }
 
     /**
@@ -120,5 +128,9 @@ class PublicationController extends Controller
     public function destroy(Publication $author)
     {
         //
+    }
+
+    public function allPublications() {
+        return inertia('Publication/Index');
     }
 }

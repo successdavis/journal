@@ -1,5 +1,5 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import Layout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
@@ -15,10 +15,13 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+defineOptions({
+  layout: Layout,
+})
+
 </script>
 
 <template>
-    <GuestLayout>
         <Head title="Login" />
 
         <div class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style="background-image: url('/images/bg-image.png')">
@@ -95,7 +98,6 @@ const submit = () => {
                 </form>
             </div>
         </div>
-    </GuestLayout>
 </template>
 
 <style scoped>

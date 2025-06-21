@@ -15,11 +15,12 @@ class PublicationListingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'author' => $this->author->name,
-            'title' => $this->title,
-            'image' => $this->thumbnail_path,
-            'excerpt' => $this->excerpt,
-            'category' => $this->category->name
+            'id'        => $this->id,
+            'author'    => $this->author->name,
+            'title'     => $this->title,
+            'image'     => $this->thumbnail_path,
+            'excerpt'   => $this->excerpt,
+            'category'  => $this->category->name
         ];
     }
 }

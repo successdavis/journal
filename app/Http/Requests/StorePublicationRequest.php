@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreAuthorRequest extends FormRequest
+class StorePublicationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +30,8 @@ class StoreAuthorRequest extends FormRequest
             'article_type' => 'required|string',
             'affiliation' => 'required|string',
             'journal' => 'required|string',
-            'subject_area' => 'required|string',
+            'category' => 'required|string',
+            'excerpt' => 'required|string',
             'main_document' => 'required|file|mimes:pdf,doc,docx',
             'figures.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'supplementary.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',

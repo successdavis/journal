@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\EditorDecisionController;
 use App\Http\Controllers\ListPublicationsController;
@@ -7,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ManuscriptReviewerController;
 use App\Http\Controllers\EditorController;
-use App\Http\Controllers\PublicationsController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use Illuminate\Foundation\Application;
@@ -24,9 +25,19 @@ Route::get('/', function () {
 });
 
 Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'latestThesis']);
+Route::get('api/get-books-publications', [ListPublicationsController::class, 'latestBooks']);
+Route::get('api/get-events-publications', [ListPublicationsController::class, 'eventListing']);
+Route::get('api/publications', [ListPublicationsController::class, 'index']);
 
-Route::get('/browse/journals-and-books', [PublicationsController::class, 'index']);
-Route::get('/browse/journals-and-books/show', [PublicationsController::class, 'show']);
+Route::get('/browse/journals-and-books', [PublicationController::class, 'allPublications']);
+Route::get('/browse/journals-and-books/{publication}/show', [PublicationController::class, 'show']);
+
+Route::get('api/author/publications', [AuthorController::class, 'publications']);
+
+
+Route::get('/about-us', [AboutUsController::class, 'show']);
+
+
 
 Route::get('/author/dashboard', function () {
     return Inertia::render('Author/Dashboard');

@@ -20,10 +20,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('abstract');
             $table->string('keywords');
-            $table->string('article_type');
             $table->string('affiliation');
             $table->string('journal');
-            $table->string('subject_area');
             $table->string('main_document');
             $table->json('figures')->nullable();
             $table->json('supplementary')->nullable();

@@ -3,22 +3,23 @@
         <div class="w-72 sidebar fixed overflow-y-scroll h-full hidden md:block" aria-label="Sidebar">
             <!--            <Sidebar></Sidebar>-->
             <component :is="componentToRender"></component>
+
         </div>
-        <div class="ml-72 py-4 px-3 w-full overflow-y-scroll main-content ">
+        <div class="md:ml-72 py-4 px-3 w-full overflow-y-scroll main-content ">
             <Flash
-                v-if="flash.success"
+                v-if="flash && flash.success"
                 :message="flash.success"
                 type="success"
                 @hide="clearFlash('success')"
             />
             <Flash
-                v-if="flash.error"
+                v-if="flash && flash.error"
                 :message="flash.error"
                 type="error"
                 @hide="clearFlash('error')"
             />
             <Flash
-                v-if="flash.message"
+                v-if="flash && flash.message"
                 :message="flash.message"
                 type="info"
                 @hide="clearFlash('info')"
@@ -29,7 +30,7 @@
 </template>
 
 <script>
-import AuthorSideBar from "@/Layouts/Partials/AuthorsSideBar.vue";
+import AuthorSideBar from "@/Layouts/Partials/AuthorsSideBar.vue"
 import EditorSideBar from "@/Layouts/Partials/EditorsSideBar.vue";
 import ReviewersSideBar from "@/Layouts/Partials/ReviewersSideBar.vue";
 import Flash from '@/Components/FlashMessage.vue'
@@ -60,8 +61,8 @@ export default {
                     return 'EditorSideBar';
                 case 'reviewer':
                     return 'ReviewersSideBar';
-                case 'manager':
-                    return 'author';
+                case 'author':
+                    return 'AuthorSideBar';
                 case 'director':
                     return 'AuthorSideBar';
                 case 'guest':
@@ -73,7 +74,7 @@ export default {
         },
 
         flash() {
-            return usePage().props.value.flash || {}
+            // return usePage().props.value.flash || {}
         }
     }
 }

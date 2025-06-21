@@ -20,12 +20,7 @@ class Publication extends Model
         return $this->belongsToMany(User::class, 'users');
     }
 
-    protected $fillable = [
-        'author_id', 'title', 'abstract', 'keywords', 'article_type', 'author_name', 'email',
-        'affiliation', 'journal', 'subject_area', 'main_document', 'figures',
-        'supplementary', 'cover_letter', 'ethical_approval', 'conflict_of_interest',
-        'funding_statement', 'consent', 'originality', 'status', 'accepted_on',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'figures' => 'array',
