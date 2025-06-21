@@ -1,0 +1,1 @@
+import{b as a,o as e,w as o,e as r,A as s}from"./app-ftS2QChc.js";const _={__name:"Dashboard",setup(n){return(u,t)=>(e(),a(s,null,{default:o(()=>t[0]||(t[0]=[r("p",null,"Your logged in as Editor",-1)])),_:1,__:[0]}))}};export{_ as default};
