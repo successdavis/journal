@@ -1,0 +1,1 @@
+import{b as a,o as t,w as o,e as r,A as s}from"./app-CQ9HrJZy.js";const _={__name:"Dashboard",setup(n){return(u,e)=>(t(),a(s,null,{default:o(()=>e[0]||(e[0]=[r("p",null,"Your logged in as Reviewer",-1)])),_:1,__:[0]}))}};export{_ as default};

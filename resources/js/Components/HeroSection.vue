@@ -11,7 +11,7 @@
         <p class="text-teal-500 text-sm uppercase tracking-wide mb-2">NAEC</p>
         <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
           We <span class="text-gray-800">Support</span> <br />
-          <span class="text-teal-500">Exceptional Children</span>
+          <span class="text-teal-500">Exceptional Children.</span>
         </h1>
         <p class="text-gray-600 mb-6">
           At the National Association for Exceptional Children, we aim to provide quality support, advocacy, and resources to ensure no child is left behind.
