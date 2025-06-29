@@ -6,7 +6,7 @@
 
                 <div class="flex items-center gap-4">
                     <Link href="/" class="py-2 mx-3 text-gray-700 hover:text-blue-600">
-                        <span class="text-xl font-bold">JournalSite</span>
+                        <span class="text-xl font-bold">NAEC</span>
                     </Link>
                 </div>
 
@@ -27,6 +27,7 @@
                     Submit Your Research
                 </Link>
                 <Link
+                    v-else
                     href="/login"
                     class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
@@ -105,7 +106,7 @@
                 </Link>
             </div>
 
-            <div v-if="user" class="hidden lg:flex items-center gap-4">
+            <div v-if="user" class="lg:hidden items-center gap-4">
                 <Link v-if="$page.props.auth.user.role === 'Editor'" href="/editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 <Link v-else-if="$page.props.auth.user.role === 'Reviewer'" href="/reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 <Link v-else-if="$page.props.auth.user.role === 'Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>

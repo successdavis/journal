@@ -30,6 +30,7 @@ Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'l
 Route::get('api/get-books-publications', [ListPublicationsController::class, 'latestBooks']);
 Route::get('api/get-events-publications', [ListPublicationsController::class, 'eventListing']);
 Route::get('api/publications', [ListPublicationsController::class, 'index']);
+Route::get('/api/publication/articles-related-to/{publication_id}', [ListPublicationsController::class, 'fetchRelatedArticles']);
 
 Route::get('/browse/journals-and-books', [PublicationController::class, 'allPublications']);
 Route::get('/browse/journals-and-books/{publication}/show', [PublicationController::class, 'show']);

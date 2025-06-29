@@ -75,7 +75,6 @@
                         {{ publication.abstract }}
                     </div>
                     <div v-if="publication.premium">
-
                         <!-- Fade Overlay -->
                         <div
                             class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
@@ -92,11 +91,12 @@
 
                     <div v-else class="w-full bg-red-600 flex">
                         <!-- Read More Button -->
-                        <div class="absolute bottom-0  z-10 text-center items-center justify-center">
-                            <button
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2   z-10 text-center items-center justify-center">
+                            <a
+                                :href="`/storage/${publication.main_document}`" download
                                 class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
                                 Download article
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -122,7 +122,7 @@
                 <div>
                     <h2 class="text-lg font-semibold text-gray-700 mb-3">Similar articles:</h2>
                     <div
-                        v-for="(article, index) in journal.similarArticles"
+                        v-for="(article, index) in relatedArticles"
                         :key="index"
                         class="border-l-4 pl-3 mb-4"
                         :class="{
@@ -157,8 +157,9 @@ const tocItems = ref([])
 const activeSection = ref('')
 const contentRef = ref(null)
 const showModal = ref(false)
+const relatedArticles = ref([])
 
-defineProps({
+let props = defineProps({
     publication: {
         type: Object,
         required: true
@@ -185,6 +186,7 @@ const handleScroll = () => {
 }
 
 onMounted(() => {
+    fetchSimilarArticles(props.publication.id)
     const headings = contentRef.value.querySelectorAll('h2, h3')
     tocItems.value = Array.from(headings).map(h => ({
         id: h.id,
@@ -224,6 +226,14 @@ const journal = {
             access: 'free'
         }
     ]
+}
+const fetchSimilarArticles = (publicationId)=>{
+    axios.get(`/api/publication/articles-related-to/${publicationId}`)
+        .then(res=>{
+            relatedArticles.value = res.data
+            console.log(res.data)
+        })
+
 }
 
 defineOptions({

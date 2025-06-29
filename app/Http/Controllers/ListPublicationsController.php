@@ -11,6 +11,7 @@ use App\Models\Publication;
 use App\Models\PublicationType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PHPUnit\TextUI\TestRunner;
 
 class ListPublicationsController extends Controller
 {
@@ -46,6 +47,20 @@ class ListPublicationsController extends Controller
         return response()->json([
             'events' => EventListingResource::collection(Event::latest()->limit(5)->get())
         ]);
+    }
+
+    public function fetchRelatedArticles($publication_id) {
+     $article = Publication::findOrFail($publication_id);
+     $keyWords = explode(',', $article->keywords);
+    $publications = Publication::all();
+
+        $results = Publication::where(function ($query) use ($keyWords) {
+            foreach ($keyWords as $keyword) {
+                $query->orWhere('keywords', 'like', "%$keyword%");
+            }
+        })->limit(5)->get();
+
+       return response()->json($results);
     }
 
 }
