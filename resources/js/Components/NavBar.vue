@@ -11,16 +11,23 @@
                 </div>
 
                 <div class="hidden lg:flex lg:gap-6">
-                    <Link href="about-us" class="py-2 mx-3 text-gray-700 hover:text-blue-600">About Us</Link>
+                    <Link href="/about-us" class="py-2 mx-3 text-gray-700 hover:text-blue-600">About Us</Link>
                     <Link href="/browse/journals-and-books" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Journals</Link>
-                    <Link href="all-articles" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Articles</Link>
+                    <Link href="/all-articles" class="py-2 mx-3 text-gray-700 hover:text-blue-600">All Articles</Link>
                 </div>
             </div>
 
             <!-- Center: Submit button (hidden on small) -->
             <div class="hidden lg:flex">
                 <Link
-                    href="submit-your-research"
+                    v-if="$page.props.auth.user && $page.props.auth.user.role === 'Author'"
+                    href="/author/submit-new-manuscript"
+                    class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                    Submit Your Research
+                </Link>
+                <Link
+                    href="/login"
                     class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
                     Submit Your Research
@@ -63,15 +70,16 @@
                 </button>
                 <!-- Right Nav Links (desktop) -->
                 <div v-if="user" class="hidden lg:flex items-center gap-4">
-                    <Link v-if="user.role === 'editor'" href="editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                    <Link v-else-if="user.role === 'reviewer'" href="reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                    <Link v-else-if="user.role === 'admin'" href="admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                    <Link v-else href="author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-if="$page.props.auth.user.role === 'Editor'" href="/editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="$page.props.auth.user.role === 'Reviewer'" href="/reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="$page.props.auth.user.role === 'Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="$page.props.auth.user.role === 'Author'" href="/author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else href="/reader/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 </div>
                 <div v-else class="hidden lg:flex items-center gap-4">
-                    <Link href="search" class="text-sm font-medium text-gray-700 hover:text-blue-600">Search</Link>
-                    <Link href="login" class="text-sm font-medium text-gray-700 hover:text-blue-600">Login</Link>
-                    <Link href="register" class="text-sm font-medium text-gray-700 hover:text-blue-600">Register</Link>
+                    <Link href="/search" class="text-sm font-medium text-gray-700 hover:text-blue-600">Search</Link>
+                    <Link href="/login" class="text-sm font-medium text-gray-700 hover:text-blue-600">Login</Link>
+                    <Link href="/register" class="text-sm font-medium text-gray-700 hover:text-blue-600">Register</Link>
                 </div>
             </div>
         </div>
@@ -82,31 +90,32 @@
             class="w-full lg:mt-0"
         >
             <div class="flex flex-col lg:hidden lg:gap-6">
-                <Link href="about-us" class="py-2 text-gray-700 hover:text-blue-600">About Us</Link>
-                <Link href="all-journals" class="py-2 text-gray-700 hover:text-blue-600">All Journals</Link>
-                <Link href="all-articles" class="py-2 text-gray-700 hover:text-blue-600">All Articles</Link>
+                <Link href="/about-us" class="py-2 text-gray-700 hover:text-blue-600">About Us</Link>
+                <Link href="/all-journals" class="py-2 text-gray-700 hover:text-blue-600">All Journals</Link>
+                <Link href="/all-articles" class="py-2 text-gray-700 hover:text-blue-600">All Articles</Link>
             </div>
 
             <!-- Submit Button (mobile) -->
             <div class="flex lg:hidden mt-2">
                 <Link
-                    href="submit-your-research"
+                    href="/author/submit-new-manuscript"
                     class="w-full text-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700"
                 >
                     Submit Your Research
                 </Link>
             </div>
 
-            <div v-if="user" class="flex flex-col lg:hidden gap-2 mt-4">
-                <Link v-if="user.role === 'editor'" href="editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                <Link v-else-if="user.role === 'reviewer'" href="reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                <Link v-else-if="user.role === 'admin'" href="admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                <Link v-else href="author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+            <div v-if="user" class="hidden lg:flex items-center gap-4">
+                <Link v-if="$page.props.auth.user.role === 'Editor'" href="/editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="$page.props.auth.user.role === 'Reviewer'" href="/reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="$page.props.auth.user.role === 'Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="$page.props.auth.user.role === 'Author'" href="/author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else href="/reader/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
             </div>
             <div v-else class="flex flex-col lg:hidden gap-2 mt-4">
-                <Link href="search" class="text-gray-700 hover:text-blue-600">Search</Link>
-                <Link href="login" class="text-gray-700 hover:text-blue-600">Login</Link>
-                <Link href="register" class="text-gray-700 hover:text-blue-600">Register</Link>
+                <Link href="/search" class="text-gray-700 hover:text-blue-600">Search</Link>
+                <Link href="/login" class="text-gray-700 hover:text-blue-600">Login</Link>
+                <Link href="/register" class="text-gray-700 hover:text-blue-600">Register</Link>
             </div>
         </div>
     </nav>
@@ -120,4 +129,8 @@ import { usePage } from '@inertiajs/vue3'
 const { props } = usePage()
 const user = props.auth.user
 const menuOpen = ref(false)
+
+const notAllowed = ()=>{
+    alert('You,re not allowed to perform this action')
+}
 </script>

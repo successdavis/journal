@@ -20,7 +20,9 @@ class PublicationListingResource extends JsonResource
             'title'     => $this->title,
             'image'     => $this->thumbnail_path,
             'excerpt'   => $this->excerpt,
-            'category'  => $this->category->name
+            'category'  => $this->category->name,
+            'amount'  => $this->amount,
+            'premium'  => $this->premium
         ];
     }
 }

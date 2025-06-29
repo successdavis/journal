@@ -68,11 +68,54 @@
             </div>
 
             <!-- Main Content -->
-            <div class="md:col-span-3 space-y-6">
-                <div ref="contentRef" class="prose prose-lg max-w-none text-gray-800">
-                    {{publication.abstract}}
+            <div class="md:col-span-3 space-y-6 relative">
+                <div class="relative max-h-60 overflow-hidden">
+                    <!-- Abstract Content -->
+                    <div ref="contentRef" class="prose prose-lg max-w-none text-gray-800">
+                        {{ publication.abstract }}
+                    </div>
+                    <div v-if="publication.premium">
+
+                        <!-- Fade Overlay -->
+                        <div
+                            class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+
+                        <!-- Read More Button -->
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                            <button
+                                @click="showModal = true"
+                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
+                                Read more
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-else class="w-full bg-red-600 flex">
+                        <!-- Read More Button -->
+                        <div class="absolute bottom-0  z-10 text-center items-center justify-center">
+                            <button
+                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
+                                Download article
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div
+                        v-show="showModal === true"
+                        @click="showModal = false"
+                        class=" fixed top-0 left-0 w-full h-full bg-black opacity-80 z-50">
+                    </div>
+                    <div
+                        v-show="showModal === true"
+                        class="fixed  z-50 top-0 translate-y-32 translate-x-1/2">
+                        <PublicationPriceModal
+                            :publication="publication"
+                        />
+                    </div>
                 </div>
             </div>
+
 
             <!-- Right Sidebar -->
             <aside class="space-y-6">
@@ -107,10 +150,13 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import Layout from '@/Layouts/GuestLayout.vue'
+import {Link} from "@inertiajs/vue3";
+import PublicationPriceModal from "@/Components/PublicationPriceModal.vue";
 
 const tocItems = ref([])
 const activeSection = ref('')
 const contentRef = ref(null)
+const showModal = ref(false)
 
 defineProps({
     publication: {
@@ -183,6 +229,8 @@ const journal = {
 defineOptions({
     layout: Layout,
 })
+
+
 </script>
 
 <script>
@@ -194,6 +242,7 @@ export default {
         }
     }
 }
+
 </script>
 
 <style scoped>

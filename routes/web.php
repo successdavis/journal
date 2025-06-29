@@ -5,12 +5,14 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\EditorDecisionController;
 use App\Http\Controllers\ListPublicationsController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ManuscriptReviewerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
+use App\Http\Controllers\ReceiptController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,6 +56,11 @@ Route::get('/reviewer/dashboard', function () {
 })->middleware(['auth', 'verified'])
     ->name('reviewer.dashboard');
 
+Route::get('/reader/dashboard', function () {;
+    return Inertia::render('Reader/Dashboard');
+})->middleware(['auth', 'verified'])
+    ->name('reader.dashboard');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -84,6 +91,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/reviewer/{reviewer_id}/submit/{manuscript_id}', [SubmittedReviewController::class, 'create']);
     Route::post('/reviewer/{reviewer_id}/submit/{manuscript_id}', [SubmittedReviewController::class, 'store']);
     Route::get('/reviewer/review-history', [ReviewerController::class, 'history']);
+
+
+
+    Route::post('/reader/payment/{user_id}/{publication_id}', [ReceiptController::class, 'store']);
+    Route::get('/reader/history/{user_id}', [ReceiptController::class, 'showReceipts']);
+    Route::get('/reader/payment/{user_id}/{publication_id}/{receipt_id}', [ReceiptController::class, 'index'])
+    ->name('reader.receipt.view');
+
+    Route::post('/paystack/initiate/{receipt_id}/{user_id}', [PaymentController::class, 'initiate'])->name('paystack.initiate');
+    Route::get('/paystack/callback', [PaymentController::class, 'handleCallBack'])->name('paystack.callback');
+
 
 });
 

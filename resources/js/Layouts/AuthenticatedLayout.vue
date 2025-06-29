@@ -3,8 +3,8 @@
         <div class="w-72 sidebar fixed overflow-y-scroll h-full hidden md:block" aria-label="Sidebar">
             <!--            <Sidebar></Sidebar>-->
             <component :is="componentToRender"></component>
-
         </div>
+
         <div class="md:ml-72 py-4 px-3 w-full overflow-y-scroll main-content ">
             <Flash
                 v-if="flash && flash.success"
@@ -33,19 +33,21 @@
 import AuthorSideBar from "@/Layouts/Partials/AuthorsSideBar.vue"
 import EditorSideBar from "@/Layouts/Partials/EditorsSideBar.vue";
 import ReviewersSideBar from "@/Layouts/Partials/ReviewersSideBar.vue";
+import ReadersSideBar from "@/Components/ReadersSideBar.vue";
 import Flash from '@/Components/FlashMessage.vue'
-import {usePage} from "@inertiajs/vue3";
 
 export default {
     components: {
         AuthorSideBar,
         EditorSideBar,
         ReviewersSideBar,
+        ReadersSideBar,
         Flash
     },
     data() {
+        const role = this.$page.props.auth.user.role || 'guest';
         return {
-            userRole: this.$page.props.auth.role[0]
+            userRole: role
         }
     },
 
@@ -57,14 +59,16 @@ export default {
     computed: {
         componentToRender() {
             switch (this.userRole) {
-                case 'editor':
-                    return 'EditorSideBar';
-                case 'reviewer':
-                    return 'ReviewersSideBar';
-                case 'author':
+                case 'Editor':
+                    return EditorSideBar;
+                case 'Reviewer':
+                    return ReviewersSideBar;
+                case 'Author':
                     return 'AuthorSideBar';
-                case 'director':
-                    return 'AuthorSideBar';
+                case 'Director':
+                    return AuthorSideBar;
+                    case 'Reader':
+                    return ReadersSideBar;
                 case 'guest':
                     return 'GuestComponent';
                 // add additional cases for other user roles
@@ -76,7 +80,11 @@ export default {
         flash() {
             // return usePage().props.value.flash || {}
         }
-    }
+    },
+
+    props: {
+        userRole: String
+    },
 }
 </script>
 

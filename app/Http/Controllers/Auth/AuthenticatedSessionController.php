@@ -53,6 +53,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('reviewer.dashboard');
             case 'author':
                 return redirect()->route('author.dashboard');
+                case 'reader':
+                return redirect()->route('reader.dashboard');
             default:
                 Auth::logout();
                 return redirect()->route('login')->withErrors([
