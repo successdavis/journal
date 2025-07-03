@@ -73,7 +73,7 @@
                 <div v-if="user" class="hidden lg:flex items-center gap-4">
                     <Link v-if="$page.props.auth.user.role === 'Editor'" href="/editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                     <Link v-else-if="$page.props.auth.user.role === 'Reviewer'" href="/reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                    <Link v-else-if="$page.props.auth.user.role === 'Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                    <Link v-else-if="$page.props.auth.user.role === 'Super_Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                     <Link v-else-if="$page.props.auth.user.role === 'Author'" href="/author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                     <Link v-else href="/reader/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 </div>
@@ -109,7 +109,7 @@
             <div v-if="user" class="lg:hidden items-center gap-4">
                 <Link v-if="$page.props.auth.user.role === 'Editor'" href="/editor/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 <Link v-else-if="$page.props.auth.user.role === 'Reviewer'" href="/reviewer/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-                <Link v-else-if="$page.props.auth.user.role === 'Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
+                <Link v-else-if="$page.props.auth.user.role === 'Super_Admin'" href="/admin/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 <Link v-else-if="$page.props.auth.user.role === 'Author'" href="/author/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
                 <Link v-else href="/reader/dashboard" class="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
             </div>

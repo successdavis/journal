@@ -26,7 +26,7 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        Role::firstOrCreate(['name' => 'Super Admin'])->givePermissionTo(Permission::all());
+        Role::firstOrCreate(['name' => 'Super Super_Admin'])->givePermissionTo(Permission::all());
 
         Role::firstOrCreate(['name' => 'Editor'])->givePermissionTo([
             'create journal',

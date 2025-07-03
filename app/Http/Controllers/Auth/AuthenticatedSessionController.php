@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
 
 
         switch (strtolower($roles[0])) {
-            case 'admin':
+            case 'super_admin':
                 return redirect()->route('admin.dashboard');
             case 'editor':
                 return redirect()->route('editor.dashboard');

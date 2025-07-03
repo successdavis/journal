@@ -1,5 +1,4 @@
 <template>
-
     <aside class="h-full">
         <div class="overflow-y-auto py-4 px-3 bg-gray-800 h-full rounded">
             <ul class="space-y-2 text-gray-200">

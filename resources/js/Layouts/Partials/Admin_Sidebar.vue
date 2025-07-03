@@ -1,4 +1,7 @@
 <template>
+
+    <Head title="Admin Dashboard" />
+
     <div class="flex">
         <!-- Sidebar -->
         <aside
@@ -9,27 +12,21 @@
       ]"
         >
             <div class="text-lg font-bold mb-6">
-                Author: {{ userName }}
+                Admin: {{ $page.props.auth.user.name }}
             </div>
 
             <nav class="flex flex-col space-y-3 text-sm">
                 <Link
-                    href="/author/dashboard"
+                    href="/admin/dashboard"
                     class="hover:bg-slate-300 px-3 py-2 rounded transition"
                 >
-                    Home
+                    Dashboard
                 </Link>
                 <Link
-                    href="/author/my-submissions"
+                    href="/super_admin/role_requests"
                     class="hover:bg-slate-300 px-3 py-2 rounded transition"
                 >
-                    My Submissions
-                </Link>
-                <Link
-                    href="/author/submit-new-manuscript"
-                    class="hover:bg-slate-300 px-3 py-2 rounded transition"
-                >
-                    Submit New Manuscript
+                    Role Requests
                 </Link>
             </nav>
         </aside>
@@ -38,8 +35,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import {Head, Link} from '@inertiajs/vue3'
+import AccordionMenu from "@/Layouts/Partials/AccordionMenu.vue";
 
 const showSidebar = ref(false)
-const userName = 'John Doe' // You can pass this as a prop or use store if needed
+
 </script>

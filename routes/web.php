@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\EditorDecisionController;
 use App\Http\Controllers\ListPublicationsController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicationController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\EditorController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,6 +43,11 @@ Route::get('api/author/publications', [AuthorController::class, 'publications'])
 Route::get('/about-us', [AboutUsController::class, 'show']);
 
 
+
+Route::get('/admin/dashboard', function () {
+    return Inertia::render('Super_Admin/Dashboard');
+})->middleware(['auth', 'verified'])
+    ->name('admin.dashboard');
 
 Route::get('/author/dashboard', function () {
     return Inertia::render('Author/Dashboard');
@@ -103,6 +110,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/paystack/initiate/{receipt_id}/{user_id}', [PaymentController::class, 'initiate'])->name('paystack.initiate');
     Route::get('/paystack/callback', [PaymentController::class, 'handleCallBack'])->name('paystack.callback');
 
+
+
+
+    Route::get('/super_admin/fetch_totals', [SuperAdminController::class, 'index'])->name('super_admin.fetch_totals');
+    Route::get('/super_admin/role_requests', [SuperAdminController::class, 'roleRequests'])->name('super_admin.role_request');
+    Route::patch('/super_admin/response_to_role_request/{role_request_id}', [SuperAdminController::class, 'responseToRoleRequest'])
+        ->name('super_admin.response_to_role_request');
+
+
+
+    Route::get('/get_notifications/{user_id}', [NotificationController::class, 'index'])->name('user.get_notifications');
+
+    Route::patch('/notifications_read/{user_id}', [NotificationController::class, 'notificationsRead'])->name('user.read_notifications');
+
+    Route::get('/dashboard/{stat_title}/view', [SuperAdminController::class, 'viewStats'])->name('view.stats');
 
 });
 
