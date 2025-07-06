@@ -51,7 +51,7 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            $roles = ['Super Admin', 'Editor', 'Reviewer', 'Author', 'Reader'];
+            $roles = ['Super Super_Admin', 'Editor', 'Reviewer', 'Author', 'Reader'];
 
             // Optional: make sure roles exist before assignment (especially in tests)
             $availableRoles = \Spatie\Permission\Models\Role::pluck('name')->toArray();

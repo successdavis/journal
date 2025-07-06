@@ -2,11 +2,6 @@
     <div class="flex">
         <!-- Sidebar -->
         <aside
-            :class="[
-        'fixed md:static top-0 left-0 z-40 h-screen w-64 transition-transform transform md:translate-x-0',
-        showSidebar ? 'translate-x-0' : '-translate-x-full',
-        'bg-slate-200 text-slate-900 shadow-lg p-5'
-      ]"
         >
             <div class="text-lg font-bold mb-6">
                 Author: {{ userName }}

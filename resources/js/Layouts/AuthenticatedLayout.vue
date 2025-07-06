@@ -33,11 +33,13 @@
 import AuthorSideBar from "@/Layouts/Partials/AuthorsSideBar.vue"
 import EditorSideBar from "@/Layouts/Partials/EditorsSideBar.vue";
 import ReviewersSideBar from "@/Layouts/Partials/ReviewersSideBar.vue";
-import ReadersSideBar from "@/Components/ReadersSideBar.vue";
+import ReadersSideBar from "@/Layouts/Partials/ReadersSideBar.vue";
+import Admin_Sidebar from "@/Layouts/Partials/Admin_Sidebar.vue";
 import Flash from '@/Components/FlashMessage.vue'
 
 export default {
     components: {
+        Admin_Sidebar,
         AuthorSideBar,
         EditorSideBar,
         ReviewersSideBar,
@@ -59,6 +61,8 @@ export default {
     computed: {
         componentToRender() {
             switch (this.userRole) {
+                case 'Super_Admin':
+                    return Admin_Sidebar;
                 case 'Editor':
                     return EditorSideBar;
                 case 'Reviewer':

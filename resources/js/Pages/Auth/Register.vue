@@ -3,6 +3,7 @@ import Layout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {computed} from "vue";
 
 const form = useForm({
     name: '',
@@ -11,6 +12,20 @@ const form = useForm({
     password_confirmation: '',
     role: '',
 });
+
+let props = defineProps({
+    roles: Object
+})
+
+const filteredRoles = computed(() =>
+    props.roles.filter(role => role.name !== 'Super_Admin')
+)
+
+function formatRoleName(name) {
+    return name
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase())
+}
 
 const submit = () => {
     form.post(route('register'), {
@@ -24,6 +39,7 @@ defineOptions({
 </script>
 
 <template>
+
     <Head title="Register" />
 
     <div class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style="background-image: url('/images/bg-image.png')">
@@ -108,7 +124,7 @@ defineOptions({
 
                 <!-- Role -->
                 <div class="mt-4">
-                    <InputLabel for="role" value="Select Role" class="mb-1 text-sm text-gray-700 dark:text-gray-300" />
+                    <InputLabel for="role" value="Register as" class="mb-1 text-sm text-gray-700 dark:text-gray-300" />
                     <select
                         id="role"
                         v-model="form.role"
@@ -116,9 +132,14 @@ defineOptions({
                         required
                     >
                         <option value="" disabled>Select a role</option>
-                        <option value="author">Author</option>
-                        <option value="reviewer">Reviewer</option>
-                        <option value="editor">Editor</option>
+                        <option
+                            v-for="role in filteredRoles"
+                            :key="role.id"
+                            :value="role.id"
+                        >
+                            {{ formatRoleName(role.name) }}
+                        </option>
+
                     </select>
                     <InputError class="mt-2" :message="form.errors.role" />
                 </div>

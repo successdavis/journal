@@ -11,14 +11,13 @@
             <Link href="/author/publications" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group hover:bg-gray-100">Publications</Link>
         </li>
 
+
         <li>
             <Link href="/author/my-submissions" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group hover:bg-gray-100">My Submissions</Link>
         </li>
         <li>
             <Link href="/author/submit-new-manuscript" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group hover:bg-gray-100">Submit New Manuscript </Link>
         </li>
-
-
 
     </sidebar>
 </template>
