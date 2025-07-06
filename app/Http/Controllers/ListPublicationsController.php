@@ -33,6 +33,15 @@ class ListPublicationsController extends Controller
         ]);
     }
 
+    public function latestJournal()
+    {
+        $publication = PublicationType::where('title', 'Journal')->first();
+
+        return response()->json([
+            'publications' => PublicationListingResource::collection(Publication::limit(20)->get())
+        ]);
+    }
+
     public function latestBooks()
     {
         $publication = PublicationType::where('title', 'Book')->first();

@@ -27,6 +27,7 @@ Route::get('/', function () {
 });
 
 Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'latestThesis']);
+Route::get('api/get-journal-publications', [ListPublicationsController::class, 'latestJournal']);
 Route::get('api/get-books-publications', [ListPublicationsController::class, 'latestBooks']);
 Route::get('api/get-events-publications', [ListPublicationsController::class, 'eventListing']);
 Route::get('api/publications', [ListPublicationsController::class, 'index']);
