@@ -35,6 +35,7 @@ Route::get('/browse/journals-and-books', [PublicationController::class, 'allPubl
 Route::get('/browse/journals-and-books/{publication}/show', [PublicationController::class, 'show']);
 
 Route::get('api/author/publications', [AuthorController::class, 'publications']);
+Route::get('author/publications', [AuthorController::class, 'index']);
 
 
 Route::get('/about-us', [AboutUsController::class, 'show']);

@@ -63,7 +63,7 @@ export default {
                     return EditorSideBar;
                 case 'Reviewer':
                     return ReviewersSideBar;
-                case 'Author':
+                case 'author':
                     return 'AuthorSideBar';
                 case 'Director':
                     return AuthorSideBar;

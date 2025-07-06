@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AuthorController extends Controller
 {
+    public function index() {
+        return Inertia::render('Author/Index');
+    }
     public function publications(Request $request)
     {
         $user = auth()->user();
