@@ -126,6 +126,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/{stat_title}/view', [SuperAdminController::class, 'viewStats'])->name('view.stats');
 
+    Route::patch('/super_admin/unpublish_article/{publication_id}', [SuperAdminController::class, 'ubpublishArticle'])->name('unpublish.published_status');
+    Route::patch('/super_admin/{publication_id}/update_article_status', [SuperAdminController::class, 'updateArticleStatus'])->name('update.article_status');
+
+    Route::delete('/super_admin/publications/{pub_id}/delete', [SuperAdminController::class, 'destroy'])->name('delete.article');
+
+    Route::delete('/super_admin/user/{user_id}/delete', [SuperAdminController::class, 'deleteUser'])->name('admin.delete_user');
+
+    Route::get('/super_admin/user/{user_id}/view', [SuperAdminController::class, 'viewUser'])->name('admin.view_user');
+
 });
 
 require __DIR__ . '/auth.php';

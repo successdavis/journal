@@ -43,6 +43,7 @@ class StorePublicationRequest extends FormRequest
             'originality' => 'required|boolean',
             'views' =>'nullable|integer',
             'accepted_on' =>'nullable|String',
+            'status' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere'
         ];
     }
 

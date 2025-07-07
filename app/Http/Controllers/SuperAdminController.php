@@ -10,6 +10,8 @@ use App\Models\SuperAdmin;
 use App\Http\Requests\StoreSuperAdminRequest;
 use App\Http\Requests\UpdateSuperAdminRequest;
 use App\Models\User;
+use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -71,42 +73,42 @@ class SuperAdminController extends Controller
 
     public function viewStats($stats_title)
     {
-        switch ($stats_title){
+        switch ($stats_title) {
             case 'total_sales':
                 $data = Receipt::with('user', 'publication.author')
                     ->where('status', 'successful')
                     ->get();
-                    break;
+                break;
             case 'total_authors':
                 $data = Role::with('users')->where('name', 'Author')->get();
-                    break;
+                break;
             case 'total_reviewers':
                 $data = Role::with('users')->where('name', 'Reviewer')->get();
-                    break;
+                break;
             case 'total_editors':
                 $data = Role::with('users')->where('name', 'Editor')->get();
-                    break;
+                break;
             case 'published_articles':
                 $data = Publication::with('author')->where('status', 'published', null)->get();
-                    break;
+                break;
             case 'under_review':
                 $data = Publication::with('author')->where('status', 'under_review')->get();
-                    break;
+                break;
             case 'accepted_articles':
                 $data = Publication::with('author')->where('status', 'accepted')->get();
-                    break;
+                break;
             case 'rejected_articles':
                 $data = Publication::with('author')->where('status', 'rejected')->get();
-                    break;
+                break;
             case 'articles_withdrawn_by_authors':
                 $data = Publication::with('author')->where('status', 'articles_withdrawn_by_author')->get();
-                    break;
+                break;
             case 'total_articles':
                 $data = Publication::with('author')->get();
-                    break;
+                break;
             case 'total_users':
                 $data = User::all();
-                    break;
+                break;
             default:
                 abort(404);
         }
@@ -140,7 +142,7 @@ class SuperAdminController extends Controller
             $defaultRole = Role::where('name', 'Reader')->get();
             $roleToUpdate = DB::table('model_has_role')
                 ->where('role_id', $request->role_id)
-            ->where('model_id', $request->user_id);
+                ->where('model_id', $request->user_id);
 
             if ($request->option === 'Accepted') {
 
@@ -177,12 +179,42 @@ class SuperAdminController extends Controller
         //
     }
 
+    public function ubpublishArticle(StoreSuperAdminRequest $request, $publication_id)
+    {
+        $publication = Publication::findOrFail($publication_id);
+        $status = validator($request->publication, [
+            'status' => 'required|in:accepted,published'
+        ])->validate();
+        $publication->status = $status['status'];
+        $publication->save();
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(SuperAdmin $superAdmin)
     {
         //
+    }
+
+    public function updateArticleStatus(StoreSuperAdminRequest $request, $publication_id)
+    {
+        $publication = Publication::findOrFail($publication_id);
+
+        $newStatus = validator(
+            ['newStatus' => $request->newStatus],
+            ['newStatus' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere']
+        )->validate();
+
+        if ($newStatus['newStatus'] === 'published' && $publication->published_at === null) {
+            $publication->published_at = Carbon::now();
+            $publication->status = $newStatus['newStatus'];
+        } else {
+            $publication->status = $newStatus['newStatus'];
+            $publication->published_at = null;
+
+        }
+        $publication->save();
     }
 
     /**
@@ -196,6 +228,16 @@ class SuperAdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function viewUser($user_id)
+    {
+        $user = User::with('publications', 'user_role')->find($user_id);
+
+       return inertia::render('Super_Admin/ViewUser', [
+           'user' => $user
+       ]);
+
+    }
+
     public function update(UpdateSuperAdminRequest $request, SuperAdmin $superAdmin)
     {
         //
@@ -204,8 +246,19 @@ class SuperAdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SuperAdmin $superAdmin)
+    public function destroy($pub_id)
     {
-        //
+        $itemToDelete = Publication::findOrFail($pub_id);
+        if ($itemToDelete) {
+            $itemToDelete->delete();
+        }
+    }
+
+        public function deleteUser($user_id)
+    {
+        $userToDelete = User::findOrFail($user_id);
+        if ($userToDelete) {
+            $userToDelete->delete();
+        }
     }
 }

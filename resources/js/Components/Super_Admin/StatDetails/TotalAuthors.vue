@@ -102,7 +102,8 @@ const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String
 });
 
 const role = computed(() => props.data[0] || {});

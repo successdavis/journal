@@ -1,7 +1,8 @@
 <template>
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles under review</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles {{ formatStatus(page_title) }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ publications.length }} Articles found</p>
         </div>
 
@@ -9,23 +10,35 @@
             <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Title
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Author
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Journal
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Status
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Update status
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Submitted at
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Action
                     </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 <tr
-                    v-for="pub in publications"
+                    v-for="(pub, index) in publications"
                     :key="pub.id"
                     class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
                 >
@@ -50,13 +63,56 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 dark:text-white">{{ pub.journal }}</div>
+                        <!-- Status Badge -->
+                        <div
+                            class="inline-block px-3 py-1 text-xs font-semibold rounded-full capitalize"
+                            :class="{
+    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': pub.status === 'accepted' || pub.status === 'published',
+    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200': pub.status === 'under_review' || pub.status === 'resubmit_else_where',
+    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': pub.status === 'rejected' || pub.status === 'withdrawn_by_author',
+    'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300': ![
+      'accepted',
+      'rejected',
+      'under_review',
+      'published',
+      'withdrawn_by_author',
+      'resubmit_else_where'
+    ].includes(pub.status)
+  }"
+                        >
+                            {{ formatStatus(pub.status) }}
+                        </div>
+
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <UpdateArticleStatus
+                                :publication="pub"
+                            />
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             {{ formatDate(pub.created_at) }}
                         </div>
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <Link
+                                :href="`/super_admin/publications/${pub.id}/view`"
+                                class="text-blue-600 hover:underline text-sm"
+                            >
+                                View
+                            </Link>
+                            <button
+                                @click="deleteArticle(pub, index)"
+                                class="text-red-600 hover:underline text-sm"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
@@ -65,7 +121,9 @@
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-gray-500 dark:text-gray-400">
-                    Showing <span class="font-medium">1</span> to <span class="font-medium">{{ publications.length }}</span> of <span class="font-medium">{{ publications.length }}</span> results
+                    Showing <span class="font-medium">1</span> to <span class="font-medium">{{
+                        publications.length
+                    }}</span> of <span class="font-medium">{{ publications.length }}</span> results
                 </div>
                 <div class="flex space-x-2">
                     <button
@@ -88,11 +146,15 @@
 
 <script setup>
 import {computed} from "vue";
+import {Link} from '@inertiajs/vue3'
+import UpdateArticleStatus from "@/Components/Super_Admin/UpdateArticleStatus.vue";
+
 const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String,
 });
 
 const publications = computed(() => props.data);
@@ -106,4 +168,28 @@ const formatDate = (dateString) => {
         day: 'numeric'
     });
 };
+
+const formatStatus = (status) => {
+    if (!status) return ''
+    return status
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
+
+let deleteArticle = (pub, index) => {
+    if (confirm(`Are you sure you want to delete the article '${pub.title}`)){
+        axios.delete(`/super_admin/publications/${pub.id}/delete`)
+            .then(res => {
+                if (res.status === 200){
+                alert('Article deleted successfully!')
+                    publications.value.splice(index, 1)
+                }else {
+                    alert('could not delete the article, please try again')
+                }
+            })
+    }else{
+
+    }
+}
+
 </script>

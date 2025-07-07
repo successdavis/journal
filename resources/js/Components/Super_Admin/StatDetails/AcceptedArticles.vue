@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles under review</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles {{formatStatus(page_title) }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ publications.length }} Articles found</p>
         </div>
 
@@ -16,10 +16,13 @@
                         Author
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Journal
+                        Update status
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Submitted at
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Action
                     </th>
                 </tr>
                 </thead>
@@ -50,11 +53,31 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 dark:text-white">{{ pub.journal }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <UpdateArticleStatus
+                                :publication="pub"
+                            />
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             {{ formatDate(pub.created_at) }}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex space-x-2">
+                            <Link
+                                :href="`/super_admin/publications/${pub.id}/view`"
+                                class="text-blue-600 hover:underline text-sm"
+                            >
+                                View
+                            </Link>
+                            <button
+                                @click="deleteArticle(pub, index)"
+                                class="text-red-600 hover:underline text-sm"
+                            >
+                                Delete
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -88,11 +111,14 @@
 
 <script setup>
 import {computed} from "vue";
+import UpdateArticleStatus from "@/Components/Super_Admin/UpdateArticleStatus.vue";
+import {Link} from "@inertiajs/vue3";
 const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String
 });
 
 const publications = computed(() => props.data);
@@ -106,4 +132,11 @@ const formatDate = (dateString) => {
         day: 'numeric'
     });
 };
+
+const formatStatus = (status) => {
+    if (!status) return ''
+    return status
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
 </script>

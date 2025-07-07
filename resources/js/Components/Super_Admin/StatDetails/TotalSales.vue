@@ -29,33 +29,39 @@
             <tbody>
             <tr
                 v-for="(item, index) in uniqueReceipts"
+                :key="index"
                 class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200 hover:bg-blue-100">
+
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ item.publication.title }}
+                    {{ item.publication?.title || '—' }}
                 </th>
+
                 <td class="px-6 py-4">
-                    {{item.publication.author.name}}
-                </td>
-                <td class="px-6 py-4 text-green-600">
-                    {{ counts[item.publication_id] }}
-                </td>
-                <td class="px-6 py-4 text-green-600">
-                    {{ item.publication.views }}
-                </td>
-                <td
-                    class=" py-4 flex items-start justify-start">
-                    {{item.publication.downloads}}
-                </td>
-                <td class="px-6 py-4 text-green-600">
-                    {{ item.publication.amount }}
+                    {{ item.publication?.author?.name || '—' }}
                 </td>
 
                 <td class="px-6 py-4 text-green-600">
-                    {{amountTotals[item.publication_id] }}
+                    {{ counts[item.publication_id] || 0 }}
                 </td>
 
+                <td class="px-6 py-4 text-green-600">
+                    {{ item.publication?.views ?? 0 }}
+                </td>
+
+                <td class="py-4 flex items-start justify-start">
+                    {{ item.publication?.downloads ?? 0 }}
+                </td>
+
+                <td class="px-6 py-4 text-green-600">
+                    {{ item.publication?.amount || '—' }}
+                </td>
+
+                <td class="px-6 py-4 text-green-600">
+                    {{ amountTotals[item.publication_id] || 0 }}
+                </td>
 
             </tr>
+
             </tbody>
         </table>
     </div>

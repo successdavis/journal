@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles under review</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles {{formatStatus(page_title) }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ publications.length }} Articles found</p>
         </div>
 
@@ -92,7 +92,8 @@ const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String
 });
 
 const publications = computed(() => props.data);
@@ -106,4 +107,11 @@ const formatDate = (dateString) => {
         day: 'numeric'
     });
 };
+
+const formatStatus = (status) => {
+    if (!status) return ''
+    return status
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
 </script>
