@@ -24,6 +24,9 @@
                 <th scope="col" class="px-6 py-3">
                     Total amount
                 </th>
+                <th scope="col" class="px-6 py-3">
+                    Break down
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -32,9 +35,12 @@
                 :key="index"
                 class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200 hover:bg-blue-100">
 
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap truncate max-w-[300px] dark:text-white"
+                    :title="item.publication?.title">
                     {{ item.publication?.title || '—' }}
                 </th>
+
 
                 <td class="px-6 py-4">
                     {{ item.publication?.author?.name || '—' }}
@@ -59,6 +65,19 @@
                 <td class="px-6 py-4 text-green-600">
                     {{ amountTotals[item.publication_id] || 0 }}
                 </td>
+                <td
+                    v-if="item.publication_id"
+                    class="px-6 py-4 text-center">
+                    <Link :href="`/super_admin/view_sales_details/${item.publication_id}`"
+                          class="text-blue-600 hover:underline">
+                        View breakdown
+                    </Link>
+                </td>
+                <td
+                    v-else
+                    class="px-6 py-4 text-center">
+                    Deleted Article
+                </td>
 
             </tr>
 
@@ -69,6 +88,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import {Link} from '@inertiajs/inertia-vue3'
 
 const props = defineProps({
     data: Array

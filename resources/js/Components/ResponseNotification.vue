@@ -23,18 +23,20 @@
                         {{ notificationsCount }}
   </span>
         </button>
-
         <!-- Centered child -->
-        <div :class="['absolute top-6 left-1/2 transform -translate-x-1/2 z-50',
+        <div :class="[' top-6 left-1/2 transform -translate-x-1/2 z-50 h-fit',
         showMessages ? '' : 'hidden'
 ]">
             <div class="bg-white p-4 rounded shadow">
                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Notifications</h2>
                 <ul v-if="notifications.length > 0" class="text-sm text-gray-600 space-y-2">
-                    <li v-for="(notification, index) in notifications" class="max-w-2xl break-words flex items-end justify-left">
+                    <li v-for="(notification, index) in notifications"
+                        class="max-w-2xl break-words flex items-end justify-left"
+                    >
                        📢 <span :class="['px-2 ',
-                            notification.status ? 'text-gray-600 italic' : 'font-bold'
-                       ]">{{ notification.message }}</span>
+                            notification.status? 'text-gray-600 italic' : 'font-bold'
+                       ]">{{ notification.message }}
+                    </span>
                     </li>
                 </ul>
                 <ul v-else class=" text-sm text-gray-400 italic text-center">
@@ -63,6 +65,7 @@ let showMessages = ref(false)
 const getNotifications = () => {
     axios.get(`/get_notifications/${props.user.id}`)
         .then(res => {
+            console.log(res.data)
             notifications.value = res.data[0]
             notificationsCount.value = res.data[1]
         })
@@ -71,7 +74,7 @@ const getNotifications = () => {
 const displayNotificationMessages = () => {
     axios.patch(`/notifications_read/${props.user.id}`)
         .then(res => {
-            notifications.value = res.data
+            notifications.value = res.data[0]
             showMessages.value = !showMessages.value
             notificationsCount.value = 0
         })

@@ -135,6 +135,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/super_admin/user/{user_id}/view', [SuperAdminController::class, 'viewUser'])->name('admin.view_user');
 
+    Route::get('/super_admin/view_sales_details/{publication_id}', [SuperAdminController::class, 'viewSale'])->name('admin.view_sale');
+
 });
 
 require __DIR__ . '/auth.php';

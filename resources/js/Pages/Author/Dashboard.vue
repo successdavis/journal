@@ -7,6 +7,7 @@ import SubmissionTable from '@/Components/Author/SubmissionTable.vue'
 import SubmissionCardList from '@/Components/Author/SubmissionCardList.vue'
 import Notifications from '@/Components/Author/Notifications.vue'
 import SkeletonTable from '@/Components/Author/SkeletonTable.vue'
+import ResponseNotification from "@/Components/ResponseNotification.vue";
 
 const submissions = ref([])
 let loading = ref(true)
@@ -37,11 +38,15 @@ const logout = () => {
         <div class="max-w-7xl mx-auto space-y-6">
 
             <!-- Header -->
-            <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-gray-800">Author Dashboard</h1>
+            <div class="flex justify-around items-center">
+
                 <a href="/author/submit-new-manuscript" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     + Submit New Article
                 </a>
+                <ResponseNotification
+                :user="$page.props.auth.user"
+                />
 
                 <button
                     @click="logout"

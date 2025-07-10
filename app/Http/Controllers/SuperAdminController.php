@@ -122,7 +122,7 @@ class SuperAdminController extends Controller
     public function roleRequests()
     {
         return inertia::render('Super_Admin/RoleRequests', [
-            'roleRequests' => RoleRequest::with('user', 'role')->get(),
+            'roleRequests' => RoleRequest::orderBy('id', 'DESC')->with('user', 'role')->where('status', 'Pending')->get(),
         ]);
     }
 
@@ -134,41 +134,48 @@ class SuperAdminController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
-
         DB::transaction(function () use ($request, &$role_request_id) {
             $roleRequest = RoleRequest::findOrFail($role_request_id);
             $roleRequest->status = $request->option;
             $roleRequest->save();
+
             $defaultRole = Role::where('name', 'Reader')->get();
-            $roleToUpdate = DB::table('model_has_role')
-                ->where('role_id', $request->role_id)
-                ->where('model_id', $request->user_id);
 
-            if ($request->option === 'Accepted') {
+            $roleToUpdate = DB::table('model_has_roles')
+                ->where('model_id', $request->user_id)
+            ->first();
 
-                $roleToUpdate->model_id = $request->user_id;
-                $roleToUpdate->role_id = $request->role_id;
-            } else {
-                $roleToUpdate->model_id = $request->user_id;
-                $roleToUpdate->role_id = $defaultRole->id;
+
+            if($request->option === 'Accepted') {
+                DB::table('model_has_roles')
+                    ->where('model_id', $request->user_id)
+                    ->update([
+                    'role_id' => $request->role_id,
+                ]);
+            }else {
+                DB::table('model_has_roles')
+                    ->where('model_id', $request->user_id)
+                    ->update([
+                        'role_id' => $defaultRole->id,
+                    ]);
             }
 
+            $roleRequested = Role::where('id', $request->role_id)->first();
             Notification::create([
                 'notifiable_type' => get_class($roleRequest),
                 'notifiable_id' => $roleRequest->id,
                 'receiver_id' => $roleRequest->user_id,
                 'sender_id' => auth()->id(),
-                'message' => 'Your request to be an author has been' . $request->option,
+                'message' => 'Your request to be '. $roleRequested->name .'has been' . $request->option,
                 'status' => false,
             ]);
         });
 
 
-        $data = RoleRequest::with('user', 'role')->get();
-
-
+        $data = RoleRequest::orderBy('id', 'DESC')
+            ->with('user', 'role')
+            ->get();
         return response()->json($data);
-
     }
 
     /**
@@ -232,9 +239,9 @@ class SuperAdminController extends Controller
     {
         $user = User::with('publications', 'user_role')->find($user_id);
 
-       return inertia::render('Super_Admin/ViewUser', [
-           'user' => $user
-       ]);
+        return inertia::render('Super_Admin/ViewUser', [
+            'user' => $user
+        ]);
 
     }
 
@@ -254,11 +261,21 @@ class SuperAdminController extends Controller
         }
     }
 
-        public function deleteUser($user_id)
+    public function deleteUser($user_id)
     {
         $userToDelete = User::findOrFail($user_id);
         if ($userToDelete) {
             $userToDelete->delete();
+        }
+    }
+
+    public function viewSale($publication_id)
+    {
+        $sales = Receipt::with('publication.author')->where('publication_id', $publication_id)->get();
+        if ($sales) {
+            return inertia::render('Super_Admin/ViewSale', [
+                'sales' => $sales,
+            ]);
         }
     }
 }

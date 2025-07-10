@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|exists:roles,id',
         ]);
@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
             ]);
 
             $selectedRole = Role::findOrFail($request->role);
-            if ($selectedRole->name !== 'Reader'){
+            if ($selectedRole->name !== 'Reader') {
                 RoleRequest::create([
                     'user_id' => $user->id,
                     'role_id' => $request->role,
@@ -60,32 +60,16 @@ class RegisteredUserController extends Controller
                 ]);
             }
 
-            $currentRole =  Role::where('name', 'Reader')->first()->id;
+            $currentRoleId = Role::where('name', 'Reader')->first()->id;
             DB::table('model_has_roles')->insert([
                 'model_id' => $user->id,
-                'role_id' => $currentRole,
+                'role_id' => $currentRoleId,
                 'model_type' => 'App\Models\User',
             ]);
-        });
         event(new Registered($user));
         Auth::login($user);
+        });
 
-        switch ($user->role) {
-            case 'Super_Admin':
-                return redirect()->route('admin.dashboard');
-            case 'Editor':
-                return redirect()->route('editor.dashboard');
-            case 'Reviewer':
-                return redirect()->route('reviewer.dashboard');
-            case 'Author':
-                return redirect()->route('author.dashboard');
-                case 'Reader':
-                return redirect()->route('reader.dashboard');
-            default:
-                Auth::logout();
-                return redirect()->route('login')->withErrors([
-                    'email' => 'Unauthorized role.',
-                ]);
-        }
+        return redirect()->route('reader.dashboard');
     }
 }
