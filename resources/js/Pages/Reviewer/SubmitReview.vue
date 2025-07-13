@@ -1,6 +1,7 @@
 <template>
-    <AuthenticatedLayout>
-
+    <div class="mb-6">
+        <ReviewerDashboardHeader/>
+    </div>
         <form @submit.prevent class="space-y-8 max-w-4xl mx-auto bg-white px-6 rounded-2xl shadow-lg">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Submit Your Review</h2>
 
@@ -98,18 +99,6 @@
                 </label>
             </div>
 
-            <!-- Submit Option -->
-<!--            <div>-->
-<!--                <label class="block text-sm font-semibold text-gray-700 mb-1">Submission Option <span-->
-<!--                    class="text-red-500">*</span></label>-->
-<!--                <select v-model="form.submit_option" required-->
-<!--                        class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-teal-600 focus:border-teal-600">-->
-<!--                    <option value="" selected disabled>Select submit option</option>-->
-<!--                    <option value="draft">Save as Draft</option>-->
-<!--                    <option value="submitted">Submit</option>-->
-<!--                </select>-->
-<!--            </div>-->
-
             <!-- Submit Button -->
             <div class="pt-4 w-full flex items-center justify-center ">
                 <button type="submit"
@@ -119,13 +108,13 @@
                 </button>
             </div>
         </form>
-    </AuthenticatedLayout>
 </template>
 
 <script setup>
 import {reactive} from 'vue'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import axios from "axios";
+import ReviewerDashboardHeader from "@/Components/Reviewer/ReviewerDashboardHeader.vue";
 
 const form = reactive({
     review_title: '',

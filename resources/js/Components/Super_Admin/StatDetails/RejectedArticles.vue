@@ -16,10 +16,16 @@
                         Author
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Journal
+                        Update status
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Submitted at
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                       View
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Delete
                     </th>
                 </tr>
                 </thead>
@@ -54,8 +60,30 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <UpdateArticleStatus
+                                :publication="pub"
+                            />
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
                             {{ formatDate(pub.created_at) }}
                         </div>
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <Link
+                            :href="`/super_admin/publication/${pub.id}/view`"
+                            class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors group">
+                            View
+                        </Link>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button
+                            @click="deletePublication(pub, index) "
+                            class="flex items-center text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors group">
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -88,6 +116,9 @@
 
 <script setup>
 import {computed} from "vue";
+import {Link} from "@inertiajs/inertia-vue3";
+import axios from "axios";
+import UpdateArticleStatus from "@/Components/Super_Admin/UpdateArticleStatus.vue";
 const props = defineProps({
     data: {
         type: Array,
@@ -113,5 +144,22 @@ const formatStatus = (status) => {
     return status
         .replace(/_/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
+
+
+let deletePublication = (publication, index) => {
+    if (confirm(`Are you sure you want to delete the article '${publication.title}`)){
+        axios.delete(`/super_admin/publications/${publication.id}/delete`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Article deleted successfully!')
+                    publications.value.splice(index, 1)
+                }else {
+                    alert('could not delete the article, please try again')
+                }
+            })
+    }else{
+
+    }
 }
 </script>

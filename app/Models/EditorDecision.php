@@ -10,6 +10,14 @@ class EditorDecision extends Model
     /** @use HasFactory<\Database\Factories\EditorDecisionFactory> */
     use HasFactory;
 
+
+    public function editor(){
+        return $this->belongsTo(User::class, 'editor_id');
+    }
+    public function manuscript(){
+        $this->belongsTo(Publication::class, 'manuscript_id');
+    }
+
     protected $fillable = [
         'manuscript_id',
         'submitted_review_id',

@@ -1,5 +1,7 @@
 <template>
-    <AuthenticatedLayout>
+    <div class="mb-6">
+        <ReviewerDashboardHeader/>
+    </div>
     <div class="p-4">
         <h2 class="text-xl font-semibold mb-4">My Review History</h2>
         <div class="overflow-x-auto bg-white shadow rounded-lg">
@@ -60,12 +62,12 @@
             </table>
         </div>
     </div>
-    </AuthenticatedLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import ReviewerDashboardHeader from "@/Components/Reviewer/ReviewerDashboardHeader.vue";
 
 defineProps({
     reviews: Array

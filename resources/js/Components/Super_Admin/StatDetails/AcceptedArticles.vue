@@ -22,7 +22,10 @@
                         Submitted at
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Action
+                        View
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Delete
                     </th>
                 </tr>
                 </thead>
@@ -65,20 +68,18 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex space-x-2">
-                            <Link
-                                :href="`/super_admin/publications/${pub.id}/view`"
-                                class="text-blue-600 hover:underline text-sm"
-                            >
-                                View
-                            </Link>
-                            <button
-                                @click="deleteArticle(pub, index)"
-                                class="text-red-600 hover:underline text-sm"
-                            >
-                                Delete
-                            </button>
-                        </div>
+                        <Link
+                            :href="`/super_admin/publication/${pub.id}/view`"
+                            class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors group">
+                            View
+                        </Link>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button
+                            @click="deletePublication(pub, index) "
+                            class="flex items-center text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors group">
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -113,6 +114,7 @@
 import {computed} from "vue";
 import UpdateArticleStatus from "@/Components/Super_Admin/UpdateArticleStatus.vue";
 import {Link} from "@inertiajs/vue3";
+import axios from "axios";
 const props = defineProps({
     data: {
         type: Array,
@@ -138,5 +140,21 @@ const formatStatus = (status) => {
     return status
         .replace(/_/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
+
+let deletePublication = (publication, index) => {
+    if (confirm(`Are you sure you want to delete the article '${publication.title}`)){
+        axios.delete(`/super_admin/publications/${publication.id}/delete`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Article deleted successfully!')
+                    publications.value.splice(index, 1)
+                }else {
+                    alert('could not delete the article, please try again')
+                }
+            })
+    }else{
+
+    }
 }
 </script>

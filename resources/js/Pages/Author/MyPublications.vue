@@ -3,15 +3,11 @@
         <AuthorDashboardHeader/>
 
     </div>
-
-    <SubmissionTable
-        v-if="articles"
-        :submissions="articles"
-    />
-            <div v-else>
-                <p class="text-xs text-gray-400 font-semibold uppercase mb-1">You have no submissions Yet</p>
-            </div>
-
+    <div>
+        <SubmissionTable
+        :submissions="publications"
+        />
+    </div>
 </template>
 
 <script setup>
@@ -19,6 +15,10 @@ import SubmissionTable from "@/Components/Author/SubmissionTable.vue";
 import AuthorDashboardHeader from "@/Components/Author/AuthorDashboardHeader.vue";
 
 defineProps({
-    articles: Object
+    publications: Array
 })
 </script>
+
+<style scoped>
+
+</style>

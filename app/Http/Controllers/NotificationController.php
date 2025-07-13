@@ -17,7 +17,10 @@ class NotificationController extends Controller
         $notificationsCount = Notification::where('receiver_id', $user_id)->where('status', false)->count();
 
         if ($notifications) {
-            return response()->json([$notifications, $notificationsCount]);
+            return response()->json([
+               'notifications' => $notifications,
+                'notificationsCount' => $notificationsCount
+            ]);
         }
     }
 

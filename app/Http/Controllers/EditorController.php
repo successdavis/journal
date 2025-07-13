@@ -27,13 +27,11 @@ class EditorController extends Controller
 
     public function viewReviews()
     {
-        $reviews = SubmittedReview::whereHas('reviewManuscript')
+        $reviews = SubmittedReview::whereHas('manuscript')
             ->with([
-                'reviewManuscript.reviewer', // Load reviewer info
-                'reviewManuscript.manuscript'
-            ])
-            ->latest()
-            ->get();
+                'manuscript.user', // Load reviewer info
+                'manuscript.manuscript.author'
+            ])->get();
 
         return inertia::render('Editor/AllReviews', [
             'reviews' => $reviews,

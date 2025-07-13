@@ -1,11 +1,11 @@
 <template>
     <div class="min-h-screen bg-gray-50 px-6 py-10">
         <div class="max-w-5xl mx-auto bg-white shadow-sm rounded-2xl p-8 space-y-10">
-
             <!-- Top: Profile + Delete -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white uppercase">
+                    <div
+                        class="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white uppercase">
                         <img
                             v-if="user.profilePhoto"
                             :src="user.profilePhoto"
@@ -19,6 +19,13 @@
                         <p class="text-gray-500 text-sm">{{ user.email }}</p>
                         <p class="text-xs text-gray-400">Joined: {{ formattedDate }}</p>
                     </div>
+                </div>
+                <div class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span class="font-medium">User Role:</span>
+                    <span
+                        class="px-2 py-1 text-blue-800 dark:bg-blue-800 dark:text-blue-100 rounded-full text-lg font-bold">
+    {{ user.user_role[0].name }}
+  </span>
                 </div>
                 <button
                     @click="deleteUser(user)"
@@ -77,7 +84,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import {computed} from 'vue'
 
 const props = defineProps({
     user: {
@@ -126,7 +133,6 @@ const stats = computed(() => {
         totalAmount,
     }
 })
-
 
 
 let deleteUser = (user) => {

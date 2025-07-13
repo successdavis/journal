@@ -1,7 +1,7 @@
 <template>
     <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+        <div class=" flex justify-between px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles {{ formatStatus(page_title) }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ publications.length }} Articles found</p>
         </div>
@@ -22,7 +22,9 @@
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Status
                     </th>
-                    <th scope="col"
+                    <th
+                        v-if="$page.props.auth.user.role === 'Super_Admin'"
+                        scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Update status
                     </th>
@@ -84,7 +86,8 @@
                         </div>
 
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td v-if="$page.props.auth.user.role === 'Super_Admin'"
+                        class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             <UpdateArticleStatus
                                 :publication="pub"
@@ -99,12 +102,13 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex space-x-2">
                             <Link
-                                :href="`/super_admin/publications/${pub.id}/view`"
+                                :href="`/super_admin/publication/${pub.id}/view`"
                                 class="text-blue-600 hover:underline text-sm"
                             >
                                 View
                             </Link>
                             <button
+                                v-if="$page.props.auth.user.role === 'Super_Admin'"
                                 @click="deleteArticle(pub, index)"
                                 class="text-red-600 hover:underline text-sm"
                             >

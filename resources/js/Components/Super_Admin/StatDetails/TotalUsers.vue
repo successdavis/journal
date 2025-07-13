@@ -32,7 +32,7 @@
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Status
+                        User role
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -74,6 +74,9 @@
                             {{ user.email_verified_at ? 'Verified email' : 'Unverified email' }}
                         </div>
                     </td>
+                    <td class="px-6 py-4">
+                        {{user.user_role[0].name}}
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             {{ formatDate(user.created_at) }}
@@ -91,7 +94,7 @@
                         </Link>
                         <button
                             @click="deleteUser(user, index)"
-                            class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                            class="text-red-600 hover:text-red-800 dark:text-indigo-400 dark:hover:text-indigo-300"
                         >
                             Delete
                         </button>

@@ -3,11 +3,6 @@
     <div class="bg-white my-6 rounded-lg shadow-md space-y-4 py-6">
         <!-- Header -->
         <h2 class="text-xl font-semibold text-gray-800">📝 Assign / Reassign Reviewers</h2>
-
-
-
-
-
             <table class="min-w-full bg-white border rounded text-sm">
                 <thead class="bg-gray-100 text-left">
                 <tr>
@@ -21,7 +16,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="(reviewer, index) in assignedReviewers" :key="index" class="border-b">
-                    <td class="px-4 py-2 border">{{ reviewer.reviewer.name }}</td>
+                    <td class="px-4 py-2 border">{{ reviewer.user.name }}</td>
                     <td class="px-4 py-2 border">{{ reviewer.request_status }}</td>
                     <td class="px-4 py-2 border">
                         {{ reviewer.complete_reviewed_on ?? 'Not yet reviewed' }}
@@ -30,7 +25,7 @@
                     <td class="px-4 py-2 border">{{formatDate(reviewer.created_at)  }}</td>
                     <td class="px-4 py-2 border text-red-500">
                         <button
-                            @click="removeReviewer(reviewer.reviewer.id, index)"
+                            @click="removeReviewer(reviewer, index)"
                             class="text-red-500 text-sm hover:underline"
                         >
                             Remove
@@ -51,8 +46,8 @@
             >
                 <option value="" disabled selected>Select a reviewer</option>
                 <option
-                    v-for="reviewer in reviewers"
-                    :key="reviewer.id"
+                    v-for="(reviewer, index) in displayedList.users"
+                    :key="index"
                     :value="reviewer"
                 >
                     {{ reviewer.name }} ({{ reviewer.email }})
@@ -74,18 +69,17 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import axios from "axios";
+import indexEsm from "@heroicons/vue";
 
 // Props (replace with actual backend values)
 const props = defineProps({
     itemId: Number,
-    existingReviewers: Array,
-    reviewers: Array,
 })
 
 // Reactive Data
-const assignedReviewers = ref([...props.existingReviewers])
+const assignedReviewers = ref([])
 const selectedReviewer = ref('')
-const displayedList = ref('')
+const displayedList = ref([])
 
 function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -98,31 +92,53 @@ function formatDate(dateString) {
 // Methods
 function assignReviewer() {
 
+    console.log(selectedReviewer.value)
     if (selectedReviewer.value) {
         // Prevent duplicates
-        const exists = assignedReviewers.value.find(
-            (r) => r.reviewer_id === selectedReviewer.value.id,
+        const exists = (assignedReviewers.value || []).find(
+            (r) => r.reviewer_id === selectedReviewer.value.id
         )
             if (!exists) {
-                axios.post(`/editor/${selectedReviewer.value.id}/assign-reviewer/${props.itemId}`)
+                axios.post(`/admins/${selectedReviewer.value.id}/assign_reviewer/${props.itemId}`)
                     .then((res) => {
                         if (res.status === 200) {
-                            assignedReviewers.value = res.data
+                            assignedReviewers.value = res.data.assignedReviewers
+                            displayedList.value = res.data.reviewers
                             selectedReviewer.value = ''
-
                         }
                     })
+            }else {
+                alert(selectedReviewer.value.name + ' has already been added to review this article')
             }
     }
 }
 
-function removeReviewer(reviewerId, index) {
-
-    console.log(reviewerId, props.itemId)
-            assignedReviewers.value.splice(index, 1)
-    axios.delete(`/editor/${reviewerId}/assign-reviewer/${props.itemId}`)
+function fetchReviewers() {
+    axios.get(`/dashboard/get_reviewers/${props.itemId}`)
         .then(res=>{
+            displayedList.value = res.data.reviewers
+            assignedReviewers.value = res.data.assignedReviewers
+            console.log(res.data.assignedReviewers)
         })
 
 }
+
+
+function removeReviewer(reviewer, index) {
+    console.log(reviewer)
+    axios.delete(`/editor/${reviewer.user.id}/assign_reviewer/${props.itemId}`)
+        .then(res=>{
+            if (res.status === 200){
+            assignedReviewers.value.splice(index, 1)
+            }
+
+        })
+
+}
+
+
+
+onMounted(()=>{
+    fetchReviewers()
+})
 </script>

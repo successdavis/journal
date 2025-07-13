@@ -107,7 +107,7 @@ class SuperAdminController extends Controller
                 $data = Publication::with('author')->get();
                 break;
             case 'total_users':
-                $data = User::all();
+                $data = User::with('user_role')->get();
                 break;
             default:
                 abort(404);
@@ -145,7 +145,6 @@ class SuperAdminController extends Controller
                 ->where('model_id', $request->user_id)
             ->first();
 
-
             if($request->option === 'Accepted') {
                 DB::table('model_has_roles')
                     ->where('model_id', $request->user_id)
@@ -173,7 +172,7 @@ class SuperAdminController extends Controller
 
 
         $data = RoleRequest::orderBy('id', 'DESC')
-            ->with('user', 'role')
+            ->with('user', 'role')->where('status', 'pending')
             ->get();
         return response()->json($data);
     }
@@ -269,12 +268,35 @@ class SuperAdminController extends Controller
         }
     }
 
+    public function removeUserRole($user_id)
+    {
+        $defaultRole = Role::where('name', 'Reader')->first();
+        $user = User::findOrFail($user_id);
+
+        if ($user){
+        DB::table('model_has_roles')->where('model_id', $user->id)
+        ->update([
+            'role_id' => $defaultRole->id,
+        ]);
+        }
+    }
+
     public function viewSale($publication_id)
     {
         $sales = Receipt::with('publication.author')->where('publication_id', $publication_id)->get();
         if ($sales) {
             return inertia::render('Super_Admin/ViewSale', [
                 'sales' => $sales,
+            ]);
+        }
+    }
+
+    public function viewPublication($publication_id)
+    {
+        $publication = Publication::with('author')->where('id', $publication_id)->first();
+        if ($publication) {
+            return inertia::render('Super_Admin/ViewPublication', [
+                'publication' => $publication,
             ]);
         }
     }

@@ -1,5 +1,4 @@
 <template>
-    <AuthenticatedLayout>
         <div class="max-w-6xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
             <h1 class="text-3xl font-extrabold mb-8 text-gray-800">Submitted Manuscripts</h1>
 
@@ -97,7 +96,6 @@
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
 
 </template>
 

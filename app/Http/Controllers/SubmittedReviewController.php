@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EditorDecision;
 use App\Models\ManuscriptReviewer;
+use App\Models\Reviewer;
 use App\Models\SubmittedReview;
 use App\Http\Requests\StoreSubmittedReviewRequest;
 use App\Http\Requests\UpdateSubmittedReviewRequest;
@@ -14,9 +16,23 @@ class SubmittedReviewController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($review_id)
     {
-        //
+        $submittedReview = SubmittedReview::findOrFail($review_id)
+        ->whereHas('manuscript')
+            ->with([
+                'manuscript.user', // Load reviewer info
+                'manuscript.manuscript.author'
+            ])->first();
+
+        $editorDecision = EditorDecision::with('editor')
+            ->where('submitted_review_id', $submittedReview->id)
+            ->first();
+
+        return inertia::render('Editor/ViewReview', [
+            'review' => $submittedReview,
+            'editorDecision' => $editorDecision,
+        ]);
     }
 
     /**
@@ -48,11 +64,11 @@ class SubmittedReviewController extends Controller
 
 //         Handle file uploads
         if ($request->hasFile('annotated_manuscript')) {
-            $data['annotated_manuscript'] = $request->file('annotated_manuscript')->store('reviews/annotated');
+            $data['annotated_manuscript'] = $request->file('annotated_manuscript')->store('reviews/annotated', 'public');
         }
 
         if ($request->hasFile('supplementary_feedback')) {
-            $data['supplementary_feedback'] = $request->file('supplementary_feedback')->store('reviews/supplementary');
+            $data['supplementary_feedback'] = $request->file('supplementary_feedback')->store('reviews/supplementary', 'public');
         }
 
         SubmittedReview::create($data);

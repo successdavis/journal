@@ -1,5 +1,4 @@
 <template>
-    <AuthenticatedLayout>
         <div class="max-w-5xl mx-auto p-6 md:p-10 bg-white shadow-xl rounded-3xl space-y-10">
             <!-- Title and Status -->
             <div class="flex justify-between flex-col md:flex-row md:items-center gap-4">
@@ -98,46 +97,7 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Review Action -->
-            <section class="border-t pt-6">
-                <div v-if="manuscript.pivot.request_status === 'pending'">
-                    <p class="text-gray-700 mb-3 font-medium">Do you accept this review request?</p>
-                    <div class="flex gap-4">
-                        <button
-                            @click="acceptReview(manuscript.pivot.reviewer_id, manuscript.pivot.manuscript_id)"
-                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-                        >
-                            Accept
-                        </button>
-                        <button
-                            @click="rejectReview(manuscript.pivot.reviewer_id, manuscript.pivot.manuscript_id)"
-                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
-                        >
-                            Reject
-                        </button>
-                    </div>
-                </div>
-                <div v-else>
-                    <p class="text-gray-600 mb-2">You've already <strong>{{ manuscript.pivot.request_status }}</strong> this review.</p>
-                    <div class="flex gap-4">
-                        <button disabled class="bg-gray-300 text-white px-4 py-2 rounded-lg cursor-not-allowed">Accepted</button>
-                        <button disabled class="bg-gray-300 text-white px-4 py-2 rounded-lg cursor-not-allowed">Reject</button>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex w-full items-center justify-center">
-                        <Link
-                            v-if="manuscript.pivot.request_status  === 'accepted'"
-                            :href="`/reviewer/${manuscript.pivot.reviewer_id}/submit/${manuscript.pivot.manuscript_id}`"
-                            class="px-4 py-1 w-32 h-12 text-xs bg-teal-600 text-white flex justify-center items-center rounded hover:bg-teal-700">
-                            Submit Review
-                        </Link>
-                    </div>
-                </div>
-            </section>
         </div>
-    </AuthenticatedLayout>
 </template>
 
 
@@ -155,26 +115,6 @@ const props = defineProps({
 const manuscript = ref([])
     manuscript.value = props.assignedReview.reviewed_manuscripts[0]
 
-const acceptReview = (reviewerId, manuscriptId) => {
-
-    axios.patch(`/reviewer/${reviewerId}/accept-review/${manuscriptId}`)
-        .then(res=>{
-        // assignedReviewsTodisplay.value = res.data
-        console.log(res.data[1].reviewed_manuscripts[0])
-            manuscript.value = res.data[1].reviewed_manuscripts[0]
-    })
-}
-const rejectReview = (reviewerId, manuscriptId) => {
-
-    axios.patch(`/reviewer/${reviewerId}/reject-review/${manuscriptId}`)
-        .then(res=>{
-            // assignedReviewsTodisplay.value = res.data
-            manuscript.value = res.data[1].reviewed_manuscripts[0]
-        })
-}
-const submitReview = (reviewerId, manuscriptId) => {
-    axios.post(`/reviewer/${reviewerId}/submit/${manuscriptId}}`)
-}
 
 const pivotStatusClass = computed(() => {
     switch (manuscript.value.pivot.request_status) {

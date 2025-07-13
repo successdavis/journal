@@ -1,120 +1,121 @@
 <template>
-    <AuthenticatedLayout>
+    <div class="mb-6">
+        <ReviewerDashboardHeader/>
+    </div>
     <div class="py-6 w-full lg:max-w-6xl mx-auto">
         <h1 class="text-2xl font-bold mb-6">📚 Assigned Reviews</h1>
 
-        <div v-if="assignedReviewsTodisplay" class="space-y-4">
-            <div
-                v-for="(review, index) in assignedReviewsTodisplay.reviewed_manuscripts"
-                :key="index"
-                class="bg-white rounded-2xl shadow-md border p-5 transition hover:shadow-lg"
-            >
-                <div class="flex flex-col md:flex-row justify-between gap-4">
-                    <div>
-                        <h2 class="text-lg font-semibold text-teal-900">
-                            {{ review.title }}
-                        </h2>
-                        <p class="text-gray-600 text-sm mt-1">
-                            Assigned on: {{ formatDate(review.created_at) }}
-                        </p>
-                        <p class="text-gray-600 text-sm mt-1 mb-6">
-                            Abstract: {{review.abstract}}
-                        </p>
-                        <p class="text-sm mt-1 text-gray-800 bg-gray-300 w-fit px-2 rounded-md">
-                            Author: {{ review.author?.name ?? 'N/A' }}
-                        </p>
-                    </div>
-                    <div class="flex flex-col md:items-end space-y-2">
-                        <div class="flex gap-3 items-center">
-              <span class="px-3 py-1 text-xs font-semibold rounded-full"
-                    :class="getStatusClass(review.pivot.request_status)">
-                {{ review.pivot.request_status }}
+        <div v-if="assignedReviewsTodisplay.length" class="overflow-x-auto">
+            <table class="min-w-full table-auto border border-gray-200 rounded-xl shadow-sm bg-white">
+                <thead class="bg-gray-100 text-gray-700 text-sm">
+                <tr>
+                    <th class="px-4 py-3 text-left">Title</th>
+                    <th class="px-4 py-3 text-left">Journal</th>
+                    <th class="px-4 py-3 text-left">Author</th>
+                    <th class="px-4 py-3 text-left">Assigned On</th>
+                    <th class="px-4 py-3 text-left">Request Status</th>
+                    <th class="px-4 py-3 text-left">Review Status</th>
+                    <th class="px-4 py-3 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    v-for="(review, index) in assignedReviewsTodisplay"
+                    :key="index"
+                    class="border-t text-sm hover:bg-gray-50 transition"
+                >
+                    <td class="px-4 py-4 font-medium text-teal-900 max-w-xs">
+                        {{ review.manuscript.title }}
+                    </td>
+                    <td class="px-4 py-4">
+                        {{ review.manuscript.journal }}
+                    </td>
+                    <td class="px-4 py-4">
+                        {{ review.manuscript.author?.name ?? 'N/A' }}
+                    </td>
+                    <td class="px-4 py-4">
+                        {{ formatDate(review.created_at) }}
+                    </td>
+                    <td class="px-4 py-4">
+              <span
+                  class="px-3 py-1 rounded-full text-xs font-semibold"
+                  :class="getStatusClass(review.request_status)"
+              >
+                {{ review.request_status }}
               </span>
-
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full"
-                                  :class="getReviewStatusClass(review.pivot.status)">
-                {{ review.pivot.status }}
+                    </td>
+                    <td class="px-4 py-4">
+              <span
+                  class="px-3 py-1 rounded-full text-xs font-semibold"
+                  :class="getReviewStatusClass(review.status)"
+              >
+                {{ review.status }}
               </span>
-                        </div>
-
-                        <div class="flex gap-2 mt-2">
-                            <button
-                                v-if="review.pivot.request_status === 'pending'"
-                                @click="acceptReview(review.pivot.reviewer_id, review.pivot.manuscript_id)"
-                                class="px-4 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">
-                                Accept
-                            </button>
-
-                            <button
-                                v-if="review.pivot.request_status === 'pending'"
-                                @click="rejectReview(review.pivot.reviewer_id, review.pivot.manuscript_id)"
-                                class="px-4 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">
-                                Reject
-                            </button>
-
-
-                            <Link
-                                :href='`/reviewer/view/${review.id}`'
-                                class="px-4 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">
-                                View Manuscript
-                            </Link>
-                            <div class="flex w-full items-center justify-center">
-                                <Link
-                                    v-if="review.pivot.request_status  === 'accepted'"
-                                    :href="`/reviewer/${review.pivot.reviewer_id}/submit/${review.pivot.manuscript_id}`"
-                                    class="px-4 py-1 w-32 h-12 text-xs bg-teal-600 text-white flex justify-center items-center rounded hover:bg-teal-700">
-                                    Submit Review
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    </td>
+                    <td class="px-4 py-4 text-center space-y-1 md:space-y-0 md:space-x-2 flex flex-col md:flex-row justify-center items-center">
+                        <button
+                            v-if="review.request_status === 'pending'"
+                            @click="acceptReview(review.reviewer_id, review.manuscript_id)"
+                            class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1 rounded"
+                        >
+                            Accept
+                        </button>
+                        <button
+                            v-if="review.request_status === 'pending'"
+                            @click="rejectReview(review.reviewer_id, review.manuscript_id)"
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded"
+                        >
+                            Reject
+                        </button>
+                        <Link
+                            :href="`/super_admin/publication/${review.manuscript.id}/view`"
+                            class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded"
+                        >
+                            View
+                        </Link>
+                        <Link
+                            v-if="review.request_status === 'accepted'"
+                            :href="`/reviewer/${review.reviewer_id}/submit/${review.manuscript_id}`"
+                            class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3 py-1 rounded"
+                        >
+                            Submit
+                        </Link>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div v-else class="text-center text-gray-500 mt-20">
             No assigned reviews at the moment.
         </div>
     </div>
-    </AuthenticatedLayout>
 </template>
 
-
 <script setup>
-import {onMounted, ref} from 'vue'
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {Link} from "@inertiajs/vue3";
-import axios from "axios";
+import { ref } from 'vue'
+import { Link } from "@inertiajs/vue3"
+import axios from "axios"
+import ReviewerDashboardHeader from "@/Components/Reviewer/ReviewerDashboardHeader.vue";
 
-
-let props = defineProps({
+const props = defineProps({
     assignedReviews: Array
-});
+})
 
-let assignedReviewsTodisplay = ref([])
-assignedReviewsTodisplay.value = props.assignedReviews
+let assignedReviewsTodisplay = ref([...props.assignedReviews])
 
 const acceptReview = (reviewerId, manuscriptId) => {
     axios.patch(`/reviewer/${reviewerId}/accept-review/${manuscriptId}`)
-        .then(res=>{
+        .then(res => {
             assignedReviewsTodisplay.value = res.data[0]
         })
 }
 
 const rejectReview = (reviewerId, manuscriptId) => {
     axios.patch(`/reviewer/${reviewerId}/reject-review/${manuscriptId}`)
-        .then(res=>{
+        .then(res => {
             assignedReviewsTodisplay.value = res.data[0]
         })
-}
-
-const viewManuscript = (manuscriptId) => {
-    // console.log(manuscriptId)
-   axios.get(`/reviewer/view/${manuscriptId}}`)
-}
-
-const submitReview = (id) => {
-    console.log(`Submit Review for ID: ${id}`)
 }
 
 const formatDate = (dateStr) => {
