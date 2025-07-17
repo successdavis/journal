@@ -36,8 +36,10 @@ onMounted(async () => {
             <AuthorDashboardHeader/>
 
         </div>
-        <!-- Dashboard Cards -->
-        <DashboardCards :submissions="submissions" :loading="loading"/>
+        <div class="mb-6">
+            <!-- Dashboard Cards -->
+            <DashboardCards :submissions="submissions" :loading="loading"/>
+        </div>
 
         <!-- Submissions Display -->
         <div v-if="loading">

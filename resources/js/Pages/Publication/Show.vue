@@ -19,34 +19,42 @@
 
         <!-- Toolbar Menu -->
         <div class="flex flex-wrap items-center gap-6 border-y py-4 my-6 text-sm text-gray-700">
-            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">
-                <Bars3Icon class="w-5 h-5" />
-                <span>Contents</span>
+<!--            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">-->
+<!--                <Bars3Icon class="w-5 h-5" />-->
+<!--                <span>Contents</span>-->
+<!--            </div>-->
+            <div class="flex items-center gap-1 text-blue-900 font-semibold cursor-pointer" @click="showModal = true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                <span>DOWNLOAD PDF</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 font-semibold cursor-pointer">
-                <ArrowDownTrayIcon class="w-5 h-5" />
-                <span>PDF/EPUB</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+                <span>PREMIUM ACCESS</span>
             </div>
-            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ChatBubbleLeftRightIcon class="w-5 h-5" />
-                <span>Cite article</span>
-            </div>
-            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ShareIcon class="w-5 h-5" />
-                <span>Share options</span>
-            </div>
-            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <InformationCircleIcon class="w-5 h-5" />
-                <span>Information, rights and permissions</span>
-            </div>
-            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ChartBarIcon class="w-5 h-5" />
-                <span>Metrics and citations</span>
-            </div>
-            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">
-                <TableCellsIcon class="w-5 h-5" />
-                <span>Figures and tables</span>
-            </div>
+            <!--            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">-->
+            <!--                <ChatBubbleLeftRightIcon class="w-5 h-5" />-->
+            <!--                <span>Cite article</span>-->
+            <!--            </div>-->
+            <!--            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">-->
+            <!--                <ShareIcon class="w-5 h-5" />-->
+            <!--                <span>Share options</span>-->
+            <!--            </div>-->
+            <!--            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">-->
+            <!--                <InformationCircleIcon class="w-5 h-5" />-->
+            <!--                <span>Information, rights and permissions</span>-->
+            <!--            </div>-->
+            <!--            <div class="flex items-center gap-1 text-blue-900 cursor-pointer">-->
+            <!--                <ChartBarIcon class="w-5 h-5" />-->
+            <!--                <span>Metrics and citations</span>-->
+            <!--            </div>-->
+            <!--            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">-->
+            <!--                <TableCellsIcon class="w-5 h-5" />-->
+            <!--                <span>Figures and tables</span>-->
+            <!--            </div>-->
         </div>
 
         <div class="grid md:grid-cols-5 gap-8">
@@ -80,7 +88,7 @@
                             class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
 
                         <!-- Read More Button -->
-                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                        <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-10">
                             <button
                                 @click="showModal = true"
                                 class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">

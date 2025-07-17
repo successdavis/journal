@@ -99,6 +99,13 @@ export default {
         flash() {
             return this.$page.props.flash || {}
         },
+
+        toggleSidebar() {
+            this.isSidebarOpen = !this.isSidebarOpen
+        },
+        closeSidebar() {
+            this.isSidebarOpen = false
+        },
     },
 
     props: {
@@ -108,13 +115,7 @@ export default {
     methods: {
         clearFlash(type) {
             this.$page.props.flash[type] = null
-        },
-        toggleSidebar() {
-            this.isSidebarOpen = !this.isSidebarOpen
-        },
-        closeSidebar() {
-            this.isSidebarOpen = false
-        },
+        }
     },
 }
 </script>
