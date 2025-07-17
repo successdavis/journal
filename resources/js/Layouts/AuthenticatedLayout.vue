@@ -1,53 +1,62 @@
 <template>
-    <div class="flex relative">
-        <!-- Mobile toggle button -->
+    <div class="flex relative h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+        <!-- Mobile Toggle Button -->
+        <!-- Mobile Toggle Button -->
         <button
             @click="toggleSidebar"
-            class="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded focus:outline-none"
+            :class="[
+    'md:hidden fixed top-4 z-50 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300 ease-in-out',
+    isSidebarOpen ? 'left-72' : 'left-4'
+  ]"
+            aria-label="Toggle sidebar"
         >
-            ☰
+            <span v-if="!isSidebarOpen">☰</span>
+            <span v-else>&times;</span>
         </button>
+
 
         <!-- Mobile Overlay -->
         <div
             v-if="isSidebarOpen"
-            class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 md:hidden"
             @click="closeSidebar"
         ></div>
 
         <!-- Sidebar -->
-        <div
+        <aside
             :class="[
-        'w-72 sidebar h-full overflow-y-scroll fixed z-50 transform transition-transform duration-300 md:translate-x-0 md:block',
+        'w-72 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 overflow-y-auto fixed top-0 left-0 z-50 transition-transform duration-300 ease-in-out transform md:translate-x-0',
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
       ]"
-            aria-label="Sidebar"
         >
             <component :is="componentToRender" @click="closeSidebar" />
-        </div>
+        </aside>
 
         <!-- Main Content -->
-        <div class="md:ml-72 py-4 px-3 w-full overflow-y-scroll main-content">
+        <main class="flex-1 md:ml-72 p-4 overflow-y-auto">
+            <!-- Flash Messages -->
             <Flash
-                v-if="flash && flash.success"
+                v-if="flash.success"
                 :message="flash.success"
                 type="success"
                 @hide="clearFlash('success')"
             />
             <Flash
-                v-if="flash && flash.error"
+                v-if="flash.error"
                 :message="flash.error"
                 type="error"
                 @hide="clearFlash('error')"
             />
             <Flash
-                v-if="flash && flash.message"
+                v-if="flash.message"
                 :message="flash.message"
                 type="info"
                 @hide="clearFlash('info')"
             />
+
+            <!-- Page Slot -->
             <slot />
-        </div>
+        </main>
     </div>
 </template>
 
@@ -69,8 +78,12 @@ export default {
         Flash,
     },
 
+    props: {
+        userRole: String,
+    },
+
     data() {
-        const role = this.$page.props.auth.user.role || 'guest'
+        const role = this.$page.props.auth.user.role || "guest"
         return {
             userRole: role,
             isSidebarOpen: false,
@@ -80,55 +93,41 @@ export default {
     computed: {
         componentToRender() {
             switch (this.userRole) {
-                case 'Super_Admin':
+                case "Super_Admin":
                     return Admin_Sidebar
-                case 'Editor':
+                case "Editor":
                     return EditorSideBar
-                case 'Reviewer':
+                case "Reviewer":
                     return ReviewersSideBar
-                case 'Author':
-                case 'Director':
+                case "Author":
+                case "Director":
                     return AuthorSideBar
-                case 'Reader':
+                case "Reader":
                     return ReadersSideBar
                 default:
-                    return 'GuestComponent'
+                    return ReadersSideBar
             }
         },
 
         flash() {
             return this.$page.props.flash || {}
         },
-
-        toggleSidebar() {
-            this.isSidebarOpen = !this.isSidebarOpen
-        },
-        closeSidebar() {
-            this.isSidebarOpen = false
-        },
-    },
-
-    props: {
-        userRole: String,
     },
 
     methods: {
+        toggleSidebar() {
+            this.isSidebarOpen = !this.isSidebarOpen
+        },
+
+        closeSidebar() {
+            this.isSidebarOpen = false
+        },
+
         clearFlash(type) {
-            this.$page.props.flash[type] = null
-        }
+            if (this.$page.props.flash[type]) {
+                this.$page.props.flash[type] = null
+            }
+        },
     },
 }
 </script>
-
-<style scoped>
-@media print {
-    .sidebar {
-        display: none !important;
-    }
-
-    .main-content {
-        width: 100% !important;
-        margin: 0 !important;
-    }
-}
-</style>

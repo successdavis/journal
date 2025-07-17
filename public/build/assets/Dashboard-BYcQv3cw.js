@@ -1,0 +1,1 @@
+import{_ as e}from"./EditorsDashboardHeader-9S5ym9Uk.js";import{c as s,o as a,e as o,d as t}from"./app-Du_fKGW3.js";import"./ResponseNotification-Cwkpa25z.js";const c={class:"h-screen"},r={class:"mb-6"},l={__name:"Dashboard",setup(_){return(n,m)=>(a(),s("div",c,[o("div",r,[t(e)])]))}};export{l as default};

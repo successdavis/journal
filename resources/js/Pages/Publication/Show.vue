@@ -19,19 +19,23 @@
 
         <!-- Toolbar Menu -->
         <div class="flex flex-wrap items-center gap-6 border-y py-4 my-6 text-sm text-gray-700">
-<!--            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">-->
-<!--                <Bars3Icon class="w-5 h-5" />-->
-<!--                <span>Contents</span>-->
-<!--            </div>-->
+            <!--            <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">-->
+            <!--                <Bars3Icon class="w-5 h-5" />-->
+            <!--                <span>Contents</span>-->
+            <!--            </div>-->
             <div class="flex items-center gap-1 text-blue-900 font-semibold cursor-pointer" @click="showModal = true">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                 </svg>
                 <span>DOWNLOAD PDF</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 font-semibold cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/>
                 </svg>
                 <span>PREMIUM ACCESS</span>
             </div>
@@ -99,7 +103,8 @@
 
                     <div v-else class="w-full bg-red-600 flex">
                         <!-- Read More Button -->
-                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2   z-10 text-center items-center justify-center">
+                        <div
+                            class="absolute bottom-4 left-1/2 -translate-x-1/2   z-10 text-center items-center justify-center">
                             <a
                                 :href="`/storage/${publication.main_document}`" download
                                 class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
@@ -108,19 +113,28 @@
                         </div>
                     </div>
 
+                    <div>
+                        <!-- Backdrop -->
+                        <div
+                            v-show="showModal"
+                            @click="showModal = false"
+                            class="fixed inset-0 bg-black bg-opacity-80 z-40"
+                        ></div>
 
-                    <div
-                        v-show="showModal === true"
-                        @click="showModal = false"
-                        class=" fixed top-0 left-0 w-full h-full bg-black opacity-80 z-50">
+                        <!-- Modal Content -->
+                        <div
+                            v-show="showModal"
+                            class="fixed inset-20 z-50 flex items-start sm:items-center justify-center p-4"
+                        >
+                            <div
+                                class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md sm:max-w-lg md:max-w-xl transform transition-all"
+                                @click.stop
+                            >
+                                <PublicationPriceModal :publication="publication" />
+                            </div>
+                        </div>
                     </div>
-                    <div
-                        v-show="showModal === true"
-                        class="fixed  z-50 top-0 translate-y-32 translate-x-1/2">
-                        <PublicationPriceModal
-                            :publication="publication"
-                        />
-                    </div>
+
                 </div>
             </div>
 
@@ -156,7 +170,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import Layout from '@/Layouts/GuestLayout.vue'
 import {Link} from "@inertiajs/vue3";
 import PublicationPriceModal from "@/Components/PublicationPriceModal.vue";
@@ -201,7 +215,7 @@ onMounted(() => {
         text: h.innerText,
         level: h.tagName === 'H3' ? 3 : 2
     }))
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {passive: true})
 })
 
 onBeforeUnmount(() => {
@@ -212,9 +226,9 @@ const journal = {
     title:
         'Deeping the Commitment to Our Editorial Vision and Recognizing Areas for Comprehensive Reform in Special Education',
     authors: [
-        { name: 'Endia J. Lindo', link: '#' },
-        { name: 'Patricia Martínez-Álvarez', link: '#' },
-        { name: 'Kathleen King Thorius', link: '#' }
+        {name: 'Endia J. Lindo', link: '#'},
+        {name: 'Patricia Martínez-Álvarez', link: '#'},
+        {name: 'Kathleen King Thorius', link: '#'}
     ],
     volume: 91,
     issue: 2,
@@ -235,9 +249,9 @@ const journal = {
         }
     ]
 }
-const fetchSimilarArticles = (publicationId)=>{
+const fetchSimilarArticles = (publicationId) => {
     axios.get(`/api/publication/articles-related-to/${publicationId}`)
-        .then(res=>{
+        .then(res => {
             relatedArticles.value = res.data
             console.log(res.data)
         })
@@ -267,6 +281,7 @@ export default {
 html {
     scroll-behavior: smooth;
 }
+
 .prose section {
     scroll-margin-top: 100px; /* offset for sticky nav */
 }

@@ -1,12 +1,8 @@
 <template>
-    <div class="flex">
-        <!-- Sidebar -->
+    <div class="flex h-screen">
+        <!-- Sidebar (visible only on md and up) -->
         <aside
-            :class="[
-        'fixed md:static top-0 left-0 z-40 h-screen w-64 transition-transform transform md:translate-x-0',
-        showSidebar ? 'translate-x-0' : '-translate-x-full',
-        'bg-indigo-50 text-indigo-900 shadow-lg p-5'
-      ]"
+            class="block w-64 h-full bg-indigo-50 text-indigo-900 shadow-lg p-5"
         >
             <div class="text-lg font-bold mb-6">
                 Readers Panel
@@ -28,23 +24,18 @@
             </nav>
         </aside>
 
-        <!-- Top Bar for Mobile -->
-        <div class="absolute top-0 left-0  z-50 flex items-center justify-between md:hidden p-4 bg-white shadow">
+        <!-- Mobile Top Bar -->
+        <div class="md:hidden fixed top-0 left-0 w-full z-50 flex items-center justify-between p-4 bg-white shadow">
             <div class="font-semibold text-indigo-900">Readers Panel</div>
-            <button @click="showSidebar = !showSidebar" class="text-indigo-900 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
         </div>
 
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mt-16 md:mt-0 overflow-y-auto">
+            <slot />
+        </main>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
-
-const showSidebar = ref(false)
 </script>
