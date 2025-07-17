@@ -18,7 +18,6 @@
         <li>
             <Link href="/author/submit-new-manuscript" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group hover:bg-gray-100">Submit New Manuscript </Link>
         </li>
-
     </sidebar>
 </template>
 <script setup>

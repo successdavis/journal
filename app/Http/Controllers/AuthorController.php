@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,6 +24,15 @@ class AuthorController extends Controller
                     'date' => $article->created_at->format('Y-m-d'),
                 ];
             }),
+        ]);
+    }
+
+    public function getPublications()
+    {
+        $user = auth()->user();
+
+        return inertia::render('Author/MyPublications', [
+            'publications' => Publication::with('author')->where('author_id', $user->id)->get(),
         ]);
     }
 

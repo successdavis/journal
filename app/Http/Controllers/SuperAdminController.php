@@ -10,6 +10,8 @@ use App\Models\SuperAdmin;
 use App\Http\Requests\StoreSuperAdminRequest;
 use App\Http\Requests\UpdateSuperAdminRequest;
 use App\Models\User;
+use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -71,42 +73,42 @@ class SuperAdminController extends Controller
 
     public function viewStats($stats_title)
     {
-        switch ($stats_title){
+        switch ($stats_title) {
             case 'total_sales':
                 $data = Receipt::with('user', 'publication.author')
                     ->where('status', 'successful')
                     ->get();
-                    break;
+                break;
             case 'total_authors':
                 $data = Role::with('users')->where('name', 'Author')->get();
-                    break;
+                break;
             case 'total_reviewers':
                 $data = Role::with('users')->where('name', 'Reviewer')->get();
-                    break;
+                break;
             case 'total_editors':
                 $data = Role::with('users')->where('name', 'Editor')->get();
-                    break;
+                break;
             case 'published_articles':
                 $data = Publication::with('author')->where('status', 'published', null)->get();
-                    break;
+                break;
             case 'under_review':
                 $data = Publication::with('author')->where('status', 'under_review')->get();
-                    break;
+                break;
             case 'accepted_articles':
                 $data = Publication::with('author')->where('status', 'accepted')->get();
-                    break;
+                break;
             case 'rejected_articles':
                 $data = Publication::with('author')->where('status', 'rejected')->get();
-                    break;
+                break;
             case 'articles_withdrawn_by_authors':
                 $data = Publication::with('author')->where('status', 'articles_withdrawn_by_author')->get();
-                    break;
+                break;
             case 'total_articles':
                 $data = Publication::with('author')->get();
-                    break;
+                break;
             case 'total_users':
-                $data = User::all();
-                    break;
+                $data = User::with('user_role')->get();
+                break;
             default:
                 abort(404);
         }
@@ -120,7 +122,7 @@ class SuperAdminController extends Controller
     public function roleRequests()
     {
         return inertia::render('Super_Admin/RoleRequests', [
-            'roleRequests' => RoleRequest::with('user', 'role')->get(),
+            'roleRequests' => RoleRequest::orderBy('id', 'DESC')->with('user', 'role')->where('status', 'Pending')->get(),
         ]);
     }
 
@@ -132,41 +134,47 @@ class SuperAdminController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
-
         DB::transaction(function () use ($request, &$role_request_id) {
             $roleRequest = RoleRequest::findOrFail($role_request_id);
             $roleRequest->status = $request->option;
             $roleRequest->save();
+
             $defaultRole = Role::where('name', 'Reader')->get();
-            $roleToUpdate = DB::table('model_has_role')
-                ->where('role_id', $request->role_id)
-            ->where('model_id', $request->user_id);
 
-            if ($request->option === 'Accepted') {
+            $roleToUpdate = DB::table('model_has_roles')
+                ->where('model_id', $request->user_id)
+            ->first();
 
-                $roleToUpdate->model_id = $request->user_id;
-                $roleToUpdate->role_id = $request->role_id;
-            } else {
-                $roleToUpdate->model_id = $request->user_id;
-                $roleToUpdate->role_id = $defaultRole->id;
+            if($request->option === 'Accepted') {
+                DB::table('model_has_roles')
+                    ->where('model_id', $request->user_id)
+                    ->update([
+                    'role_id' => $request->role_id,
+                ]);
+            }else {
+                DB::table('model_has_roles')
+                    ->where('model_id', $request->user_id)
+                    ->update([
+                        'role_id' => $defaultRole->id,
+                    ]);
             }
 
+            $roleRequested = Role::where('id', $request->role_id)->first();
             Notification::create([
                 'notifiable_type' => get_class($roleRequest),
                 'notifiable_id' => $roleRequest->id,
                 'receiver_id' => $roleRequest->user_id,
                 'sender_id' => auth()->id(),
-                'message' => 'Your request to be an author has been' . $request->option,
+                'message' => 'Your request to be '. $roleRequested->name .'has been' . $request->option,
                 'status' => false,
             ]);
         });
 
 
-        $data = RoleRequest::with('user', 'role')->get();
-
-
+        $data = RoleRequest::orderBy('id', 'DESC')
+            ->with('user', 'role')->where('status', 'pending')
+            ->get();
         return response()->json($data);
-
     }
 
     /**
@@ -177,12 +185,42 @@ class SuperAdminController extends Controller
         //
     }
 
+    public function ubpublishArticle(StoreSuperAdminRequest $request, $publication_id)
+    {
+        $publication = Publication::findOrFail($publication_id);
+        $status = validator($request->publication, [
+            'status' => 'required|in:accepted,published'
+        ])->validate();
+        $publication->status = $status['status'];
+        $publication->save();
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(SuperAdmin $superAdmin)
     {
         //
+    }
+
+    public function updateArticleStatus(StoreSuperAdminRequest $request, $publication_id)
+    {
+        $publication = Publication::findOrFail($publication_id);
+
+        $newStatus = validator(
+            ['newStatus' => $request->newStatus],
+            ['newStatus' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere']
+        )->validate();
+
+        if ($newStatus['newStatus'] === 'published' && $publication->published_at === null) {
+            $publication->published_at = Carbon::now();
+            $publication->status = $newStatus['newStatus'];
+        } else {
+            $publication->status = $newStatus['newStatus'];
+            $publication->published_at = null;
+
+        }
+        $publication->save();
     }
 
     /**
@@ -196,6 +234,16 @@ class SuperAdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function viewUser($user_id)
+    {
+        $user = User::with('publications', 'user_role')->find($user_id);
+
+        return inertia::render('Super_Admin/ViewUser', [
+            'user' => $user
+        ]);
+
+    }
+
     public function update(UpdateSuperAdminRequest $request, SuperAdmin $superAdmin)
     {
         //
@@ -204,8 +252,52 @@ class SuperAdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SuperAdmin $superAdmin)
+    public function destroy($pub_id)
     {
-        //
+        $itemToDelete = Publication::findOrFail($pub_id);
+        if ($itemToDelete) {
+            $itemToDelete->delete();
+        }
+    }
+
+    public function deleteUser($user_id)
+    {
+        $userToDelete = User::findOrFail($user_id);
+        if ($userToDelete) {
+            $userToDelete->delete();
+        }
+    }
+
+    public function removeUserRole($user_id)
+    {
+        $defaultRole = Role::where('name', 'Reader')->first();
+        $user = User::findOrFail($user_id);
+
+        if ($user){
+        DB::table('model_has_roles')->where('model_id', $user->id)
+        ->update([
+            'role_id' => $defaultRole->id,
+        ]);
+        }
+    }
+
+    public function viewSale($publication_id)
+    {
+        $sales = Receipt::with('publication.author')->where('publication_id', $publication_id)->get();
+        if ($sales) {
+            return inertia::render('Super_Admin/ViewSale', [
+                'sales' => $sales,
+            ]);
+        }
+    }
+
+    public function viewPublication($publication_id)
+    {
+        $publication = Publication::with('author')->where('id', $publication_id)->first();
+        if ($publication) {
+            return inertia::render('Super_Admin/ViewPublication', [
+                'publication' => $publication,
+            ]);
+        }
     }
 }

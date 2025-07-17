@@ -6,6 +6,7 @@
     </div>
     <component :is="componentToRender"
     :data="data"
+    :page_title="page_title"
     ></component>
 </template>
 

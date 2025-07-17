@@ -1,11 +1,14 @@
 <template>
-    <AuthenticatedLayout>
-        <p>Your logged in as Reviewer</p>
-    </AuthenticatedLayout>
+    <div class="h-screen">
+
+    <div class="mb-6">
+        <ReviewerDashboardHeader/>
+    </div>
+    </div>
 </template>
 
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import ReviewerDashboardHeader from "@/Components/Reviewer/ReviewerDashboardHeader.vue";
 </script>
 
 <style scoped>

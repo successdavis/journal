@@ -1,5 +1,4 @@
 <template>
-    <AuthenticatedLayout>
         <div class="p-6 max-w-5xl mx-auto bg-white shadow-xl rounded-xl space-y-6 mb-12">
             <!-- Header -->
             <div class="flex items-center justify-between">
@@ -35,7 +34,6 @@
                 />
             </div>
         </div>
-    </AuthenticatedLayout>
 </template>
 
 <script setup>

@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Publications Dashboard</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Articles {{formatStatus(page_title) }}</h2>
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ publications.length }} publications found</p>
         </div>
 
@@ -16,7 +16,7 @@
                         Author
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Journal
+                        Unpublished
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Status
@@ -56,7 +56,14 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 dark:text-white">{{ pub.journal }}</div>
+                        <div class="text-sm text-gray-900 dark:text-white">
+                            <label class="inline-flex items-center me-5 cursor-pointer">
+                                <input type="checkbox" value="" class="sr-only peer"
+                                       :checked="pub.status === 'published'"
+                                       @change="ubpublished(pub)">
+                                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
               <span
@@ -124,15 +131,17 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String
 });
 
 const publications = computed(() => props.data);
+let checked = ref(true)
 
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -145,13 +154,21 @@ const formatDate = (dateString) => {
 };
 
 const formatStatus = (status) => {
-    const statusMap = {
-        'published': 'Published',
-        'accepted': 'Accepted',
-        'under_review': 'Under Review',
-        'rejected': 'Rejected',
-        'withdrawn_by_author': 'Withdrawn'
-    };
-    return statusMap[status] || status;
-};
+    if (!status) return ''
+    return status
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
+
+const ubpublished = (publication)=>{
+    if (publication.status === 'published'){
+        publication.status = 'accepted';
+    }else {
+        publication.status = 'published'
+    }
+        axios.patch(`/super_admin/unpublish_article/${publication.id}`, {publication})
+            .then(res=>{
+                console.log(publication)
+            })
+}
 </script>

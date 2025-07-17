@@ -1,17 +1,16 @@
 <template>
-<AuthenticatedLayout>
+    <div class="mb-6">
+        <EditorsDashboardHeader />
+    </div>
 
     <AllManuscriptsTable
     :items="manuscripts"
     />
-
-</AuthenticatedLayout>
 </template>
 
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ManuscriptsTable from "@/Components/ManuscriptsTable.vue";
 import AllManuscriptsTable from "@/Components/AllManuscriptsTable.vue";
+import EditorsDashboardHeader from "@/Components/Editor/EditorsDashboardHeader.vue";
 
 
 defineProps({

@@ -11,7 +11,7 @@ class ManuscriptReviewer extends Model
     use HasFactory;
 
 
-    public function reviewer()
+    public function user()
     {
         return $this->belongsTo(User::class, 'reviewer_id');
     }

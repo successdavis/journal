@@ -43,6 +43,8 @@ class StorePublicationRequest extends FormRequest
             'originality' => 'required|boolean',
             'views' =>'nullable|integer',
             'accepted_on' =>'nullable|String',
+            'premium' => 'nullable|boolean',
+            'amount'  => 'required_if:premium,true|numeric',
         ];
     }
 

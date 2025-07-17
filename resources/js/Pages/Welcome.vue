@@ -1,16 +1,18 @@
 <template>
     <HeroSection imageSrc="/public/images/bg-image.png" />
-    <div class="min-h-screen bg-gray-50 text-gray-800 max-w-7xl mx-auto">
+    <div class="min-h-screen bg-gray-50 text-gray-800 max-w-7xl mx-auto px-4">
         <FeatureSection />
 <!--        <LatestItems-->
 <!--            title="Latest Thesis"-->
 <!--            url="api/get-thesis-publications"-->
 <!--        />-->
         <LatestJournals url="api/get-journal-publications"/>
-        <BookCarousel
-            url="api/get-books-publications"
-        />
-        <UpcomingEvents url="api/get-events-publications"/>
+<!--        <BookCarousel-->
+<!--            url="api/get-books-publications"-->
+<!--        />-->
+        <div class="mt-6">
+            <UpcomingEvents url="api/get-events-publications"/>
+        </div>
     </div>
 </template>
 

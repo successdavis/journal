@@ -1,11 +1,33 @@
 <template>
-    <div class="flex">
-        <div class="w-72 sidebar fixed overflow-y-scroll h-full hidden md:block" aria-label="Sidebar">
-            <!--            <Sidebar></Sidebar>-->
-            <component :is="componentToRender"></component>
+    <div class="flex relative">
+        <!-- Mobile toggle button -->
+        <button
+            @click="toggleSidebar"
+            class="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded focus:outline-none"
+        >
+            ☰
+        </button>
+
+        <!-- Mobile Overlay -->
+        <div
+            v-if="isSidebarOpen"
+            class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            @click="closeSidebar"
+        ></div>
+
+        <!-- Sidebar -->
+        <div
+            :class="[
+        'w-72 sidebar h-full overflow-y-scroll fixed z-50 transform transition-transform duration-300 md:translate-x-0 md:block',
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+      ]"
+            aria-label="Sidebar"
+        >
+            <component :is="componentToRender" @click="closeSidebar" />
         </div>
 
-        <div class="md:ml-72 py-4 px-3 w-full overflow-y-scroll main-content ">
+        <!-- Main Content -->
+        <div class="md:ml-72 py-4 px-3 w-full overflow-y-scroll main-content">
             <Flash
                 v-if="flash && flash.success"
                 :message="flash.success"
@@ -31,11 +53,11 @@
 
 <script>
 import AuthorSideBar from "@/Layouts/Partials/AuthorsSideBar.vue"
-import EditorSideBar from "@/Layouts/Partials/EditorsSideBar.vue";
-import ReviewersSideBar from "@/Layouts/Partials/ReviewersSideBar.vue";
-import ReadersSideBar from "@/Layouts/Partials/ReadersSideBar.vue";
-import Admin_Sidebar from "@/Layouts/Partials/Admin_Sidebar.vue";
-import Flash from '@/Components/FlashMessage.vue'
+import EditorSideBar from "@/Layouts/Partials/EditorsSideBar.vue"
+import ReviewersSideBar from "@/Layouts/Partials/ReviewersSideBar.vue"
+import ReadersSideBar from "@/Layouts/Partials/ReadersSideBar.vue"
+import Admin_Sidebar from "@/Layouts/Partials/Admin_Sidebar.vue"
+import Flash from "@/Components/FlashMessage.vue"
 
 export default {
     components: {
@@ -44,50 +66,56 @@ export default {
         EditorSideBar,
         ReviewersSideBar,
         ReadersSideBar,
-        Flash
+        Flash,
     },
+
     data() {
-        const role = this.$page.props.auth.user.role || 'guest';
+        const role = this.$page.props.auth.user.role || 'guest'
         return {
-            userRole: role
+            userRole: role,
+            isSidebarOpen: false,
         }
+    },
+
+    computed: {
+        componentToRender() {
+            switch (this.userRole) {
+                case 'Super_Admin':
+                    return Admin_Sidebar
+                case 'Editor':
+                    return EditorSideBar
+                case 'Reviewer':
+                    return ReviewersSideBar
+                case 'Author':
+                case 'Director':
+                    return AuthorSideBar
+                case 'Reader':
+                    return ReadersSideBar
+                default:
+                    return 'GuestComponent'
+            }
+        },
+
+        flash() {
+            return this.$page.props.flash || {}
+        },
+
+        toggleSidebar() {
+            this.isSidebarOpen = !this.isSidebarOpen
+        },
+        closeSidebar() {
+            this.isSidebarOpen = false
+        },
+    },
+
+    props: {
+        userRole: String,
     },
 
     methods: {
         clearFlash(type) {
             this.$page.props.flash[type] = null
         }
-    },
-    computed: {
-        componentToRender() {
-            switch (this.userRole) {
-                case 'Super_Admin':
-                    return Admin_Sidebar;
-                case 'Editor':
-                    return EditorSideBar;
-                case 'Reviewer':
-                    return ReviewersSideBar;
-                case 'author':
-                    return 'AuthorSideBar';
-                case 'Director':
-                    return AuthorSideBar;
-                    case 'Reader':
-                    return ReadersSideBar;
-                case 'guest':
-                    return 'GuestComponent';
-                // add additional cases for other user roles
-                default:
-                    return 'GuestComponent'; // fallback component if role is not recognized
-            }
-        },
-
-        flash() {
-            // return usePage().props.value.flash || {}
-        }
-    },
-
-    props: {
-        userRole: String
     },
 }
 </script>

@@ -27,11 +27,14 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         view
                     </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Remove author
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 <tr
-                    v-for="user in users"
+                    v-for="(user, index) in users"
                     :key="user.id"
                     class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
                 >
@@ -61,10 +64,20 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <Link class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors group">
-                            View User
+                        <Link
+                            :href="`/super_admin/user/${user.id}/view`"
+                            class="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors group">
+                            View author
                         </Link>
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button
+                            @click="removeRole(user, index) "
+                            class="flex items-center text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors group">
+                            Remove
+                        </button>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
@@ -97,12 +110,14 @@
 <script setup>
 import { computed } from 'vue';
 import {Link} from '@inertiajs/inertia-vue3'
+import axios from "axios";
 
 const props = defineProps({
     data: {
         type: Array,
         default: () => []
-    }
+    },
+    page_title: String
 });
 
 const role = computed(() => props.data[0] || {});
@@ -130,4 +145,15 @@ const formatTimeSince = (dateString) => {
     if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
     return `${Math.floor(diffInDays / 30)} months ago`;
 };
+
+
+const removeRole  = (user, index)=>{
+axios.patch(`/super_admin/remove_user_role/${user.id}`)
+    .then(res=>{
+        if (res.status === 200){
+            users.value.splice(index, 1)
+        }
+
+    })
+}
 </script>

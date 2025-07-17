@@ -1,13 +1,5 @@
-<script setup>
-defineProps({
-  submissions: {
-    type: Array,
-    required: true
-  }
-})
-</script>
-
 <template>
+
   <div class="bg-white rounded-xl shadow-lg p-6">
     <h2 class="text-2xl font-semibold text-gray-800 mb-6">My Submissions</h2>
 
@@ -24,7 +16,7 @@ defineProps({
 
         <tbody class="divide-y divide-gray-100 text-gray-700 text-sm">
           <tr
-            v-for="(item, index) in submissions"
+            v-for="(item, index) in publications"
             :key="index"
             class="hover:bg-gray-50 transition duration-150"
           >
@@ -45,17 +37,25 @@ defineProps({
                 {{ item.status }}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ item.date }}</td>
+            <td v-if="item.date"
+                class="px-6 py-4 whitespace-nowrap"> {{ item.date }} </td>
+
+              <td v-else
+                class="px-6 py-4 whitespace-nowrap"> {{ formatDate(item.created_at) }} </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <a
-                :href="`/articles/${index}`"
+              <Link
+                  :href="`/super_admin/publication/${item.id}/view`"
                 class="text-blue-600 hover:underline font-medium text-sm"
               >
                 View
-              </a>
+              </Link>
+                <button
+                    @click="deletePublication(item, index) "
+                    class="flex items-center text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors group">
+                    Delete
+                </button>
             </td>
           </tr>
-
           <tr v-if="submissions.length === 0">
             <td colspan="4" class="px-6 py-6 text-center text-gray-400 italic">
               No submissions found.
@@ -66,3 +66,41 @@ defineProps({
     </div>
   </div>
 </template>
+
+<script setup>
+import  {Link} from '@inertiajs/inertia-vue3'
+import axios from "axios";
+import {ref} from "vue";
+let props = defineProps({
+    submissions: {
+        type: Array,
+        required: true
+    }
+})
+let publications = ref([...props.submissions])
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+};
+
+let deletePublication = (publication, index) => {
+    if (confirm(`Are you sure you want to delete the article '${publication.title}`)){
+        axios.delete(`/super_admin/publications/${publication.id}/delete`)
+            .then(res => {
+                if (res.status === 200){
+                    alert('Article deleted successfully!')
+                    publications.value.splice(index, 1)
+                }else {
+                    alert('could not delete the article, please try again')
+                }
+            })
+    }else{
+
+    }
+}
+</script>

@@ -36,7 +36,7 @@ class PublicationController extends Controller
         $categories = Category::all();
         return inertia::render('Author/NewManuscript', [
             'publication_type' => $publicationTypes,
-            'categories'          =>  $categories
+            'categories' => $categories
         ]);
     }
 
@@ -90,6 +90,8 @@ class PublicationController extends Controller
             'funding_statement' => $data['funding_statement'] ?? null,
             'consent' => $data['consent'],
             'originality' => $data['originality'],
+            'premium' => $data['premium'],
+            'amount' => $data['amount'],
         ]);
 
         return Inertia::render('ReportNotices/PublicationSuccess');
@@ -102,7 +104,7 @@ class PublicationController extends Controller
     public function show(Publication $publication)
     {
         return Inertia::render('Publication/Show', [
-            'publication'   => $publication
+            'publication' => $publication
         ]);
     }
 
@@ -130,7 +132,8 @@ class PublicationController extends Controller
         //
     }
 
-    public function allPublications() {
+    public function allPublications()
+    {
         return inertia('Publication/Index');
     }
 }

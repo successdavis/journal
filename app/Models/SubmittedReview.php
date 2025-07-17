@@ -10,7 +10,7 @@ class SubmittedReview extends Model
     /** @use HasFactory<\Database\Factories\SubmittedReviewFactory> */
     use HasFactory;
 
-    public function reviewManuscript()
+    public function manuscript()
     {
         return $this->belongsTo(ManuscriptReviewer::class, 'review_manuscript_id');
     }

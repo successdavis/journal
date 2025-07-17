@@ -28,6 +28,7 @@ class StoreEditorDecisionRequest extends FormRequest
             'decision' => 'required|string|in:accept,minor_revisions,major_revisions,reject,request_additional_review,resubmit_elsewhere,withdrawn_by_author',
             'comments_to_author' => 'nullable|string',
             'comments_to_reviewer' => 'nullable|string',
+            'reviewer_id' => 'required|integer|exists:users,id',
         ];
     }
 }

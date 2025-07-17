@@ -1,5 +1,9 @@
 <template>
     <Head title="Submit New Manuscript" />
+    <div class="mb-6">
+        <AuthorDashboardHeader/>
+
+    </div>
     <div class="max-w-4xl mx-auto py-12">
         <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-12">Submit New Manuscript</h1>
 
@@ -157,6 +161,21 @@
                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
                         <span class="ml-2 text-sm text-gray-700">This manuscript is original and not under review elsewhere.</span>
                     </label>
+                    <br>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" v-model="form.premium"
+                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                        <span class="ml-2 text-sm text-gray-700">Is this article premium?</span>
+                    </label>
+
+                    <!-- Conditionally show amount -->
+                    <div v-if="form.premium" class="mt-2">
+                        <label class="inline-flex items-center">
+                            <span class="ml-2 text-sm text-gray-700 mr-2">Amount</span>
+                            <input type="number" v-model="form.amount"
+                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                        </label>
+                    </div>
                 </div>
 
             </div>
@@ -185,6 +204,7 @@ import InputLabel from "@/Components/InputLabel.vue"
 import TextInput from "@/Components/TextInput.vue"
 import InputError from "@/Components/InputError.vue"
 import PrimaryButton from "@/Components/PrimaryButton.vue"
+import AuthorDashboardHeader from "@/Components/Author/AuthorDashboardHeader.vue";
 
 const steps = ['Manuscript Details', 'Publication Info', 'Uploads', 'Declarations', 'Consent']
 const currentStep = ref(0)
@@ -213,7 +233,7 @@ const form = useForm({
     title: '', abstract: '', keywords: '', article_type: '', affiliation: '',
     journal: '', main_document: null, figures: [], supplementary: [],
     cover_letter: null, ethical_approval: '', conflict_of_interest: '', funding_statement: '',
-    consent: false, originality: false, category: '', excerpt: ''
+    consent: false, originality: false, category: '', excerpt: '', premium: '', amount: ''
 })
 
 const submit = () => {

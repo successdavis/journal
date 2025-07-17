@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\Publication;
 use App\Models\ManuscriptReviewer;
 use App\Http\Requests\StoreManuscriptReviewerRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\UpdateManuscriptReviewerRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class ManuscriptReviewerController extends Controller
 {
@@ -36,17 +38,38 @@ class ManuscriptReviewerController extends Controller
         $reviewer = User::findOrFail($reviewer_id);
         $manuscript = Publication::findOrFail($item_id);
 
-        ManuscriptReviewer::create([
+
+       $newReviewer =  ManuscriptReviewer::create([
             'manuscript_id' => $manuscript->id,
             'reviewer_id' => $reviewer->id,
         ]);
-        $existingReviewers = ManuscriptReviewer::with('reviewer')
+
+
+       $newReviewer->save();
+
+        Notification::create([
+            'notifiable_type' => get_class($newReviewer),
+            'notifiable_id' => $newReviewer->id,
+            'receiver_id' => $reviewer->id,
+            'sender_id' => auth()->id(),
+            'message' => 'You have been assigned to review manuscript '.$manuscript->title,
+            'status' => false,
+        ]);
+
+
+
+        $assignedReviewers = ManuscriptReviewer::with('user')
             ->where('manuscript_id', $item_id)
             ->get();
+        $reviewers =  Role::with('users')
+            ->where('name', 'Reviewer')->first();
 
-        return response()->json($existingReviewers);
 
 
+        return response()->json([
+            'reviewers' => $reviewers,
+            'assignedReviewers' => $assignedReviewers
+        ]);
     }
 
     /**
@@ -71,6 +94,7 @@ class ManuscriptReviewerController extends Controller
     public function update($reviewer_id, $item_id)
     {
 
+        $user = Auth::user();
         $manuscriptToAccept = ManuscriptReviewer::where('reviewer_id', $reviewer_id)
             ->where('manuscript_id', $item_id)->first();
 
@@ -78,23 +102,12 @@ class ManuscriptReviewerController extends Controller
         $manuscriptToAccept->status = 'in_progress';
         $manuscriptToAccept->save();
 
-        $assignedReviews = User::with('reviewedManuscripts.author')->find($reviewer_id);
-
-
 //       ViewManuscript as Reviewer
-        $assignedReviewerDetails = User::with(['reviewedManuscripts' => function ($query) use ($item_id) {
-            $query->where('authors.id', $item_id) // authors = manuscripts
-            ->with('author'); // load the author of the manuscript
-        }])->find($reviewer_id);
+        $reviewRequest = ManuscriptReviewer::where('reviewer_id', $user->id)
+            ->where('manuscript_id', $item_id)
+            ->first();
 
-        $assignedReviewerDetails->reviewedManuscripts[0]
-            ->figures = json_decode($assignedReviewerDetails->reviewedManuscripts[0]
-            ->figures);
-
-        $assignedReviewerDetails->reviewedManuscripts[0]
-            ->supplementary = json_decode($assignedReviewerDetails->reviewedManuscripts[0]
-            ->supplementary);
-        return response()->json([$assignedReviews, $assignedReviewerDetails]);
+        return response()->json($reviewRequest);
     }
 
     public function rejectReviewRequest($reviewer_id, $item_id)
@@ -150,11 +163,13 @@ class ManuscriptReviewerController extends Controller
      */
     public function destroy($reviewer_id, $item_id)
     {
-        ManuscriptReviewer::where('reviewer_id', $reviewer_id)
-            ->where('manuscript_id', $item_id)
-            ->delete();
+        $reviewerToRemove = ManuscriptReviewer::where('reviewer_id', $reviewer_id)
+        ->where('manuscript_id', $item_id)->first();
 
-        return response()->json(['message' => 'Reviewer unassigned successfully.']);
+//        dd($reviewer_id, $item_id);
 
+        if ($reviewerToRemove) {
+            $reviewerToRemove->delete();
+        }
     }
 }

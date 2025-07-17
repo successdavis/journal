@@ -1,6 +1,11 @@
 <template>
     <div class="pt-4 my-6">
+        <span class="text-sm text-gray-500 mb-1 block text-center">For editors only</span>
+            <h1 class="text-3xl text-center font-semibold text-gray-800 border-b pb-2 mb-4">
+                🖊️ Make a Decision
+            </h1>
         <div class="flex w-full justify-start">
+
             <div class="w-full max-w-md mx-auto">
                 <select id="editorDecision" v-model="review.selectedDecision"
                         @change="handleDecisionChange(review)"
@@ -38,14 +43,13 @@
 
     <div
         v-show="showReviewersModal"
-        @click="showReviewersModal = false"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="relative bg-white p-6 rounded-xl shadow-xl w-fit">
             <h1 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 Confirm Final Decision
             </h1>
             <AssignReviewerSection
-                :itemId="item.id"
+                :itemId="review.id"
                 :reviewers="reviewers"
                 :existingReviewers="existingReviewers"
             />
@@ -60,9 +64,6 @@
             </div>
         </div>
     </div>
-    <!--    <AssignReviewerSection-->
-
-    <!--    />-->
 </template>
 
 <script setup>
@@ -85,16 +86,17 @@ const selectedManuscriptTitle = ref('')
 const selectedReviewId = ref(null)
 
 function handleDecisionChange(review) {
-        selectedManuscriptTitle.value = props.review.review_manuscript.manuscript.title
+        selectedManuscriptTitle.value = props.review.manuscript.manuscript.title
         selectedReviewId.value = props.review.id
         showModal.value = true
 }
 
 function handleFinalDecision({commentToAuthor, commentToReviewer}) {
     const data = {
-        manuscript_id: props.review.review_manuscript.manuscript.id,
+        manuscript_id: props.review.manuscript.manuscript.id,
         submitted_review_id: props.review.id,
         round: props.review.round,
+        reviewer_id: props.review.manuscript.user.id,
         decision: props.review.selectedDecision,
         comments_to_author: commentToAuthor,
         comments_to_reviewer: commentToReviewer,

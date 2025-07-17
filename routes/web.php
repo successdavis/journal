@@ -15,6 +15,7 @@ use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\SuperAdminController;
+use App\Models\SubmittedReview;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -85,9 +86,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/editor/all-submissions', [EditorController::class, 'index']);
     Route::get('/editor/{item_id}/view', [EditorController::class, 'viewManuscript']);
     Route::get('/editor/{item_id}/track-review', [EditorController::class, 'trackReviewManuscript']);
-    Route::post('/editor/{reviewer_id}/assign-reviewer/{item_id}', [ManuscriptReviewerController::class, 'store']);
-    Route::delete('/editor/{reviewer_id}/assign-reviewer/{item_id}', [ManuscriptReviewerController::class, 'destroy']);
+
     Route::get('/editor/all-reviews', [EditorController::class, 'viewReviews']);
+
     Route::get('/editor/all-reviews/{item_id}', [EditorController::class, 'viewReviewsSection']);
     Route::post('/editor/{review_id}/make-decision', [EditorDecisionController::class, 'store']);
     Route::get('/editor/categories/create', [CategoriesController::class, 'create']);
@@ -101,6 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reviewer/{reviewer_id}/submit/{manuscript_id}', [SubmittedReviewController::class, 'create']);
     Route::post('/reviewer/{reviewer_id}/submit/{manuscript_id}', [SubmittedReviewController::class, 'store']);
     Route::get('/reviewer/review-history', [ReviewerController::class, 'history']);
+    Route::get('/reviewer/get_review_request/{manuscript_id}', [ReviewerController::class, 'getReviewRequest']);
 
 
 
@@ -115,7 +117,14 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::post('/admins/{reviewer_id}/assign_reviewer/{item_id}', [ManuscriptReviewerController::class, 'store']);
+    Route::delete('/editor/{reviewer_id}/assign_reviewer/{item_id}', [ManuscriptReviewerController::class, 'destroy']);
+
+
     Route::get('/super_admin/fetch_totals', [SuperAdminController::class, 'index'])->name('super_admin.fetch_totals');
+    Route::patch('/super_admin/remove_user_role/{user_id}', [SuperAdminController::class, 'removeUserRole'])->name('super_admin.remove_user_role');
+    Route::get('/super_admin/publication/{pub_id}/view', [SuperAdminController::class, 'viewPublication'])->name('super_admin.view_publication');
+
     Route::get('/super_admin/role_requests', [SuperAdminController::class, 'roleRequests'])->name('super_admin.role_request');
     Route::patch('/super_admin/response_to_role_request/{role_request_id}', [SuperAdminController::class, 'responseToRoleRequest'])
         ->name('super_admin.response_to_role_request');
@@ -123,10 +132,25 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/get_notifications/{user_id}', [NotificationController::class, 'index'])->name('user.get_notifications');
-
     Route::patch('/notifications_read/{user_id}', [NotificationController::class, 'notificationsRead'])->name('user.read_notifications');
 
     Route::get('/dashboard/{stat_title}/view', [SuperAdminController::class, 'viewStats'])->name('view.stats');
+
+    Route::patch('/super_admin/unpublish_article/{publication_id}', [SuperAdminController::class, 'ubpublishArticle'])->name('unpublish.published_status');
+    Route::patch('/super_admin/{publication_id}/update_article_status', [SuperAdminController::class, 'updateArticleStatus'])->name('update.article_status');
+
+    Route::delete('/super_admin/publications/{pub_id}/delete', [SuperAdminController::class, 'destroy'])->name('delete.article');
+
+    Route::delete('/super_admin/user/{user_id}/delete', [SuperAdminController::class, 'deleteUser'])->name('admin.delete_user');
+
+    Route::get('/super_admin/user/{user_id}/view', [SuperAdminController::class, 'viewUser'])->name('admin.view_user');
+
+    Route::get('/super_admin/view_sales_details/{publication_id}', [SuperAdminController::class, 'viewSale'])->name('admin.view_sale');
+    Route::get('/dashboard/get_reviewers/{publication_id}', [ReviewerController::class, 'getReviewers'])->name('reviewers.get');
+
+    Route::get('/author/publications', [AuthorController::class, 'getPublications'])->name('author_publications.get');
+
+    Route::get('admin/view_full_review/{review_id}', [SubmittedReviewController::class, 'index'])->name('admins.view_submitted_review');
 
 });
 

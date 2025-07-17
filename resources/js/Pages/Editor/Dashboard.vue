@@ -1,11 +1,15 @@
 <template>
-    <AuthenticatedLayout>
-        <p>Your logged in as Editor</p>
-    </AuthenticatedLayout>
+    <div class="h-screen">
+<div class="mb-6">
+    <EditorsDashboardHeader />
+</div>
+
+
+    </div>
 </template>
 
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import EditorsDashboardHeader from "@/Components/Editor/EditorsDashboardHeader.vue";
 </script>
 
 <style scoped>

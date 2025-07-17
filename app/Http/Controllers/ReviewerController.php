@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use PHPUnit\TextUI\Output\SummaryPrinter;
+use Spatie\Permission\Models\Role;
+use function PHPUnit\Framework\assertInfinite;
 
 class ReviewerController extends Controller
 {
@@ -19,12 +21,38 @@ class ReviewerController extends Controller
      */
     public function index()
     {
-
         $user = Auth::user();
-        $assignedReviews = User::with('reviewedManuscripts.author')->find($user->id);
+        $assignedReviews = ManuscriptReviewer::with('manuscript.author')
+            ->where('reviewer_id', $user->id)
+            ->get();
 
         return inertia::render('Reviewer/View', [
             'assignedReviews'=> $assignedReviews
+        ]);
+    }
+
+    public function getReviewRequest($manuscript_id)
+    {
+        $user = Auth::user();
+        $assignedReview = ManuscriptReviewer::where('reviewer_id', $user->id)
+            ->where('manuscript_id', $manuscript_id)
+            ->first();
+
+        return response()->json($assignedReview);
+    }
+
+    public function getReviewers($publication_id)
+    {
+        $assignedReviewers = ManuscriptReviewer::with('user')
+            ->where('manuscript_id', $publication_id)
+            ->get();
+
+        $reviewers =  Role::with('users')
+            ->where('name', 'Reviewer')->first();
+
+        return response()->json([
+            'reviewers' => $reviewers,
+            'assignedReviewers' => $assignedReviewers
         ]);
     }
 

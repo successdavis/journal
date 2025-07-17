@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('publication_id')->nullable()->constrained('publications')->onDelete('set null');
+            $table->foreignId('publication_id')->constrained('publications')->onDelete('set null');
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3)->default('NGN');
             $table->string('payment_method')->nullable();
