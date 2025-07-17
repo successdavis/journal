@@ -81,7 +81,7 @@ onMounted(async () => {
     </div>
 
     <!-- New Sales & Earnings Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-6">
 
         <!-- Total Sales Card -->
         <div class="bg-purple-50 p-6 rounded-2xl shadow hover:shadow-lg transition group border border-purple-200">
