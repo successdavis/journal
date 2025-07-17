@@ -116,24 +116,39 @@
                     <div>
                         <!-- Backdrop -->
                         <div
-                            v-show="showModal"
                             @click="showModal = false"
+                            v-show="showModal"
                             class="fixed inset-0 bg-black bg-opacity-80 z-40"
                         ></div>
 
                         <!-- Modal Content -->
                         <div
                             v-show="showModal"
-                            class="fixed inset-20 z-50 flex items-start sm:items-center justify-center p-4"
+                            class="fixed inset-0 z-50 flex items-center justify-center p-4"
                         >
                             <div
-                                class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md sm:max-w-lg md:max-w-xl transform transition-all"
+                                class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full sm:w-auto sm:max-w-lg md:max-w-xl transform transition-all"
                                 @click.stop
                             >
+                                <!-- Close Button -->
+                                <button
+                                    @click="showModal = false"
+                                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Modal Content Component -->
                                 <PublicationPriceModal :publication="publication" />
                             </div>
                         </div>
                     </div>
+
+
+
 
                 </div>
             </div>
