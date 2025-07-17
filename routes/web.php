@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoriesController;
@@ -15,7 +14,6 @@ use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\SuperAdminController;
-use App\Models\SubmittedReview;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
