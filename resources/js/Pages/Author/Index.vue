@@ -34,7 +34,7 @@
                 5
               </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowra      <td class="px-6 py-4 whitespace-nowrap">Journal</td>
+                        <td class="px-6 py-4 whitespace-nowrap">Journal</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <a
                                 :href="`/articles/${index}`"
