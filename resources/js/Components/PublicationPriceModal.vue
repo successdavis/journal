@@ -1,9 +1,11 @@
 <template>
-
     <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <a href="#">
-            <img class="p-8 rounded-t-lg" :src="publication.image" alt="product image" />
-        </a>
+        <img
+            class="w-full h-64 p-4 rounded-lg"
+            :src="`/storage/${publication.thumbnail}`"
+            :alt="publication.thumbnail"
+        />
+
         <div class="px-5 pb-5">
             <a href="#">
                 <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{{publication.title}}</h5>
@@ -29,7 +31,7 @@
                 <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>
             </div>
             <div class="flex items-center justify-between">
-                <span class="text-3xl font-bold text-gray-900 dark:text-white">${{ publication.amount }}</span>
+                <span class="text-3xl font-bold text-gray-900 dark:text-white">₦{{ publication.amount }}</span>
                     <button
                         v-if="$page.props.auth.user"
                         @click="handleReadMore(publication.id, $page.props.auth.user.id)"
@@ -40,7 +42,7 @@
                         v-else
                         href="/login"
                         class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
-                        Continue to payment
+                        Proceed to payment
                     </Link>
             </div>
         </div>

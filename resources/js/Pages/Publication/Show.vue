@@ -74,44 +74,47 @@
                     <div ref="contentRef" class="prose prose-lg max-w-none text-gray-800">
                         {{ publication.abstract }}
                     </div>
+
+                    <!-- Premium content handling -->
                     <div v-if="publication.premium">
                         <!-- Fade Overlay -->
-                        <div
-                            class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
 
                         <!-- Read More Button -->
                         <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                             <button
                                 @click="showModal = true"
-                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
+                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                            >
                                 Read more
                             </button>
                         </div>
                     </div>
 
-                    <div v-else class="w-full bg-red-600 flex">
-                        <!-- Read More Button -->
-                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2   z-10 text-center items-center justify-center">
-                            <a
-                                :href="`/storage/${publication.main_document}`" download
-                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
-                                Download article
-                            </a>
-                        </div>
+                    <!-- Free content / non-premium -->
+                    <div v-else class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 text-center">
+                        <a
+                            :href="`/storage/${publication.main_document}`"
+                            download
+                            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                        >
+                            Download article
+                        </a>
                     </div>
 
-
+                    <!-- Dark overlay when modal is open -->
                     <div
-                        v-show="showModal === true"
+                        v-show="showModal"
                         @click="showModal = false"
-                        class=" fixed top-0 left-0 w-full h-full bg-black opacity-80 z-50">
-                    </div>
+                        class="fixed top-0 left-0 w-full h-full bg-black opacity-80 z-40"
+                    ></div>
+
+                    <!-- Modal -->
                     <div
-                        v-show="showModal === true"
-                        class="fixed  z-50 top-0 translate-y-32 translate-x-1/2">
-                        <PublicationPriceModal
-                            :publication="publication"
-                        />
+                        v-show="showModal"
+                        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+                    >
+                        <PublicationPriceModal :publication="publication" />
                     </div>
                 </div>
             </div>
