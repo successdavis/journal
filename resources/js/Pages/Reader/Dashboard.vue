@@ -2,6 +2,8 @@
 import {router} from "@inertiajs/vue3";
 import {ref} from "vue";
 import ResponseNotification from "@/Components/ResponseNotification.vue";
+import { Link } from '@inertiajs/vue3';
+
 
 const notifications = ref('');
 const notificationCount = ref(0)
@@ -19,11 +21,11 @@ const logout = () => {
 
             <!-- Header -->
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-800">Reader Dashboard</h1>
+                <h1 class="text-lg font-bold text-gray-800">Welcome</h1>
 
-            <ResponseNotification
-            :user="$page.props.auth.user"
-            />
+                <ResponseNotification
+                    :user="$page.props.auth.user"
+                />
 
                 <button
                     @click="logout"
@@ -35,5 +37,9 @@ const logout = () => {
             <hr>
 
         </div>
+
+        <p class="mt-6">You're login, please return to landing page to purchase any journal of your choice</p>
+
+        <Link class="text-center mt-6 block cursor-pointer bg-blue-800 text-white p-3" href="/">Browse Journals</Link>
     </div>
 </template>

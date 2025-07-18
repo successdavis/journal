@@ -4,15 +4,19 @@
         <div>
             <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{{ publication.title }}</h1>
             <div class="text-sm text-gray-600">
-          <span v-for="(author, index) in journal.authors" :key="index">
-            <a :href="author.link" class="text-blue-600 hover:underline">{{ author.name }}</a>
-            <span v-if="index !== journal.authors.length - 1">, </span>
+          <span>
+            <a class="text-blue-600 hover:underline">{{ publication.co_writers }}</a>
+              <!--            <span v-if="index !== journal.authors.length - 1">, </span>-->
           </span>
+<!--          <span v-for="(author, index) in journal.authors" :key="index">-->
+<!--            <a :href="author.link" class="text-blue-600 hover:underline">{{ author.name }}</a>-->
+                    <!--            <span v-if="index !== journal.authors.length - 1">, </span>-->
+<!--          </span>-->
             </div>
             <div class="mt-1 text-sm text-gray-500">
-                Volume {{ journal.volume }}, Issue {{ journal.issue }} ·
+                {{ publication.citation_information }} ·
                 <a :href="journal.doi" target="_blank" class="text-orange-600 hover:underline">
-                    https://doi.org/{{ journal.doi }}
+                    <!--                    https://doi.org/{{ journal.doi }}-->
                 </a>
             </div>
         </div>

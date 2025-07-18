@@ -7,7 +7,7 @@
         <div class="flex justify-around items-center">
 
             <a href="/author/submit-new-manuscript" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                + Submit New Article
+                + Submit New Journal
             </a>
             <ResponseNotification
                 :user="$page.props.auth.user"

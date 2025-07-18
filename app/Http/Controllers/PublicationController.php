@@ -70,6 +70,11 @@ class PublicationController extends Controller
             $coverLetterPath = $request->file('cover_letter')->store('manuscripts/cover_letters', 'public');
         }
 
+        $thumbnailPath = null;
+        if ($request->hasFile('cover_letter')) {
+            $thumbnailPath = $request->file('thumbnail')->store('covers', 'public');
+        }
+
         // Save to DB
         Publication::create([
             'title' => $data['title'],
@@ -82,6 +87,7 @@ class PublicationController extends Controller
             'affiliation' => $data['affiliation'],
             'journal' => $data['journal'],
             'main_document' => $mainDocumentPath,
+            'thumbnail' => $thumbnailPath,
             'figures' => json_encode($figuresPaths),
             'supplementary' => json_encode($supplementaryPaths),
             'cover_letter' => $coverLetterPath,
@@ -92,6 +98,8 @@ class PublicationController extends Controller
             'originality' => $data['originality'],
             'premium' => $data['premium'],
             'amount' => $data['amount'],
+            'co_writers' => $data['co_writers'],
+            'citation_information' => $data['citation_information'],
         ]);
 
         return Inertia::render('ReportNotices/PublicationSuccess');
