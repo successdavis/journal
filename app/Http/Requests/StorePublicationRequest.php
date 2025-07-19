@@ -26,10 +26,10 @@ class StorePublicationRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'abstract' => 'required|string',
-            'keywords' => 'required|string',
+            'keywords' => 'nullable|string',
             'article_type' => 'required|string',
-            'affiliation' => 'required|string',
-            'journal' => 'required|string',
+            'affiliation' => 'nullable|string',
+            'journal' => 'nullable|string',
             'category' => 'required|string',
             'excerpt' => 'required|string',
             'main_document' => 'required|file|mimes:pdf,doc,docx',
@@ -45,6 +45,8 @@ class StorePublicationRequest extends FormRequest
             'accepted_on' =>'nullable|String',
             'premium' => 'nullable|boolean',
             'amount'  => 'required_if:premium,true|numeric',
+            'citation_information' => 'nullable|string',
+            'co_writers' => 'nullable|string'
         ];
     }
 

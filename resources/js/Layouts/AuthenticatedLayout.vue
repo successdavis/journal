@@ -1,5 +1,5 @@
 <template>
-    <div class="flex relative h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+    <div class="flex relative h-screen overflow-hidden bg-gray-100 ">
         <!-- Mobile Toggle Button -->
         <!-- Mobile Toggle Button -->
         <button

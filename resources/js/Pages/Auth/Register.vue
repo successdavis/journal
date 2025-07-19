@@ -10,7 +10,7 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
-    role: '',
+    role: '5',
 });
 
 let props = defineProps({
@@ -124,7 +124,7 @@ defineOptions({
 
                 <!-- Role -->
                 <div class="mt-4">
-                    <InputLabel for="role" value="Register as" class="mb-1 text-sm text-gray-700 dark:text-gray-300" />
+                    <InputLabel for="role" value="Register as " class="mb-1 text-sm text-gray-700 dark:text-gray-300" />
                     <select
                         id="role"
                         v-model="form.role"

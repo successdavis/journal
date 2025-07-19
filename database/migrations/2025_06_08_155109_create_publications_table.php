@@ -19,9 +19,9 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('title');
             $table->text('abstract');
-            $table->string('keywords');
-            $table->string('affiliation');
-            $table->string('journal');
+            $table->string('keywords')->nullable();
+            $table->string('affiliation')->nullable();
+            $table->string('journal')->nullable();
             $table->string('main_document');
             $table->json('figures')->nullable();
             $table->json('supplementary')->nullable();
