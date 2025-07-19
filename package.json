@@ -25,6 +25,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@tiptap/extension-blockquote": "^3.0.7",
         "@tiptap/extension-code-block": "^3.0.7",
+        "@tiptap/extension-code-block-lowlight": "^3.0.7",
         "@tiptap/extension-heading": "^3.0.7",
         "@tiptap/extension-image": "^3.0.7",
         "@tiptap/extension-link": "^3.0.7",

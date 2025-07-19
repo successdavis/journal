@@ -1,4 +1,4 @@
-// File: components/WysiwygEditor.vue
+<!-- File: components/WysiwygEditor.vue -->
 <template>
   <div class="max-w-4xl mx-auto p-4">
     <div class="bg-white rounded-xl shadow-md border border-gray-200">
@@ -26,18 +26,70 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { Editor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import { Node, mergeAttributes } from '@tiptap/core';
 
-import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, Quote, List, ListOrdered, Heading1, Heading2, Heading3, Heading4, Undo2, Redo2, Link2, ImageIcon, Code2 } from 'lucide-vue-next';
+import {
+  Bold, Italic, Underline as UnderlineIcon, Strikethrough, Quote,
+  List, ListOrdered, Heading1, Heading2, Heading3, Heading4,
+  Undo2, Redo2, Link2, ImageIcon, Code2, Youtube
+} from 'lucide-vue-next';
 
 const content = ref('');
 const showPreview = ref(false);
 const fileInput = ref(null);
+
+// 👉 Embed Extension for YouTube
+const Embed = Node.create({
+  name: 'embed',
+  group: 'block',
+  atom: true,
+  selectable: true,
+
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+    };
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'iframe[src]',
+      },
+    ];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    const safeSrc = HTMLAttributes.src?.startsWith('https://') ? HTMLAttributes.src : '';
+    return ['iframe', mergeAttributes(HTMLAttributes, {
+      src: safeSrc,
+      class: 'w-full aspect-video border rounded',
+      frameborder: '0',
+      allowfullscreen: 'true',
+    })];
+  },
+
+  addCommands() {
+    return {
+      setEmbed:
+        (attrs) =>
+        ({ commands }) => {
+          return commands.insertContent({
+            type: this.name,
+            attrs,
+          });
+        },
+    };
+  },
+});
 
 const editor = new Editor({
   content: '',
@@ -45,7 +97,8 @@ const editor = new Editor({
     StarterKit,
     Underline,
     Link.configure({ openOnClick: false }),
-    Image
+    Image,
+    Embed,
   ],
   onUpdate({ editor }) {
     content.value = editor.getHTML();
@@ -70,6 +123,15 @@ const handleImageUpload = async (e) => {
   reader.readAsDataURL(file);
 };
 
+// 👉 YouTube URL to embed src converter
+function getYouTubeEmbedUrl(url) {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  if (!match || !match[1]) return null;
+  return `https://www.youtube.com/embed/${match[1]}`;
+}
+
 const toolbar = [
   { title: 'Bold', icon: Bold, action: () => editor.chain().focus().toggleBold().run() },
   { title: 'Italic', icon: Italic, action: () => editor.chain().focus().toggleItalic().run() },
@@ -82,12 +144,37 @@ const toolbar = [
   { title: 'Blockquote', icon: Quote, action: () => editor.chain().focus().toggleBlockquote().run() },
   { title: 'Bullet List', icon: List, action: () => editor.chain().focus().toggleBulletList().run() },
   { title: 'Ordered List', icon: ListOrdered, action: () => editor.chain().focus().toggleOrderedList().run() },
-  { title: 'Link', icon: Link2, action: () => {
-    const url = prompt('Enter URL');
-    if (url) editor.chain().focus().setLink({ href: url }).run();
-  }},
-  { title: 'Insert Image', icon: ImageIcon, action: () => fileInput.value.click() },
-  { title: 'Code Block', icon: Code2, action: () => editor.chain().focus().toggleCodeBlock().run() },
+  {
+    title: 'Link',
+    icon: Link2,
+    action: () => {
+      const url = prompt('Enter URL');
+      if (url) editor.chain().focus().setLink({ href: url }).run();
+    },
+  },
+  {
+    title: 'Insert Image',
+    icon: ImageIcon,
+    action: () => fileInput.value.click(),
+  },
+  {
+    title: 'Code Block',
+    icon: Code2,
+    action: () => editor.chain().focus().toggleCodeBlock().run(),
+  },
+  {
+    title: 'Embed YouTube',
+    icon: Youtube,
+    action: () => {
+      const url = prompt('Paste YouTube video URL');
+      const embedUrl = getYouTubeEmbedUrl(url);
+      if (embedUrl) {
+        editor.chain().focus().setEmbed({ src: embedUrl }).run();
+      } else {
+        alert('Invalid YouTube URL. Please paste a valid link.');
+      }
+    },
+  },
   { title: 'Undo', icon: Undo2, action: () => editor.chain().focus().undo().run() },
   { title: 'Redo', icon: Redo2, action: () => editor.chain().focus().redo().run() },
 ];
