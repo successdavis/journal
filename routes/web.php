@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoriesController;
@@ -15,7 +14,6 @@ use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\SubmittedReviewController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\SuperAdminController;
-use App\Models\SubmittedReview;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +28,7 @@ Route::get('/', function () {
 });
 
 Route::get('api/get-thesis-publications', [ListPublicationsController::class, 'latestThesis']);
+Route::get('api/get-journal-publications', [ListPublicationsController::class, 'latestJournal']);
 Route::get('api/get-books-publications', [ListPublicationsController::class, 'latestBooks']);
 Route::get('api/get-events-publications', [ListPublicationsController::class, 'eventListing']);
 Route::get('api/publications', [ListPublicationsController::class, 'index']);
@@ -39,6 +38,7 @@ Route::get('/browse/journals-and-books', [PublicationController::class, 'allPubl
 Route::get('/browse/journals-and-books/{publication}/show', [PublicationController::class, 'show']);
 
 Route::get('api/author/publications', [AuthorController::class, 'publications']);
+Route::get('author/publications', [AuthorController::class, 'index']);
 
 
 Route::get('/about-us', [AboutUsController::class, 'show']);
