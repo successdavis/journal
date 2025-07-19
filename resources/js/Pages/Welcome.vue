@@ -1,18 +1,22 @@
 <template>
-    <HeroSection imageSrc="/public/images/bg-image.png" />
+<!--    <HeroSection imageSrc="/public/images/bg-image.png" />-->
     <div class="min-h-screen bg-gray-50 text-gray-800 max-w-7xl mx-auto px-4">
-        <FeatureSection />
+
+        <WysiwygEditor v-model="editorContent" @save="handleSave" />
+
+
+<!--        <FeatureSection />-->
 <!--        <LatestItems-->
 <!--            title="Latest Thesis"-->
 <!--            url="api/get-thesis-publications"-->
 <!--        />-->
-        <LatestJournals url="api/get-journal-publications"/>
+<!--        <LatestJournals url="api/get-journal-publications"/>-->
 <!--        <BookCarousel-->
 <!--            url="api/get-books-publications"-->
 <!--        />-->
-        <div class="mt-6">
-            <UpcomingEvents url="api/get-events-publications"/>
-        </div>
+<!--        <div class="mt-6">-->
+<!--            <UpcomingEvents url="api/get-events-publications"/>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -25,6 +29,7 @@ import LatestItems from "@/Components/LatestItems.vue"
 import BookCarousel from "@/Components/BookCarousel.vue"
 import UpcomingEvents from "@/Components/UpcomingEvents.vue"
 import LatestJournals from "@/Components/LatestJournals.vue";
+import WysiwygEditor from "@/Components/WysiwygEditor.vue";
 
 // Set layout with defineOptions (new in Vue 3.3+)
 defineOptions({
