@@ -78,12 +78,12 @@
                     <div ref="contentRef" class="prose prose-lg max-w-none text-gray-800">
                         {{ publication.abstract }}
                     </div>
-
                     <!-- Premium content handling -->
-                    <div v-if="publication.premium">
                         <!-- Fade Overlay -->
-                        <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-
+                        <div
+                            v-show="!showAbstract"
+                            class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                    <div v-if="publication.premium && !$page.props.auth.user || ($page.props.auth.user.role === 'Reader' && (!receipts.some(r => r.user_id === $page.props.auth.user.id)))">
                         <!-- Read More Button -->
                         <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                             <button
@@ -96,14 +96,15 @@
                     </div>
 
                     <!-- Free content / non-premium -->
-                    <div v-else class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 text-center">
-                        <a
-                            :href="`/storage/${publication.main_document}`"
-                            download
-                            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                    <div v-else class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 text-center">
+                        <button
+                            @click="showAbstract = true"
+                            :class="['text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5',
+                             showAbstract? 'hidden' : ''
+]"
                         >
-                            Download article
-                        </a>
+                            Read more
+                        </button>
                     </div>
 
                     <!-- Dark overlay when modal is open -->
@@ -120,6 +121,17 @@
                     >
                         <PublicationPriceModal :publication="publication" />
                     </div>
+                </div>
+                <div class="flex justify-center items-center">
+
+                <a
+                    v-show="showAbstract"
+                    :href="`/storage/${publication.main_document}`"
+                    download
+                    class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                >
+                    Download article
+                </a>
                 </div>
             </div>
 
@@ -164,13 +176,15 @@ const tocItems = ref([])
 const activeSection = ref('')
 const contentRef = ref(null)
 const showModal = ref(false)
+const showAbstract = ref(false)
 const relatedArticles = ref([])
 
 let props = defineProps({
     publication: {
         type: Object,
         required: true
-    }
+    },
+    receipts: Array,
 })
 
 const handleScroll = () => {

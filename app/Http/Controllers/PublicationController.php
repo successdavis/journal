@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Publication;
 use App\Http\Requests\StorePublicationRequest;
 use App\Models\PublicationType;
+use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -112,7 +113,8 @@ class PublicationController extends Controller
     public function show(Publication $publication)
     {
         return Inertia::render('Publication/Show', [
-            'publication' => $publication
+            'publication' => $publication,
+            'receipts' => Receipt::where('publication_id', $publication->id)->get(),
         ]);
     }
 
