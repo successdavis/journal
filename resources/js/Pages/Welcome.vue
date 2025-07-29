@@ -1,22 +1,22 @@
 <template>
-<!--    <HeroSection imageSrc="/public/images/bg-image.png" />-->
+    <HeroSection imageSrc="/public/images/bg-image.png" />
     <div class="min-h-screen bg-gray-50 text-gray-800 max-w-7xl mx-auto px-4">
 
-        <WysiwygEditor v-model="editorContent" @save="handleSave" />
+<!--        <WysiwygEditor v-model="editorContent" @save="handleSave" />-->
 
 
-<!--        <FeatureSection />-->
+        <FeatureSection />
 <!--        <LatestItems-->
 <!--            title="Latest Thesis"-->
 <!--            url="api/get-thesis-publications"-->
 <!--        />-->
-<!--        <LatestJournals url="api/get-journal-publications"/>-->
-<!--        <BookCarousel-->
-<!--            url="api/get-books-publications"-->
-<!--        />-->
-<!--        <div class="mt-6">-->
-<!--            <UpcomingEvents url="api/get-events-publications"/>-->
-<!--        </div>-->
+        <LatestJournals url="api/get-journal-publications"/>
+        <BookCarousel
+            url="api/get-books-publications"
+        />
+        <div class="mt-6">
+            <UpcomingEvents url="api/get-events-publications"/>
+        </div>
     </div>
 </template>
 
