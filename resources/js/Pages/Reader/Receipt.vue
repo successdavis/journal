@@ -88,16 +88,38 @@
             </div>
 
             <!-- Proceed to Paystack Button -->
-            <div
-                v-show="receipt.status !== 'successful'"
-                class="text-center pt-4 border-t">
-                <button
-                    @click="proceedToPaystack(receipt.id, user.id)"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition"
+            <div>
+                <!-- Show Paystack button if payment is NOT successful -->
+                <div
+                    v-if="receipt.status !== 'successful'"
+                    class="text-center pt-4 border-t"
                 >
-                    Proceed to Paystack
-                </button>
+                    <button
+                        @click="proceedToPaystack(receipt.id, user.id)"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition"
+                    >
+                        Proceed to Paystack
+                    </button>
+                </div>
+
+                <!-- Show success message and download link if payment is successful -->
+                <div
+                    v-else
+                    class="mt-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded-lg text-center"
+                >
+                    <p class="mb-3 font-medium">
+                        ✅ Payment was successful. Proceed to download your journal below:
+                    </p>
+                    <a
+                        :href="`/storage/${publication.main_document}`"
+                        download
+                        class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-lg transition"
+                    >
+                        Download Journal
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -127,7 +149,7 @@ const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 const proceedToPaystack = (receiptId, userId) => {
     // Adjust to your actual route
     axios.post(`/paystack/initiate/${receiptId}/${userId}`)
-        .then(res=>{
+        .then(res => {
             // console.log(res.data)
             window.location.href = res.data.url
         })

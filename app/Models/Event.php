@@ -15,7 +15,7 @@ class Event extends Model
         if ($thumbnail) {
             return asset('storage/' . $thumbnail);
         }else {
-            return asset('storage/covers/default-event.png');
+            return asset('storage/thumbnails/default-event.png');
         }
     }
 

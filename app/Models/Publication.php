@@ -38,7 +38,7 @@ class Publication extends Model
         if ($thumbnail) {
             return asset('storage/' . $thumbnail);
         }else {
-            return asset('storage/covers/default.png');
+            return asset('storage/thumbnails/default.png');
         }
     }
 
