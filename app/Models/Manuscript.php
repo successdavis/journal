@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Manuscript extends Model
+{
+    /** @use HasFactory<\Database\Factories\ManuscriptFactory> */
+    use HasFactory;
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function reviewers()
+    {
+        return $this->belongsToMany(User::class, 'users');
+    }
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'figures' => 'array',
+        'supplementary' => 'array',
+        'consent' => 'boolean',
+        'originality' => 'boolean',
+    ];
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getThumbnailPathAttribute($thumbnail)
+    {
+        if ($thumbnail) {
+            return asset('storage/' . $thumbnail);
+        }else {
+            return asset('storage/thumbnails/default.png');
+        }
+    }
+}

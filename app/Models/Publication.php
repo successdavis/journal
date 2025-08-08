@@ -15,10 +15,26 @@ class Publication extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function reviewers()
+    public function review()
     {
-        return $this->belongsToMany(User::class, 'users');
+        return $this->belongsTo(ManuscriptReviewer::class, 'review_id');
     }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewer_id');
+    }
+
+    public function editor()
+    {
+        return $this->belongsTo(User::class, 'editor_id');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'publication_id');
+    }
+
 
     protected $guarded = [];
 

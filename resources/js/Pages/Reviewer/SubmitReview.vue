@@ -7,7 +7,7 @@
 
             <!-- Review Title -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">Review Title <span
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Reviewed Title <span
                     class="text-red-500">*</span></label>
                 <input v-model="form.review_title" type="text" required
                        class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-teal-600 focus:border-teal-600"/>
@@ -19,6 +19,14 @@
                     class="text-red-500">*</span></label>
                 <input v-model="form.opinion" type="text" required
                        class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-teal-600 focus:border-teal-600"/>
+            </div>
+
+            <!-- reviewed Abstract -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Reviewed abstract <span
+                    class="text-red-500">*</span></label>
+                <textarea v-model="form.reviewed_abstract" rows="4" required
+                          class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-teal-600 focus:border-teal-600"></textarea>
             </div>
 
             <!-- General Comment -->
@@ -127,9 +135,10 @@ const form = reactive({
     methodology_soundness: '',
     relevance_of_manuscript: '',
     quality_of_data: '',
+    reviewed_abstract: '',
+    conflict_of_interest: '',
     annotated_manuscript: null,
     supplementary_feedback: null,
-    conflict_of_interest: '',
     review_is_honest: false,
     agreed_review_policy: false,
     submit_option: 'submitted',

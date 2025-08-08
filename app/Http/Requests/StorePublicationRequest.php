@@ -31,6 +31,7 @@ class StorePublicationRequest extends FormRequest
             'affiliation' => 'nullable|string',
             'journal' => 'nullable|string',
             'category' => 'required|string',
+            'reviewed_abstract' => 'required|string',
             'excerpt' => 'required|string',
             'main_document' => 'required|file|mimes:pdf,doc,docx',
             'figures.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',

@@ -1,9 +1,5 @@
 <template>
     <Head title="Submit New Manuscript" />
-    <div class="mb-6">
-        <AuthorDashboardHeader/>
-
-    </div>
     <div class="max-w-4xl mx-auto py-12">
         <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-12">Submit New Manuscript</h1>
 

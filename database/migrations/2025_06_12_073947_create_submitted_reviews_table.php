@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('annotated_manuscript');
             $table->string('supplementary_feedback')->nullable();
 
+            $table->string('reviewed_abstract');
             $table->string('conflict_of_interest');
             $table->boolean('review_is_honest');
             $table->boolean('agreed_review_policy');

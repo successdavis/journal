@@ -8,10 +8,10 @@
             <a class="text-blue-600 hover:underline">{{ publication.co_writers }}</a>
               <!--            <span v-if="index !== journal.authors.length - 1">, </span>-->
           </span>
-<!--          <span v-for="(author, index) in journal.authors" :key="index">-->
-<!--            <a :href="author.link" class="text-blue-600 hover:underline">{{ author.name }}</a>-->
-                    <!--            <span v-if="index !== journal.authors.length - 1">, </span>-->
-<!--          </span>-->
+                <!--          <span v-for="(author, index) in journal.authors" :key="index">-->
+                <!--            <a :href="author.link" class="text-blue-600 hover:underline">{{ author.name }}</a>-->
+                <!--            <span v-if="index !== journal.authors.length - 1">, </span>-->
+                <!--          </span>-->
             </div>
             <div class="mt-1 text-sm text-gray-500">
                 {{ publication.citation_information }} ·
@@ -24,31 +24,31 @@
         <!-- Toolbar Menu -->
         <div class="flex flex-wrap items-center gap-6 border-y py-4 my-6 text-sm text-gray-700">
             <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">
-                <Bars3Icon class="w-5 h-5" />
+                <Bars3Icon class="w-5 h-5"/>
                 <span>Contents</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 font-semibold cursor-pointer">
-                <ArrowDownTrayIcon class="w-5 h-5" />
+                <ArrowDownTrayIcon class="w-5 h-5"/>
                 <span>PDF/EPUB</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ChatBubbleLeftRightIcon class="w-5 h-5" />
+                <ChatBubbleLeftRightIcon class="w-5 h-5"/>
                 <span>Cite article</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ShareIcon class="w-5 h-5" />
+                <ShareIcon class="w-5 h-5"/>
                 <span>Share options</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <InformationCircleIcon class="w-5 h-5" />
+                <InformationCircleIcon class="w-5 h-5"/>
                 <span>Information, rights and permissions</span>
             </div>
             <div class="flex items-center gap-1 text-blue-900 cursor-pointer">
-                <ChartBarIcon class="w-5 h-5" />
+                <ChartBarIcon class="w-5 h-5"/>
                 <span>Metrics and citations</span>
             </div>
             <div class="flex items-center gap-1 text-gray-400 cursor-not-allowed">
-                <TableCellsIcon class="w-5 h-5" />
+                <TableCellsIcon class="w-5 h-5"/>
                 <span>Figures and tables</span>
             </div>
         </div>
@@ -73,47 +73,53 @@
 
             <!-- Main Content -->
             <div class="md:col-span-3 space-y-6 relative">
-                <div class="relative max-h-60 overflow-hidden">
-                    <!-- Abstract Content -->
+                <!-- Abstract section -->
+                <div :class="['relative', showAbstract ? '' : 'max-h-60 overflow-hidden']">
                     <div ref="contentRef" class="prose prose-lg max-w-none text-gray-800">
                         {{ publication.abstract }}
                     </div>
 
-                    <!-- Premium content handling -->
-                    <div v-if="publication.premium">
-                        <!-- Fade Overlay -->
-                        <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                    <!-- Fade for collapsed view -->
+                    <div
+                        v-show="!showAbstract"
+                        class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"
+                    ></div>
 
-                        <!-- Read More Button -->
-                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
-                            <button
-                                @click="showModal = true"
-                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                            >
-                                Read more
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Free content / non-premium -->
-                    <div v-else class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 text-center">
-                        <a
-                            :href="`/storage/${publication.main_document}`"
-                            download
+                    <!-- READ MORE LOGIC -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 text-center">
+                        <!-- IF Premium and not eligible -->
+                        <button
+                            v-if="
+          publication.premium &&
+          (
+            !$page.props.auth.user || (
+              $page.props.auth.user.role === 'Reader' &&
+              !receipts.some(r => r.user_id === $page.props.auth.user.id)
+            )
+          )
+        "
+                            @click="showModal = true"
                             class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
                         >
-                            Download article
-                        </a>
+                            Read more
+                        </button>
+
+                        <!-- Everyone else -->
+                        <button
+                            v-else-if="!showAbstract"
+                            @click="showAbstract = true"
+                            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                        >
+                            Read more
+                        </button>
                     </div>
 
-                    <!-- Dark overlay when modal is open -->
+                    <!-- MODAL -->
                     <div
                         v-show="showModal"
                         @click="showModal = false"
                         class="fixed top-0 left-0 w-full h-full bg-black opacity-80 z-40"
                     ></div>
-
-                    <!-- Modal -->
                     <div
                         v-show="showModal"
                         class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
@@ -121,7 +127,35 @@
                         <PublicationPriceModal :publication="publication" />
                     </div>
                 </div>
+
+                <!-- DOWNLOAD SECTION -->
+                <div v-if="showAbstract" class="flex justify-center items-center">
+                    <div class="flex items-center justify-center flex-col">
+                        <div class="italic text-blue-900 text-sm text-center mb-1">
+                            To continue reading, please download the full article.
+                        </div>
+
+                        <a
+                            v-if="
+          !publication.premium ||
+          (
+            $page.props.auth.user &&
+            (
+              $page.props.auth.user.role !== 'Reader' ||
+              receipts.some(r => r.user_id === $page.props.auth.user.id)
+            )
+          )
+        "
+                            :href="`/storage/${publication.main_document}`"
+                            download
+                            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                        >
+                            Download article
+                        </a>
+                    </div>
+                </div>
             </div>
+
 
 
             <!-- Right Sidebar -->
@@ -155,7 +189,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import Layout from '@/Layouts/GuestLayout.vue'
 import {Link} from "@inertiajs/vue3";
 import PublicationPriceModal from "@/Components/PublicationPriceModal.vue";
@@ -164,13 +198,15 @@ const tocItems = ref([])
 const activeSection = ref('')
 const contentRef = ref(null)
 const showModal = ref(false)
+const showAbstract = ref(false)
 const relatedArticles = ref([])
 
 let props = defineProps({
     publication: {
         type: Object,
         required: true
-    }
+    },
+    receipts: Array,
 })
 
 const handleScroll = () => {
@@ -200,7 +236,7 @@ onMounted(() => {
         text: h.innerText,
         level: h.tagName === 'H3' ? 3 : 2
     }))
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {passive: true})
 })
 
 onBeforeUnmount(() => {
@@ -211,9 +247,9 @@ const journal = {
     title:
         'Deeping the Commitment to Our Editorial Vision and Recognizing Areas for Comprehensive Reform in Special Education',
     authors: [
-        { name: 'Endia J. Lindo', link: '#' },
-        { name: 'Patricia Martínez-Álvarez', link: '#' },
-        { name: 'Kathleen King Thorius', link: '#' }
+        {name: 'Endia J. Lindo', link: '#'},
+        {name: 'Patricia Martínez-Álvarez', link: '#'},
+        {name: 'Kathleen King Thorius', link: '#'}
     ],
     volume: 91,
     issue: 2,
@@ -234,9 +270,9 @@ const journal = {
         }
     ]
 }
-const fetchSimilarArticles = (publicationId)=>{
+const fetchSimilarArticles = (publicationId) => {
     axios.get(`/api/publication/articles-related-to/${publicationId}`)
-        .then(res=>{
+        .then(res => {
             relatedArticles.value = res.data
             console.log(res.data)
         })
@@ -266,6 +302,7 @@ export default {
 html {
     scroll-behavior: smooth;
 }
+
 .prose section {
     scroll-margin-top: 100px; /* offset for sticky nav */
 }

@@ -3,8 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\Manuscript;
 use App\Models\Publication;
 use App\Models\PublicationType;
+use App\Models\SubmittedReview;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,29 +16,39 @@ class PublicationFactory extends Factory
 
     public function definition(): array
     {
-         return [
-            'author_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'publication_type_id' => PublicationType::inRandomOrder()->first()->id ?? PublicationType::factory(),
-            'category_id' => Category::inRandomOrder()->first()->id ?? Category::factory(),
-            'title' => $this->faker->sentence,
-            'abstract' => $this->faker->paragraph(5),
-            'keywords' => implode(',', $this->faker->words(5)),
-            'affiliation' => $this->faker->company,
-            'journal' => $this->faker->word . ' Journal',
-            'main_document' => 'documents/sample.pdf',
-            'figures' => json_encode(['fig1.png', 'fig2.png']),
-            'supplementary' => json_encode(['sup1.docx', 'sup2.xlsx']),
-            'cover_letter' => 'documents/cover_letter.pdf',
-            'ethical_approval' => $this->faker->optional()->paragraph,
-            'conflict_of_interest' => $this->faker->optional()->paragraph,
-            'funding_statement' => $this->faker->optional()->paragraph,
-            'excerpt' => $this->faker->paragraph,
-            'consent' => $this->faker->boolean,
-            'originality' => $this->faker->boolean,
-            'status' => $this->faker->randomElement(['under_review', 'accepted', 'rejected', 'published']),
+        $title = $this->faker->sentence(6, true);
+
+        return [
+            'manuscript_id' => Manuscript::factory(),
+            'review_id' => SubmittedReview::factory(),
+            'author_id' => User::factory(),
+
+            'title' => $title,
+            'abstract' => $this->faker->paragraph(4),
+            'keywords' => implode(', ', $this->faker->words(5)),
+            'journal' => $this->faker->randomElement(['SciencePlus', 'OpenAccess Med', 'Journal of AI', 'NatureTech']),
+            'affiliation' => $this->faker->company . ', ' . $this->faker->country,
+
+            'final_document' => 'documents/' . \Str::random(10) . '.pdf',
+            'supplementary_feedback' => $this->faker->sentence(),
+
+            'figures' => json_encode([
+                'figure1.png',
+                'figure2.png',
+            ]),
+            'supplementary_files' => json_encode([
+                'appendix_a.docx',
+                'dataset.xlsx',
+            ]),
+
             'views' => $this->faker->numberBetween(0, 500),
-            'downloads' => $this->faker->numberBetween(0, 300),
-            'published_at' => $this->faker->optional()->dateTimeThisYear(),
+            'downloads' => $this->faker->numberBetween(0, 200),
+
+            'doi' => '10.1234/' . \Str::slug($title) . '-' . rand(1000, 9999),
+            'slug' => \Str::slug($title),
+
+            'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
+
 }

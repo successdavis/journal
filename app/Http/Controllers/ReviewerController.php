@@ -66,12 +66,13 @@ class ReviewerController extends Controller
     public function history()
     {
         $reviewer = Auth::user();
-        $reviews = SubmittedReview::whereHas('reviewManuscript', function ($query) use ($reviewer) {
+        $reviews = SubmittedReview::whereHas('reviewManuscript',
+            function ($query) use ($reviewer) {
             $query->where('reviewer_id', $reviewer->id);
         })->with('reviewManuscript.manuscript')->latest()->get();
 
-        return inertia('Reviewer/History', [
-            'reviews' => $reviews,
+        return inertia::render('Reviewer/History', [
+            'reviews' => $reviews?: null,
         ]);
 
 

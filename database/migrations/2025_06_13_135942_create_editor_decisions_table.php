@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('manuscript_id')
                 ->references('id')
-                ->on('publications')
+                ->on('manuscripts')
                 ->onDelete('cascade');
 
             $table->foreignId('submitted_review_id')
