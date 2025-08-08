@@ -1,1 +1,0 @@
-import{_ as e}from"./ReviewerDashboardHeader-C1r1odV0.js";import{c as s,o as a,e as o,d as t}from"./app-Dnal52lu.js";import"./ResponseNotification-WJjAIpiD.js";const c={class:"h-screen"},r={class:"mb-6"},l={__name:"Dashboard",setup(_){return(n,m)=>(a(),s("div",c,[o("div",r,[t(e)])]))}};export{l as default};

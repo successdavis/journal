@@ -87,7 +87,7 @@
 
 
         <!-- If no decision exists and user is an Editor or Super_Admin -->
-        <div v-else-if="$page.props.auth.user.role === 'Editor' || $page.props.auth.user.role === 'Super_Admin'" class="bg-white shadow rounded-xl p-6">
+        <div v-if="$page.props.auth.user.role === 'Editor' || $page.props.auth.user.role === 'Super_Admin'" class="bg-white shadow rounded-xl p-6">
             <EditorDecision :review="review" />
         </div>
     </div>
