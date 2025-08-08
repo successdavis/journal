@@ -17,9 +17,11 @@ return new class extends Migration
                 ->constrained('manuscripts')
                 ->onDelete('cascade');
             $table->foreignId('review_id')
+                ->nullable()
                 ->constrained('manuscript_reviewers')
                 ->onDelete('cascade');
             $table->foreignId('editor_id')
+                ->nullable()
                 ->constrained('manuscript_reviewers')
                 ->onDelete('cascade');
             $table->foreignId('author_id')
@@ -39,7 +41,7 @@ return new class extends Migration
                 ->nullable();
 
             $table->json('figures');
-            $table->json('supplementary_files');
+            $table->json('supplementary_files')->nullable();
 
             $table->unsignedBigInteger('views')
                 ->default(0);

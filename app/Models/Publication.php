@@ -7,8 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
 {
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'figures' => 'array',
+        'supplementary' => 'array',
+        'consent' => 'boolean',
+        'originality' => 'boolean',
+    ];
+
     /** @use HasFactory<\Database\Factories\AuthorFactory> */
     use HasFactory;
+
 
     public function author()
     {
@@ -35,15 +46,6 @@ class Publication extends Model
         return $this->hasMany(Receipt::class, 'publication_id');
     }
 
-
-    protected $guarded = [];
-
-    protected $casts = [
-        'figures' => 'array',
-        'supplementary' => 'array',
-        'consent' => 'boolean',
-        'originality' => 'boolean',
-    ];
 
     public function category() {
         return $this->belongsTo(Category::class);

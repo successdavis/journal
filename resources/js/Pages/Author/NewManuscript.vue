@@ -133,7 +133,7 @@
                     <label class="inline-flex items-center">
                         <input type="checkbox" v-model="form.premium"
                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-                        <span class="ml-2 text-sm text-gray-700">Is this article premium?</span>
+                        <span class="ml-2 text-sm text-gray-700">Premium Article</span>
                     </label>
 
                     <!-- Conditionally show amount -->
@@ -189,7 +189,7 @@
                         <InputError class="mt-2" :message="form.errors.supplementary" />
                     </div>
                     <div>
-                        <InputLabel for="cover_letter" value="Thumbnail Image * " />
+                        <InputLabel for="cover_letter" value="Thumbnail Image " />
                         <input @change="form.thumbnail = $event.target.files[0]" type="file" accept="image/jpeg" class="input-file" />
                         <InputError class="mt-2" :message="form.errors.thumbnail" />
                     </div>
@@ -223,7 +223,7 @@ import InputError from "@/Components/InputError.vue"
 import PrimaryButton from "@/Components/PrimaryButton.vue"
 import AuthorDashboardHeader from "@/Components/Author/AuthorDashboardHeader.vue";
 
-const steps = ['Manuscript Details', 'Publication Info', 'Uploads', 'Declarations', 'Consent']
+const steps = ['Manuscript Details', 'Publication Info', 'Consent', 'Declarations', 'Uploads']
 const currentStep = ref(0)
 
 defineProps({

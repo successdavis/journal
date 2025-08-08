@@ -34,7 +34,7 @@
         <Transition name="slide">
             <aside
                 :class="[
-          'w-64 h-full bg-slate-900 border-r overflow-y-auto',
+          'w-64 h-full  bg-slate-900 border-r overflow-y-auto',
           'fixed top-0 left-0 z-50 shadow-xl md:shadow-none',
           'transition-transform duration-300 ease-in-out transform',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
@@ -51,7 +51,7 @@
         <!-- Main Content Area -->
         <main
             :class="[
-        'flex-1 p-4 overflow-y-auto transition-all duration-300',
+        'flex-1 bg-white p-5 overflow-y-auto transition-all duration-300',
         'md:ml-64', // Regular sidebar width
       ]"
         >

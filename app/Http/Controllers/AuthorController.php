@@ -16,7 +16,7 @@ class AuthorController extends Controller
         $user = auth()->user();
 
         return response()->json([
-            'submissions' => $user->publications()->latest()->get()->map(function ($article) {
+            'submissions' => $user->manuscripts()->latest()->get()->map(function ($article) {
                 return [
                     'id' => $article->id,
                     'title' => $article->title,

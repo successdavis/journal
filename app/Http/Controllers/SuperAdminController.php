@@ -43,7 +43,7 @@ class SuperAdminController extends Controller
             ->where('role_id', $editor->id)->count();
 
         $publishedArticles = Publication::all()->count();
-        $articlesUnderReview = Manuscript::where('status', 'under_review')->count();
+        $articlesUnderReview = Manuscript::all()->count();
         $articlesAcceptedForPublication = Manuscript::where('status', 'accepted')->count();
         $articlesRejected = Manuscript::where('status', 'rejected')->count();
         $articlesWithDrawn = Manuscript::where('status', 'withdrwan_by_author')->count();
@@ -51,15 +51,15 @@ class SuperAdminController extends Controller
 
         return response()->json([
             ['title' => 'total_sales', 'value' => $total_sales],
-            ['title' => 'total_authors', 'value' => $total_authors],
-            ['title' => 'total_reviewers', 'value' => $total_reviewers],
-            ['title' => 'total_editors', 'value' => $total_editors],
+//            ['title' => 'total_reviewers', 'value' => $total_reviewers],
+//            ['title' => 'total_editors', 'value' => $total_editors],
             ['title' => 'published_articles', 'value' => $publishedArticles],
-            ['title' => 'under_review', 'value' => $articlesUnderReview],
-            ['title' => 'accepted_articles', 'value' => $articlesAcceptedForPublication],
-            ['title' => 'rejected_articles', 'value' => $articlesRejected],
-            ['title' => 'articles_withdrawn_by_authors', 'value' => $articlesWithDrawn],
-            ['title' => 'articles_resubmitted_elsewhere', 'value' => $articlesResubmittedElsewhere],
+            ['title' => 'pending_publication', 'value' => $articlesUnderReview],
+//            ['title' => 'accepted_articles', 'value' => $articlesAcceptedForPublication],
+//            ['title' => 'rejected_articles', 'value' => $articlesRejected],
+//            ['title' => 'articles_withdrawn_by_authors', 'value' => $articlesWithDrawn],
+//            ['title' => 'articles_resubmitted_elsewhere', 'value' => $articlesResubmittedElsewhere],
+            ['title' => 'total_authors', 'value' => $total_authors],
             ['title' => 'total_articles', 'value' => $totalArticles],
             ['title' => 'total_users', 'value' => $totalUsers],
         ]);
@@ -199,14 +199,14 @@ class SuperAdminController extends Controller
 
             $roleToUpdate = DB::table('model_has_roles')
                 ->where('model_id', $request->user_id)
-            ->first();
+                ->first();
 
             if($request->option === 'Accepted') {
                 DB::table('model_has_roles')
                     ->where('model_id', $request->user_id)
                     ->update([
-                    'role_id' => $request->role_id,
-                ]);
+                        'role_id' => $request->role_id,
+                    ]);
             }else {
                 DB::table('model_has_roles')
                     ->where('model_id', $request->user_id)
@@ -261,22 +261,62 @@ class SuperAdminController extends Controller
 
     public function updateArticleStatus(StoreSuperAdminRequest $request, $publication_id)
     {
-        $publication = Publication::findOrFail($publication_id);
 
-        $newStatus = validator(
-            ['newStatus' => $request->newStatus],
-            ['newStatus' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere']
-        )->validate();
+        $manuscript = Manuscript::findOrFail($publication_id);
 
-        if ($newStatus['newStatus'] === 'published' && $publication->published_at === null) {
-            $publication->published_at = Carbon::now();
-            $publication->status = $newStatus['newStatus'];
-        } else {
-            $publication->status = $newStatus['newStatus'];
-            $publication->published_at = null;
 
-        }
+        $publication = Publication::create([
+            'title'                 => $manuscript->title,
+            'manuscript_id'         => $manuscript->id,
+//            'review_id'             => $manuscript->author_id,
+            'author_id'             => $manuscript->author_id,
+//            'editor_id'             => $manuscript->author_id,
+            'abstract'              => $manuscript->abstract,
+            'keywords'              => $manuscript->keywords,
+            'publication_type_id'   => $manuscript->publication_type_id,
+            'category_id'           => $manuscript->category_id,
+            'excerpt'               => $manuscript->excerpt,
+            'affiliation'           => $manuscript->affiliation,
+            'journal'               => $manuscript->journal,
+            'final_document'         => $manuscript->main_document,
+            'thumbnail'             => $manuscript->thumbnail,
+            'figures'               => $manuscript->figures,
+//            'supplementary'         => $manuscript->supplementary,
+//            'cover_letter'          => $manuscript->cover_letter,
+//            'ethical_approval'      => $manuscript->ethical_approval ?? null,
+//            'conflict_of_interest'  => $manuscript->conflict_of_interest ?? null,
+//            'funding_statement'     => $manuscript->funding_statement ?? null,
+//            'consent'               => $manuscript->consent,
+//            'originality'           => $manuscript->originality,
+            'premium'               => $manuscript->premium,
+            'amount'                => $manuscript->amount,
+            'co_writers'            => $manuscript->co_writers,
+//            'reviewed_abstract' => $data['reviewed_abstract'],
+            'citation_information' => $manuscript->citation_information,
+            'status'                => true,
+            'published_at'          => now()
+        ]);
+
         $publication->save();
+
+        $manuscript->status = 'published';
+        $manuscript->save();
+
+
+//        $newStatus = validator(
+//            ['newStatus' => $request->newStatus],
+//            ['newStatus' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere']
+//        )->validate();
+//
+//        if ($newStatus['newStatus'] === 'published' && $publication->published_at === null) {
+//            $publication->published_at = Carbon::now();
+//            $publication->status = $newStatus['newStatus'];
+//        } else {
+//            $publication->status = $newStatus['newStatus'];
+//            $publication->published_at = null;
+//
+//        }
+//        $publication->save();
     }
 
     /**
@@ -330,10 +370,10 @@ class SuperAdminController extends Controller
         $user = User::findOrFail($user_id);
 
         if ($user){
-        DB::table('model_has_roles')->where('model_id', $user->id)
-        ->update([
-            'role_id' => $defaultRole->id,
-        ]);
+            DB::table('model_has_roles')->where('model_id', $user->id)
+                ->update([
+                    'role_id' => $defaultRole->id,
+                ]);
         }
     }
 

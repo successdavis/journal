@@ -26,7 +26,7 @@ class User extends Authenticatable
 
     public function manuscripts()
     {
-        return $this->belongsToMany(Publication::class, 'manuscript_reviewer');
+        return $this->hasMany(Manuscript::class, 'author_id');
     }
 
     public function reviewedManuscripts()

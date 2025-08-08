@@ -73,7 +73,7 @@ class PublicationController extends Controller
         }
 
         $thumbnailPath = null;
-        if ($request->hasFile('cover_letter')) {
+        if ($request->hasFile('thumbnail')) {
             $thumbnailPath = $request->file('thumbnail')->store('covers', 'public');
         }
 
@@ -101,7 +101,7 @@ class PublicationController extends Controller
             'premium' => $data['premium'],
             'amount' => $data['amount'],
             'co_writers' => $data['co_writers'],
-            'reviewed_abstract' => $data['reviewed_abstract'],
+//            'reviewed_abstract' => $data['reviewed_abstract'],
             'citation_information' => $data['citation_information'],
         ]);
 
