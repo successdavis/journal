@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Publication extends Model
+class Manuscript extends Model
 {
-    /** @use HasFactory<\Database\Factories\AuthorFactory> */
+    /** @use HasFactory<\Database\Factories\ManuscriptFactory> */
     use HasFactory;
 
     public function author()
@@ -15,26 +15,10 @@ class Publication extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function review()
+    public function reviewers()
     {
-        return $this->belongsTo(ManuscriptReviewer::class, 'review_id');
+        return $this->belongsToMany(User::class, 'users');
     }
-
-    public function reviewer()
-    {
-        return $this->belongsTo(User::class, 'reviewer_id');
-    }
-
-    public function editor()
-    {
-        return $this->belongsTo(User::class, 'editor_id');
-    }
-
-    public function receipts()
-    {
-        return $this->hasMany(Receipt::class, 'publication_id');
-    }
-
 
     protected $guarded = [];
 
@@ -57,5 +41,4 @@ class Publication extends Model
             return asset('storage/thumbnails/default.png');
         }
     }
-
 }

@@ -10,6 +10,12 @@ class SubmittedReview extends Model
     /** @use HasFactory<\Database\Factories\SubmittedReviewFactory> */
     use HasFactory;
 
+    public function reviewManuscript()
+    {
+        return $this->belongsTo(ManuscriptReviewer::class);
+    }
+
+
     public function manuscript()
     {
         return $this->belongsTo(ManuscriptReviewer::class, 'review_manuscript_id');
@@ -33,6 +39,7 @@ class SubmittedReview extends Model
         'conflict_of_interest',
         'review_is_honest',
         'agreed_review_policy',
+        'reviewed_abstract',
         'submit_option',
     ];
 

@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/editor/all-reviews', [EditorController::class, 'viewReviews']);
 
     Route::get('/editor/all-reviews/{item_id}', [EditorController::class, 'viewReviewsSection']);
-    Route::post('/editor/{review_id}/make-decision', [EditorDecisionController::class, 'store']);
+    Route::post('/editor/{review}/make-decision', [EditorDecisionController::class, 'store']);
     Route::get('/editor/categories/create', [CategoriesController::class, 'create']);
     Route::post('/editor/categories/create', [CategoriesController::class, 'store']);
 
@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/super_admin/fetch_totals', [SuperAdminController::class, 'index'])->name('super_admin.fetch_totals');
     Route::patch('/super_admin/remove_user_role/{user_id}', [SuperAdminController::class, 'removeUserRole'])->name('super_admin.remove_user_role');
     Route::get('/super_admin/publication/{pub_id}/view', [SuperAdminController::class, 'viewPublication'])->name('super_admin.view_publication');
+    Route::get('/super_admin/published_publication/{pub_id}/view', [SuperAdminController::class, 'viewPublishedPublication'])->name('super_admin.view_publication');
 
     Route::get('/super_admin/role_requests', [SuperAdminController::class, 'roleRequests'])->name('super_admin.role_request');
     Route::patch('/super_admin/response_to_role_request/{role_request_id}', [SuperAdminController::class, 'responseToRoleRequest'])
@@ -148,7 +149,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/author/publications', [AuthorController::class, 'getPublications'])->name('author_publications.get');
 
-    Route::get('admin/view_full_review/{review_id}', [SubmittedReviewController::class, 'index'])->name('admins.view_submitted_review');
+    Route::get('/admin/view_full_review/{review_id}', [SubmittedReviewController::class, 'index'])->name('admins.view_submitted_review');
+
+
+    Route::get('/admin/roles_permissions', [SuperAdminController::class, 'role_permission'])->name('role_permission_settings');
+    Route::put('/super_admin/role_permission_update', [SuperAdminController::class, 'role_permission_update']);
 
 });
 

@@ -18,6 +18,10 @@ class EditorDecision extends Model
         $this->belongsTo(Publication::class, 'manuscript_id');
     }
 
+    public function review(){
+        $this->belongsTo(ManuscriptReviewer::class, 'submitted_review_id');
+    }
+
     protected $fillable = [
         'manuscript_id',
         'submitted_review_id',

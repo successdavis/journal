@@ -18,28 +18,37 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                 <tr
+                    v-if="reviews"
                     v-for="(review, index) in reviews"
                     :key="review.id"
                     class="hover:bg-gray-50"
                 >
                     <td class="px-4 py-2 text-sm">{{ index + 1 }}</td>
-                    <td class="px-4 py-2 text-sm">{{ review.review_manuscript.manuscript.title }}</td>
+
+                    <!-- Safe optional access using ?. -->
+                    <td class="px-4 py-2 text-sm">
+                        {{ review.review_manuscript?.manuscript?.title || '—' }}
+                    </td>
+
                     <td class="px-4 py-2 text-sm">Round {{ review.round }}</td>
+
                     <td class="px-4 py-2 text-sm">
                         {{ formatDate(review.created_at) }}
                     </td>
+
                     <td class="px-4 py-2 text-sm capitalize">
-              <span
-                  :class="[
-                  'px-2 py-1 rounded text-xs font-semibold',
-                  review.submit_option === 'submitted'
+        <span
+            :class="[
+                'px-2 py-1 rounded text-xs font-semibold',
+                review.submit_option === 'submitted'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-yellow-100 text-yellow-800'
-                ]"
-              >
-                {{ review.submit_option }}
-              </span>
+            ]"
+        >
+            {{ review.submit_option }}
+        </span>
                     </td>
+
                     <td class="px-4 py-2">
                         <button
                             class="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded"
@@ -55,9 +64,9 @@
                         >
                             Edit
                         </button>
-                        <!-- No delete button -->
                     </td>
                 </tr>
+
                 </tbody>
             </table>
         </div>

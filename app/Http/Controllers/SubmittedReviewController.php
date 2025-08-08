@@ -79,6 +79,7 @@ class SubmittedReviewController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show(SubmittedReview $submittedReview)
     {
         //

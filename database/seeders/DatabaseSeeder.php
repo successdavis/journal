@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         \App\Models\PublicationType::factory()->count(4)->create();
         $this->call(CategorySeeder::class);
-        \App\Models\Publication::factory(30)->create();
+        \App\Models\Manuscript::factory(30)->create();
+//        \App\Models\Publication::factory(30)->create();
         $this->call(EventSeeder::class);
+
     }
 }

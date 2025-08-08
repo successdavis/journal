@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manuscript;
 use App\Models\Notification;
 use App\Models\Publication;
 use App\Models\Receipt;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 
@@ -29,7 +31,7 @@ class SuperAdminController extends Controller
         $reviewer = Role::where('name', 'Reviewer')->first();
         $editor = Role::where('name', 'Editor')->first();
         $totalUsers = User::all()->count();
-        $totalArticles = Publication::all()->count();
+        $totalArticles = Manuscript::all()->count();
 
         $total_authors = DB::table('model_has_roles')
             ->where('role_id', $author->id)->count();
@@ -40,12 +42,12 @@ class SuperAdminController extends Controller
         $total_editors = DB::table('model_has_roles')
             ->where('role_id', $editor->id)->count();
 
-        $publishedArticles = Publication::where('status', 'published')->count();
-        $articlesUnderReview = Publication::where('status', 'under_review')->count();
-        $articlesAcceptedForPublication = Publication::where('status', 'accepted')->count();
-        $articlesRejected = Publication::where('status', 'rejected')->count();
-        $articlesWithDrawn = Publication::where('status', 'withdrwan_by_author')->count();
-        $articlesResubmittedElsewhere = Publication::where('status', 'resubmit_elsewhere')->count();
+        $publishedArticles = Publication::all()->count();
+        $articlesUnderReview = Manuscript::where('status', 'under_review')->count();
+        $articlesAcceptedForPublication = Manuscript::where('status', 'accepted')->count();
+        $articlesRejected = Manuscript::where('status', 'rejected')->count();
+        $articlesWithDrawn = Manuscript::where('status', 'withdrwan_by_author')->count();
+        $articlesResubmittedElsewhere = Manuscript::where('status', 'resubmit_elsewhere')->count();
 
         return response()->json([
             ['title' => 'total_sales', 'value' => $total_sales],
@@ -89,22 +91,22 @@ class SuperAdminController extends Controller
                 $data = Role::with('users')->where('name', 'Editor')->get();
                 break;
             case 'published_articles':
-                $data = Publication::with('author')->where('status', 'published', null)->get();
+                $data = Publication::with('author')->where('published_at', '!=', null)->get();
                 break;
             case 'under_review':
-                $data = Publication::with('author')->where('status', 'under_review')->get();
+                $data = Manuscript::with('author')->where('status', 'under_review')->get();
                 break;
             case 'accepted_articles':
-                $data = Publication::with('author')->where('status', 'accepted')->get();
+                $data = Manuscript::with('author')->where('status', 'accepted')->get();
                 break;
             case 'rejected_articles':
-                $data = Publication::with('author')->where('status', 'rejected')->get();
+                $data = Manuscript::with('author')->where('status', 'rejected')->get();
                 break;
             case 'articles_withdrawn_by_authors':
-                $data = Publication::with('author')->where('status', 'articles_withdrawn_by_author')->get();
+                $data = Manuscript::with('author')->where('status', 'articles_withdrawn_by_author')->get();
                 break;
             case 'total_articles':
-                $data = Publication::with('author')->get();
+                $data = Manuscript::with('author')->get();
                 break;
             case 'total_users':
                 $data = User::with('user_role')->get();
@@ -125,6 +127,60 @@ class SuperAdminController extends Controller
             'roleRequests' => RoleRequest::orderBy('id', 'DESC')->with('user', 'role')->where('status', 'Pending')->get(),
         ]);
     }
+
+    public function role_permission()
+    {
+        return Inertia::render('Super_Admin/Role_Permissions', [
+            'roles' => Role::all(),
+            'permissions' => Permission::all(),
+            'rolePermissions' => Role::with('permissions')->get()->mapWithKeys(function ($role) {
+                return [$role->id => $role->permissions->pluck('id')->toArray()];
+            })->toArray()
+        ]);
+    }
+
+    public function role_permission_update(Request $request)
+    {
+        $validated = $request->validate([
+            'selectedRole' => 'required|exists:roles,id',
+            'permissions' => 'required|array',
+            'permissions.*' => 'boolean'
+        ]);
+
+        try {
+            $role = Role::findOrFail($validated['selectedRole']);
+
+            $checked = [];
+            $unchecked = [];
+
+            foreach ($validated['permissions'] as $permissionId => $isChecked) {
+                if ($isChecked) {
+                    $checked[] = (int) $permissionId;
+                } else {
+                    $unchecked[] = (int) $permissionId;
+                }
+            }
+
+            // Add new permissions without removing existing ones
+            if (count($checked)) {
+                $role->permissions()->syncWithoutDetaching($checked);
+            }
+
+            // Remove only the unchecked permissions
+            if (count($unchecked)) {
+                $role->permissions()->detach($unchecked);
+            }
+
+            return redirect()->route('role_permission_settings')->with('success', 'Permissions updated successfully');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating permissions',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function responseToRoleRequest(Request $request, $role_request_id)
     {
@@ -293,9 +349,19 @@ class SuperAdminController extends Controller
 
     public function viewPublication($publication_id)
     {
-        $publication = Publication::with('author')->where('id', $publication_id)->first();
+        $publication = Manuscript::with('author')->where('id', $publication_id)->first();
         if ($publication) {
             return inertia::render('Super_Admin/ViewPublication', [
+                'publication' => $publication,
+            ]);
+        }
+    }
+
+    public function viewPublishedPublication($publication_id)
+    {
+        $publication = Publication::with(['author', 'reviewer', 'review', 'editor', 'receipts'] )->where('id', $publication_id)->first();
+        if ($publication) {
+            return inertia::render('Super_Admin/ViewPublishedPublication', [
                 'publication' => $publication,
             ]);
         }

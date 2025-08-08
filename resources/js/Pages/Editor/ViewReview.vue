@@ -86,42 +86,6 @@
         </div>
 
 
-        <div v-if="editorDecision" class="bg-white rounded-2xl shadow-md p-6 space-y-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center underline">Editor's Decision</h2>
-            <hr>
-            <div class="space-y-2 text-gray-700">
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Decision:</span>
-                    <span class="capitalize text-right font-bold">{{ editorDecision.decision.replace(/_/g, ' ') }}</span>
-                </div>
-
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Round:</span>
-                    <span>{{ editorDecision.round }}</span>
-                </div>
-
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Editor:</span>
-                    <span class="text-right font-bold">{{ editorDecision.editor?.name ?? 'Unknown' }}</span>
-                </div>
-
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Comments to Author:</span>
-                    <span class="text-right font-bold">{{ editorDecision.comments_to_author ?? '—' }}</span>
-                </div>
-
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Comments to Reviewer:</span>
-                    <span class="text-right font-bold">{{ editorDecision.comments_to_reviewer ?? '—' }}</span>
-                </div>
-
-                <div class="flex items-start justify-between">
-                    <span class="font-medium text-gray-600">Submitted:</span>
-                    <span class="text-right font-bold">{{ new Date(editorDecision.created_at).toLocaleString() }}</span>
-                </div>
-            </div>
-        </div>
-
         <!-- If no decision exists and user is an Editor or Super_Admin -->
         <div v-else-if="$page.props.auth.user.role === 'Editor' || $page.props.auth.user.role === 'Super_Admin'" class="bg-white shadow rounded-xl p-6">
             <EditorDecision :review="review" />

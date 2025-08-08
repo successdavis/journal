@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publications', function (Blueprint $table) {
+        Schema::create('manuscripts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('author_id')
                 ->constrained('users')
@@ -33,20 +33,21 @@ return new class extends Migration
             $table->boolean('originality');
 
             $table->string('status')
-                ->default('under_review');
-
-            $table->unsignedBigInteger('views')
-                ->default(0);
-
-            $table->unsignedBigInteger('downloads')
-                ->default(0);
-
-            $table->timestamp('published_at')
+                ->default('under_review')
                 ->nullable();
+            $table->decimal('amount', 10, 2)
+                ->nullable();
+            $table->boolean('premium')
+                ->default(0);
+            $table->string('citation_information')->nullable();
+            $table->string('co_writers')->nullable();
 
+            $table->foreignId('publication_type_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->string('thumbnail')->nullable();
+            $table->text('excerpt');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -54,6 +55,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('publications');
+        Schema::dropIfExists('manuscripts');
     }
 };

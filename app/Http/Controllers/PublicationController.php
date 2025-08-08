@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Manuscript;
 use App\Models\Publication;
 use App\Http\Requests\StorePublicationRequest;
 use App\Models\PublicationType;
@@ -77,7 +78,7 @@ class PublicationController extends Controller
         }
 
         // Save to DB
-        Publication::create([
+        Manuscript::create([
             'title' => $data['title'],
             'author_id' => Auth::user()->id,
             'abstract' => $data['abstract'],
@@ -100,6 +101,7 @@ class PublicationController extends Controller
             'premium' => $data['premium'],
             'amount' => $data['amount'],
             'co_writers' => $data['co_writers'],
+            'reviewed_abstract' => $data['reviewed_abstract'],
             'citation_information' => $data['citation_information'],
         ]);
 

@@ -25,12 +25,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('publications', function (Blueprint $table) {
-            $table->foreignId('publication_type_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('thumbnail')->nullable();
-            $table->text('excerpt');
-        });
+//        Schema::table('publications', function (Blueprint $table) {
+//            $table->foreignId('publication_type_id')->constrained()->onDelete('cascade');
+//            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+//            $table->string('thumbnail')->nullable();
+//            $table->text('excerpt');
+//        });
     }
 
     /**
@@ -38,7 +38,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('publication_types');
         Schema::dropIfExists('category_publication_type');
+        Schema::dropIfExists('publication_types');
     }
 };

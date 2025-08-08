@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manuscript;
 use App\Models\Notification;
 use App\Models\Publication;
 use App\Models\ManuscriptReviewer;
@@ -36,7 +37,7 @@ class ManuscriptReviewerController extends Controller
     public function store($reviewer_id, $item_id)
     {
         $reviewer = User::findOrFail($reviewer_id);
-        $manuscript = Publication::findOrFail($item_id);
+        $manuscript = Manuscript::findOrFail($item_id);
 
 
        $newReviewer =  ManuscriptReviewer::create([

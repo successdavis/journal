@@ -35,6 +35,7 @@ class StoreSubmittedReviewRequest extends FormRequest
             'review_title' => ['required', 'string'],
             'opinion' => ['required', 'string'],
             'general_comment' => ['required', 'string'],
+            'reviewed_abstract' => ['required', 'string'],
             'specific_comment' => ['required', 'string'],
             'comment_to_editor' => ['required', 'string'],
             'originality' => ['required', 'integer', 'min:1', 'max:5'],
