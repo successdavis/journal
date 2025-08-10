@@ -37,7 +37,7 @@
                 <div>
                     <h2 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Main Document</h2>
                     <a
-                        :href="`/storage/${publication.main_document}`"
+                        :href="`/storage/${publication.final_document}`"
                         download
                         class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition"
                     >

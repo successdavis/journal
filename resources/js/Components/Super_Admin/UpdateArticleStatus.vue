@@ -28,6 +28,7 @@ import {onMounted} from "vue";
 let props = defineProps({
     publication: Object,
 })
+let emits = defineEmits('statusUpdated')
 let publicationToDisplay = ref()
 let selectedDecision = ref('')
 onMounted(()=>{
@@ -39,6 +40,7 @@ function handleFinalDecision() {
     axios.patch(`/super_admin/${props.publication.id}/update_article_status`, {newStatus})
         .then(res =>{
             alert(publicationToDisplay.value.title + ' status has been updated to '+ newStatus)
+            emits('statusUpdated', {payload: res.data})
         })
 }
 </script>

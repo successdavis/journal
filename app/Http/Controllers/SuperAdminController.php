@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class SuperAdminController extends Controller
@@ -155,9 +156,9 @@ class SuperAdminController extends Controller
 
             foreach ($validated['permissions'] as $permissionId => $isChecked) {
                 if ($isChecked) {
-                    $checked[] = (int) $permissionId;
+                    $checked[] = (int)$permissionId;
                 } else {
-                    $unchecked[] = (int) $permissionId;
+                    $unchecked[] = (int)$permissionId;
                 }
             }
 
@@ -201,13 +202,13 @@ class SuperAdminController extends Controller
                 ->where('model_id', $request->user_id)
                 ->first();
 
-            if($request->option === 'Accepted') {
+            if ($request->option === 'Accepted') {
                 DB::table('model_has_roles')
                     ->where('model_id', $request->user_id)
                     ->update([
                         'role_id' => $request->role_id,
                     ]);
-            }else {
+            } else {
                 DB::table('model_has_roles')
                     ->where('model_id', $request->user_id)
                     ->update([
@@ -221,7 +222,7 @@ class SuperAdminController extends Controller
                 'notifiable_id' => $roleRequest->id,
                 'receiver_id' => $roleRequest->user_id,
                 'sender_id' => auth()->id(),
-                'message' => 'Your request to be '. $roleRequested->name .'has been' . $request->option,
+                'message' => 'Your request to be ' . $roleRequested->name . 'has been' . $request->option,
                 'status' => false,
             ]);
         });
@@ -261,26 +262,38 @@ class SuperAdminController extends Controller
 
     public function updateArticleStatus(StoreSuperAdminRequest $request, $publication_id)
     {
-
         $manuscript = Manuscript::findOrFail($publication_id);
+        $newStatus = $request->validate([
+            'newStatus' => ['required', 'string', Rule::in('under_review', 'published', 'accepted', 'rejected', 'resubmitted_elsewhere', 'withdrawn_by_author')]
+        ]);
 
 
-        $publication = Publication::create([
-            'title'                 => $manuscript->title,
-            'manuscript_id'         => $manuscript->id,
+        if ($manuscript && ($newStatus['newStatus'] === 'published' || $newStatus['newStatus'] === 'accepted')) {
+            $publication = Publication::where('manuscript_id', $manuscript->id)->first();
+
+            if ($publication) {
+                // Update existing
+                $publication->status = true;
+                $publication->save();
+                $manuscript->status = $newStatus['newStatus'];
+                $manuscript->save();
+            } else {
+                $publication = Publication::create([
+                    'title' => $manuscript->title,
+                    'manuscript_id' => $manuscript->id,
 //            'review_id'             => $manuscript->author_id,
-            'author_id'             => $manuscript->author_id,
+                    'author_id' => $manuscript->author_id,
 //            'editor_id'             => $manuscript->author_id,
-            'abstract'              => $manuscript->abstract,
-            'keywords'              => $manuscript->keywords,
-            'publication_type_id'   => $manuscript->publication_type_id,
-            'category_id'           => $manuscript->category_id,
-            'excerpt'               => $manuscript->excerpt,
-            'affiliation'           => $manuscript->affiliation,
-            'journal'               => $manuscript->journal,
-            'final_document'         => $manuscript->main_document,
-            'thumbnail'             => $manuscript->thumbnail,
-            'figures'               => $manuscript->figures,
+                    'abstract' => $manuscript->abstract,
+                    'keywords' => $manuscript->keywords,
+                    'publication_type_id' => $manuscript->publication_type_id,
+                    'category_id' => $manuscript->category_id,
+                    'excerpt' => $manuscript->excerpt,
+                    'affiliation' => $manuscript->affiliation,
+                    'journal' => $manuscript->journal,
+                    'final_document' => $manuscript->main_document,
+                    'thumbnail' => $manuscript->thumbnail,
+                    'figures' => $manuscript->figures,
 //            'supplementary'         => $manuscript->supplementary,
 //            'cover_letter'          => $manuscript->cover_letter,
 //            'ethical_approval'      => $manuscript->ethical_approval ?? null,
@@ -288,35 +301,26 @@ class SuperAdminController extends Controller
 //            'funding_statement'     => $manuscript->funding_statement ?? null,
 //            'consent'               => $manuscript->consent,
 //            'originality'           => $manuscript->originality,
-            'premium'               => $manuscript->premium,
-            'amount'                => $manuscript->amount,
-            'co_writers'            => $manuscript->co_writers,
+                    'premium' => $manuscript->premium,
+                    'amount' => $manuscript->amount,
+                    'co_writers' => $manuscript->co_writers,
 //            'reviewed_abstract' => $data['reviewed_abstract'],
-            'citation_information' => $manuscript->citation_information,
-            'status'                => true,
-            'published_at'          => now()
-        ]);
-
-        $publication->save();
-
-        $manuscript->status = 'published';
-        $manuscript->save();
-
-
-//        $newStatus = validator(
-//            ['newStatus' => $request->newStatus],
-//            ['newStatus' => 'required|in:accepted,published,under_review,rejected,withdrawn_by_author,resubmitted_elsewhere']
-//        )->validate();
-//
-//        if ($newStatus['newStatus'] === 'published' && $publication->published_at === null) {
-//            $publication->published_at = Carbon::now();
-//            $publication->status = $newStatus['newStatus'];
-//        } else {
-//            $publication->status = $newStatus['newStatus'];
-//            $publication->published_at = null;
-//
-//        }
-//        $publication->save();
+                    'citation_information' => $manuscript->citation_information,
+                    'status' => true,
+                    'published_at' => now()
+                ]);
+                $publication->save();
+                $manuscript->status = $newStatus['newStatus'];
+                $manuscript->save();
+            }
+        } else if ($manuscript) {
+            $manuscript->status = $newStatus['newStatus'];
+            $manuscript->save();
+        } else {
+            echo 'invalid publication selected';
+        }
+        $manuscript = Manuscript::with('author')->get();
+        return response()->json($manuscript);
     }
 
     /**
@@ -369,7 +373,7 @@ class SuperAdminController extends Controller
         $defaultRole = Role::where('name', 'Reader')->first();
         $user = User::findOrFail($user_id);
 
-        if ($user){
+        if ($user) {
             DB::table('model_has_roles')->where('model_id', $user->id)
                 ->update([
                     'role_id' => $defaultRole->id,
@@ -399,7 +403,7 @@ class SuperAdminController extends Controller
 
     public function viewPublishedPublication($publication_id)
     {
-        $publication = Publication::with(['author', 'reviewer', 'review', 'editor', 'receipts'] )->where('id', $publication_id)->first();
+        $publication = Publication::with(['author', 'reviewer', 'review', 'editor', 'receipts'])->where('id', $publication_id)->first();
         if ($publication) {
             return inertia::render('Super_Admin/ViewPublishedPublication', [
                 'publication' => $publication,

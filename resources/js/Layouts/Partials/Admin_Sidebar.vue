@@ -129,16 +129,16 @@ import {ref} from "vue";
                 </nav>
 
                 <!-- Footer -->
-                <div class="pt-4 border-t bg-red-500 border-slate-800">
-                    <button
-                        @click="logout"
+                <div class="pt-4 border-t bg-slate-800 border-slate-700">
+                    <Link
+                        href="/"
                         class="flex items-center space-x-2 w-full px-4 py-2 text-sm text-slate-400 hover:text-white rounded-lg transition-colors"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        <span>Logout</span>
-                    </button>
+                        <span>Exit dashboard</span>
+                    </Link>
                 </div>
             </div>
         </aside>

@@ -91,6 +91,7 @@
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             <UpdateArticleStatus
                                 :publication="pub"
+                                @statusUpdated="statusUpdated"
                             />
                         </div>
                     </td>
@@ -149,7 +150,7 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {Link} from '@inertiajs/vue3'
 import UpdateArticleStatus from "@/Components/Super_Admin/UpdateArticleStatus.vue";
 
@@ -161,7 +162,7 @@ const props = defineProps({
     page_title: String,
 });
 
-const publications = computed(() => props.data);
+let publications = ref( props.data);
 
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -178,6 +179,10 @@ const formatStatus = (status) => {
     return status
         .replace(/_/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase()) // Capitalize each word
+}
+
+const statusUpdated = ({payload}) => {
+    publications.value =  payload;
 }
 
 let deleteArticle = (pub, index) => {
