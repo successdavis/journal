@@ -54,17 +54,17 @@
 
 <script setup>
 import { ref, onBeforeUnmount } from 'vue';
-import { Editor, EditorContent } from '@tiptap/vue-3';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
-import { Node, mergeAttributes } from '@tiptap/core';
+// import { Editor, EditorContent } from '@tiptap/vue-3';
+// import StarterKit from '@tiptap/starter-kit';
+// import Underline from '@tiptap/extension-underline';
+// import Link from '@tiptap/extension-link';
+// import { Node, mergeAttributes } from '@tiptap/core';
 
-import {
-  Bold, Italic, Underline as UnderlineIcon, Strikethrough, Quote,
-  List, ListOrdered, Heading1, Heading2, Heading3, Heading4,
-  Undo2, Redo2, Link2, ImageIcon, Code2, Youtube
-} from 'lucide-vue-next';
+// import {
+//   Bold, Italic, Underline as UnderlineIcon, Strikethrough, Quote,
+//   List, ListOrdered, Heading1, Heading2, Heading3, Heading4,
+//   Undo2, Redo2, Link2, ImageIcon, Code2, Youtube
+// } from 'lucide-vue-next';
 
 const content = ref('');
 const showPreview = ref(false);
